@@ -190,6 +190,4 @@ resource "aws_route_table_association" "private_egress" {
 }
 
 ###############################################################################
-# << VPC Endpoints 
-
 
