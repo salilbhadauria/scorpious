@@ -1,0 +1,11 @@
+---
+
+# Packages to install
+
+default_packages:
+  - htop
+  - sysstat
+  - curl
+  - git
+  - iotop
+  - jq

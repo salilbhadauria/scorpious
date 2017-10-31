@@ -1,0 +1,13 @@
+---
+
+  - name: Ensure python-pip
+    yum:
+      name: python-pip
+      state: latest
+    tags:
+     - awscli
+
+  - name: Install awscli
+    shell: pip install -U awscli
+    tags:
+     - awscli
