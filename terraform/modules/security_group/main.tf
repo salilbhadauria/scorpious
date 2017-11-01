@@ -76,3 +76,29 @@ resource "aws_security_group_rule" "ingress_rule_sgid" {
     description              = "${lookup(var.ingress_rules_sgid[count.index], "description", "")}"
 }
 
+## Egress
+
+resource "aws_security_group_rule" "egress_rule_cidr" {
+    count = "${length(var.egress_rules_cidr)}"
+
+    security_group_id = "${aws_security_group.sg.id}"
+    type              = "egress"
+    from_port         = "${lookup(var.egress_rules_cidr[count.index], "from_port")}"
+    to_port           = "${lookup(var.egress_rules_cidr[count.index], "to_port")}"
+    protocol          = "${lookup(var.egress_rules_cidr[count.index], "protocol")}"
+    cidr_blocks       = [ "${split(", ", lookup(var.egress_rules_cidr[count.index], "cidr_blocks"))}" ]
+    description       = "${lookup(var.egress_rules_cidr[count.index], "description", "")}"
+}
+
+resource "aws_security_group_rule" "egress_rule_sgid" {
+    count = "${length(var.egress_rules_sgid)}"
+
+    security_group_id        = "${aws_security_group.sg.id}"
+    type                     = "egress"
+    from_port                = "${lookup(var.egress_rules_sgid[count.index], "from_port")}"
+    to_port                  = "${lookup(var.egress_rules_sgid[count.index], "to_port")}"
+    protocol                 = "${lookup(var.egress_rules_sgid[count.index], "protocol")}"
+    source_security_group_id = [ "${split(", ", lookup(var.egress_rules_sgid[count.index], "sg_ids"))}" ]
+    description              = "${lookup(var.egress_rules_sgid[count.index], "description", "")}"
+}
+
