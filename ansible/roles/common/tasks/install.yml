@@ -1,9 +1,16 @@
 ---
-
+  
   - name: Install base packages
     yum:
       name: "{{ item }}"
       state: latest
-    with_items: "{{ default_packages }}"
-    tags:
-      - default_packages
+    with_items: "{{ common_default_packages }}"
+
+  - name: Ensure python-pip
+    yum:
+      name: python-pip
+      state: latest
+
+  - name: Install pip based packages
+    command: pip install -U "{{ item }}"
+    with_items: "{{ common_pip_packages }}"

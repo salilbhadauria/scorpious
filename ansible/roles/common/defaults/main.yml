@@ -1,11 +1,12 @@
 ---
-
-# Packages to install
-
-default_packages:
+common_default_packages:
   - htop
   - sysstat
   - curl
   - git
   - iotop
   - jq
+
+common_pip_packages:
+  - boto3
+  - awscli

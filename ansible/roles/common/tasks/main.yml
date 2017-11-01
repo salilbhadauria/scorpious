@@ -1,4 +1,6 @@
 ---
-
- - include: install.yml
- - include: ansible-message.yml
+  
+  - include: install.yml
+    tags: common_install
+  - include: ansible-message.yml
+    tags: common_motd
