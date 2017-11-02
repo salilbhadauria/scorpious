@@ -35,8 +35,8 @@ GIT_COMMIT=$(get_git_describe_with_dirty)
 
 run_packer() {
   set -x
-  local UUID=$1 GIT_COMMIT=$2 BUILDS=; shift 2
-  (( $# >= 1 )) && { BUILDS=$1; shift; }
+  local UUID=$1 GIT_COMMIT=$2; shift 2
+  (( $# >= 1 ))
   packer build \
       -var "git_commit=$GIT_COMMIT" \
       -var "build_uuid=$UUID" \
