@@ -46,7 +46,7 @@ resource "aws_security_group_rule" "ingress_rule_cidr" {
     to_port           = "${lookup(var.ingress_rules_cidr[count.index], "to_port")}"
     protocol          = "${lookup(var.ingress_rules_cidr[count.index], "protocol")}"
     cidr_blocks       = [ "${split(", ", lookup(var.ingress_rules_cidr[count.index], "cidr_blocks"))}" ]
-    description       = "${lookup(var.ingress_rules_cidr[count.index], "description", "")}"
+    description       = "${lookup(var.ingress_rules_cidr[count.index], "description", "_")}"
 }
 
 ## Security Group ID
@@ -73,7 +73,7 @@ resource "aws_security_group_rule" "ingress_rule_sgid" {
     to_port                  = "${lookup(var.ingress_rules_sgid[count.index], "to_port")}"
     protocol                 = "${lookup(var.ingress_rules_sgid[count.index], "protocol")}"
     source_security_group_id = [ "${split(", ", lookup(var.ingress_rules_sgid[count.index], "sg_ids"))}" ]
-    description              = "${lookup(var.ingress_rules_sgid[count.index], "description", "")}"
+    description              = "${lookup(var.ingress_rules_sgid[count.index], "description", "_")}"
 }
 
 ## Egress
@@ -87,7 +87,7 @@ resource "aws_security_group_rule" "egress_rule_cidr" {
     to_port           = "${lookup(var.egress_rules_cidr[count.index], "to_port")}"
     protocol          = "${lookup(var.egress_rules_cidr[count.index], "protocol")}"
     cidr_blocks       = [ "${split(", ", lookup(var.egress_rules_cidr[count.index], "cidr_blocks"))}" ]
-    description       = "${lookup(var.egress_rules_cidr[count.index], "description", "")}"
+    description       = "${lookup(var.egress_rules_cidr[count.index], "description", "_")}"
 }
 
 resource "aws_security_group_rule" "egress_rule_sgid" {
@@ -99,6 +99,6 @@ resource "aws_security_group_rule" "egress_rule_sgid" {
     to_port                  = "${lookup(var.egress_rules_sgid[count.index], "to_port")}"
     protocol                 = "${lookup(var.egress_rules_sgid[count.index], "protocol")}"
     source_security_group_id = [ "${split(", ", lookup(var.egress_rules_sgid[count.index], "sg_ids"))}" ]
-    description              = "${lookup(var.egress_rules_sgid[count.index], "description", "")}"
+    description              = "${lookup(var.egress_rules_sgid[count.index], "description", "_")}"
 }
 
