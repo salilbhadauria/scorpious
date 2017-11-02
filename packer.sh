@@ -20,7 +20,6 @@ fi
 export IMAGE=$1
 shift 1
 
-ACCOUNT=068078214683
 export AWS_REGION="${AWS_REGION:-us-east-2}"
 
 get_git_describe_with_dirty() {

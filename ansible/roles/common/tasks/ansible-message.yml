@@ -2,7 +2,7 @@
 
   - name: Message of the day explaining server is under Ansible control.
     copy:
-     dest=/etc/update-motd.d/95-ansible
+     dest=/etc/motd
      src=etc-update-motd-d-95-ansible.j2
      owner=root
      group=root

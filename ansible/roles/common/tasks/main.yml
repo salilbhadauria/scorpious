@@ -1,6 +1,8 @@
 ---
-  
-  - include: install.yml
+
+  - import_tasks: install.yml
     tags: common_install
-  - include: ansible-message.yml
+  - import_tasks: config.yml
+    tags: common_config
+  - import_tasks: ansible-message.yml
     tags: common_motd
