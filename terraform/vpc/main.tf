@@ -22,18 +22,36 @@ module "sg_bastion" {
     
     ingress_rules_cidr = [
         {
-            protocol = "tcp"
-            from_port = "80"
-            to_port = "80"
-            cidr_blocks = "10.0.0.1/32, 10.0.0.2/32"
+            protocol    = "tcp"
+            from_port   = "22"
+            to_port     = "22"
+            cidr_blocks = "0.0.0.0/0"
         },
+    ]
+
+    egress_rules_cidr = [
         {
-            protocol = "tcp"
-            from_port = "81"
-            to_port = "81"
-            cidr_blocks = "10.0.0.3/32, 10.0.0.4/32"
+            protocol    = "all"
+            from_port   = "0"
+            to_port     = "0"
+            cidr_blocks = "0.0.0.0/0"
         },
     ]
     tags = "${var.tags}"
+}
+
+module "asg_gateway" {
+    source = "../modules/autoscaling_group"
+    
+    ami_name = "amzn-ami-2017*"
+    lc_name  = "gw"
+    lc_instance_type = "t2.small"
+    lc_key_name = "some-key"
+    lc_security_groups = "${module.sg_bastion.id}"
+
+    asg_name = "gw"
+    asg_subnet_ids = "${module.vpc.public_subnet_ids}"
+    
+    tags_asg = "${var.tags_asg}"
 }
 
