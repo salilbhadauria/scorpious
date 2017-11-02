@@ -31,3 +31,15 @@ variable "ingress_rules_sgid" {
   default     = []
 }
 
+variable "egress_rules_cidr" {
+  description = "List of maps containing rules and source as CIDR blocks"
+  type        = "list"
+  default     = []
+}
+
+variable "egress_rules_sgid" {
+  description = "List of maps containing rules and source as Security Group IDs"
+  type        = "list"
+  default     = []
+}
+
