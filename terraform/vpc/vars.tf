@@ -62,4 +62,28 @@ variable "tags" {
     }
 }
 
-
+variable "tags_asg" {
+    description = "Tag Environment"
+    default = [
+        {
+            key   = "owner"
+            value = "owner"
+            propagate_at_launch = "true"
+        },
+        {
+            key   = "environment"
+            value = "env"
+            propagate_at_launch = "true"
+        },
+        {
+            key   = "layer"
+            value = "layer"
+            propagate_at_launch = "true"
+        },
+        {
+            key   = "usage"
+            value = "usage"
+            propagate_at_launch = "true"
+        },
+    ]
+}
