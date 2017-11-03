@@ -8,9 +8,9 @@ variable "azs" {
     description = "Array AVZs. Must match number of public and or private subnets"
     type    = "list"
     default = [
-        "1a",
-        "1b",
-        "1c",
+        "2a",
+        "2b",
+        "2c",
 #        "1d",
 #        "1e",
     ]

@@ -22,7 +22,7 @@ variable "private_subnets" {
     default     = []
 }
 
-variable "private_subnets_egress" {
+variable "private_egress_subnets" {
     description = "Private subnets (Egress) CIDR list"
     type        = "list"
     default     = []

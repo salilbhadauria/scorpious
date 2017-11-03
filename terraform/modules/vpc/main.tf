@@ -58,14 +58,6 @@ resource "aws_route_table" "public" {
     )}"
 }
 
-## Public default route 
-
-resource "aws_route" "igw" {
-   route_table_id         = "${aws_route_table.public.id}" 
-   destination_cidr_block = "0.0.0.0/0"
-   gateway_id             = "${aws_internet_gateway.igw.id}"
-}
-
 ## Private route tables
 
 resource "aws_route_table" "private" {
@@ -83,10 +75,37 @@ resource "aws_route_table" "private" {
     )}"
 }
 
+resource "aws_route_table" "private_egress" {
+    count = "${length(var.private_egress_subnets)}"
+
+    vpc_id = "${aws_vpc.vpc.id}"
+
+    tags = "${merge(var.tags, map(
+            "Name", format("private-egress-rt-%s-%s-%s", 
+                element(var.azs, count.index), 
+                var.tags["owner"], 
+                var.tags["environment"]
+            )
+        )
+    )}"
+}
 # Private routes will be handled on a different module
+
+## Public default route 
+
+resource "aws_route" "igw" {
+   route_table_id         = "${aws_route_table.public.id}" 
+   destination_cidr_block = "0.0.0.0/0"
+   gateway_id             = "${aws_internet_gateway.igw.id}"
+}
 
 ###############################################################################
 # << Subnets
+
+# Get current region (defined by provider configuration)
+data "aws_region" "current" {
+    current = true
+}
 
 ## Public subnets
 
@@ -95,7 +114,10 @@ resource "aws_subnet" "public" {
 
     vpc_id                  = "${aws_vpc.vpc.id}"
     cidr_block              = "${element(var.public_subnets, count.index)}"
-    availability_zone       = "${element(var.azs, count.index)}"
+    availability_zone       = "${format("%s%s", 
+                                    replace(data.aws_region.current.name, "/[0-9]$/", ""), 
+                                    element(var.azs, count.index)
+                                )}"
     map_public_ip_on_launch = "true"
 
     tags = "${merge(var.tags, map(
@@ -109,7 +131,10 @@ resource "aws_subnet" "private" {
 
     vpc_id                  = "${aws_vpc.vpc.id}"
     cidr_block              = "${element(var.private_subnets, count.index)}"
-    availability_zone       = "${element(var.azs, count.index)}"
+    availability_zone       = "${format("%s%s", 
+                                    replace(data.aws_region.current.name, "/[0-9]$/", ""), 
+                                    element(var.azs, count.index)
+                                )}"
     map_public_ip_on_launch = "false"
 
     tags = "${merge(var.tags, map(
@@ -118,13 +143,15 @@ resource "aws_subnet" "private" {
     )}"
 }
 
-# FIXME: What is the private egress subnet used for ?
 resource "aws_subnet" "private_egress" {
-    count  = "${length(var.private_subnets_egress)}"
+    count  = "${length(var.private_egress_subnets)}"
 
     vpc_id                  = "${aws_vpc.vpc.id}"
-    cidr_block              = "${element(var.private_subnets_egress, count.index)}"
-    availability_zone       = "${element(var.azs, count.index)}"
+    cidr_block              = "${element(var.private_egress_subnets, count.index)}"
+    availability_zone       = "${format("%s%s", 
+                                    replace(data.aws_region.current.name, "/[0-9]$/", ""), 
+                                    element(var.azs, count.index)
+                                )}"
     map_public_ip_on_launch = "false"
 
     tags = "${merge(var.tags, map(
@@ -151,7 +178,7 @@ resource "aws_vpc_endpoint" "s3" {
 }
 
 resource "aws_vpc_endpoint_route_table_association" "s3_public" {
-  count = "${length(var.private_subnets)}"
+  count = "${length(var.public_subnets)}"
 
   vpc_endpoint_id = "${aws_vpc_endpoint.s3.id}"
   route_table_id  = "${element(aws_route_table.public.*.id, count.index)}"
@@ -161,9 +188,15 @@ resource "aws_vpc_endpoint_route_table_association" "s3_private" {
   count = "${length(var.private_subnets)}"
 
   vpc_endpoint_id = "${aws_vpc_endpoint.s3.id}"
-  route_table_id  = "${aws_route_table.private.*.id}"
+  route_table_id  = "${element(aws_route_table.private.*.id, count.index)}"
 }
 
+resource "aws_vpc_endpoint_route_table_association" "s3_private_egress" {
+  count = "${length(var.private_subnets)}"
+
+  vpc_endpoint_id = "${aws_vpc_endpoint.s3.id}"
+  route_table_id  = "${element(aws_route_table.private_egress.*.id, count.index)}"
+}
 
 ###############################################################################
 # << Route Tables Association
@@ -179,14 +212,14 @@ resource "aws_route_table_association" "private" {
     count = "${length(var.private_subnets)}"
 
     subnet_id      = "${element(aws_subnet.private.*.id, count.index)}"
-    route_table_id = "${aws_route_table.private.*.id}"
+    route_table_id = "${element(aws_route_table.private.*.id, count.index)}"
 }
 
 resource "aws_route_table_association" "private_egress" {
-    count = "${length(var.private_subnets_egress)}"
+    count = "${length(var.private_egress_subnets)}"
 
     subnet_id      = "${element(aws_subnet.private_egress.*.id, count.index)}"
-    route_table_id = "${aws_route_table.private.*.id}"
+    route_table_id = "${element(aws_route_table.private_egress.*.id, count.index)}"
 }
 
 ###############################################################################
