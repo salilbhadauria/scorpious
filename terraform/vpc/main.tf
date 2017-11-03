@@ -7,9 +7,16 @@ module "vpc" {
     azs                    = "${var.azs}"
     public_subnets         = "${var.public_subnets}"
     private_subnets        = "${var.private_subnets}"
-    private_subnets_egress = "${var.private_subnets_egress}"
+    private_egress_subnets = "${var.private_subnets_egress}"
 
     tags     = "${var.tags}" 
+}
+
+module "devops_key" {
+    source = "../modules/key_pair"
+
+    key_name   = "devops"
+    public_key = "${var.ssh_public_key}"
 }
 
 module "sg_bastion" {
@@ -46,8 +53,8 @@ module "asg_gateway" {
     ami_name = "amzn-ami-2017*"
     lc_name  = "gw"
     lc_instance_type = "t2.small"
-    lc_key_name = "some-key"
-    lc_security_groups = "${module.sg_bastion.id}"
+    lc_key_name = "${module.devops_key.name}"
+    lc_security_groups = [ "${module.sg_bastion.id}" ]
 
     asg_name = "gw"
     asg_subnet_ids = "${module.vpc.public_subnet_ids}"

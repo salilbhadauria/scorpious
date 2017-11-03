@@ -87,3 +87,10 @@ variable "tags_asg" {
         },
     ]
 }
+
+variable "ssh_public_key" {
+    default = <<SPK
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDaN6f5QjS6RPZoVmkTqv/XJ++YqNl3oV4g/U1cVkueg2qow4IktMTGuXOGLxx0gCUsz1NAIVWGZ/yD1M8e6ULmY7LK+/bwasmHrC40unrfXiRAeNw53GurwD6i/iGVN4cgsWVcAXgMXleCpeuMK/SHHMnI98hTlStBOUYTBz/PA+9CEZAy49p82aMEIbPDvajTmHbBMip0E5I9EPfSG9NbfaTnWUZ0697c4YiDH1ASZu0oOuA7wfvoprCcOCrfdwoUVJom150QCY0nEtyc9tpvC6ffR4d5LD4KHyNt3Y0JiKClBEEyxRmJeiyrGhyoja6va0YLtF8tt2Ndgl2PJqhv
+SPK
+}
+
