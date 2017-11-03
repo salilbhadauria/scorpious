@@ -19,6 +19,24 @@ module "devops_key" {
     public_key = "${var.ssh_public_key}"
 }
 
+module "eip_bastion" {
+    source = "../modules/eip"
+}
+
+module "route_private_egress" {
+    source = "../modules/routes"
+
+    route_table_id = "${module.vpc.route_table_private_egress}"  
+
+    routes_count = 1
+    routes = [
+        {
+            dest_cidr = "0.0.0.0/0"
+            eni_id    = "${module.eip_bastion.eni_id}"
+        },
+    ]
+}
+
 module "sg_bastion" {
     source = "../modules/security_group"
 
