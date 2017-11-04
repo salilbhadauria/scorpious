@@ -20,24 +20,6 @@ module "devops_key" {
     public_key = "${var.ssh_public_key}"
 }
 
-module "eip_bastion" {
-    source = "../modules/eip"
-}
-
-module "route_private_egress" {
-    source = "../modules/routes"
-
-    route_table_id = "${module.vpc.route_table_private_egress}"  
-
-    routes_count = 1
-    routes = [
-        {
-            dest_cidr = "0.0.0.0/0"
-            eni_id    = "${module.eip_bastion.eni_id}"
-        },
-    ]
-}
-
 module "sg_bastion" {
     source = "../modules/security_group"
 
@@ -69,14 +51,19 @@ module "sg_bastion" {
 module "asg_gateway" {
     source = "../modules/autoscaling_group"
     
-    ami_name = "amzn-ami-2017*"
-    lc_name  = "gw"
-    lc_instance_type = "t2.small"
-    lc_key_name = "${module.devops_key.name}"
+    #ami_name           = "amzn-ami-2017*"
+    ami_id             = "ami-c5062ba0"
+    lc_name            = "gw-0.0.2"
+    lc_instance_type   = "t2.small"
+    lc_ebs_optimized   = "false"
+    lc_key_name        = "${module.devops_key.name}"
     lc_security_groups = [ "${module.sg_bastion.id}" ]
 
-    asg_name = "gw"
-    asg_subnet_ids = "${module.vpc.public_subnet_ids}"
+    asg_name             = "gw"
+    asg_subnet_ids       = "${module.vpc.public_subnet_ids}"
+    asg_desired_capacity = 1
+    asg_min_size         = 1
+    asg_max_size         = 1
     
     tags_asg = "${var.tags_asg}"
 }
