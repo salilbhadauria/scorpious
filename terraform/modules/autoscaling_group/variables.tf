@@ -20,8 +20,8 @@ variable "ami_hipervisor" {
 
 # Launch Config
 
-variable "lc_name" {
-  description = "Launch Configuration name"
+variable "lc_name_prefix" {
+  description = "Launch Configuration name prefix"
 }
 
 variable "lc_ami_id" {

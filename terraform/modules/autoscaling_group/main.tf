@@ -6,20 +6,20 @@
 data "aws_ami" "ami" {
     most_recent = true
 
-    filter {
-        name   = "owner-alias"
-        values = [ "${var.ami_owner_alias}" ]
-    }
+    #filter {
+    #    name   = "owner-alias"
+    #    values = [ "${var.ami_owner_alias}" ]
+    #}
 
     filter {
         name   = "name"
         values = [ "${var.ami_name}" ]
     }
 
-    filter {
-        name   = "architecture"
-        values = [ "${var.ami_architecture}" ]
-    }
+    #filter {
+    #    name   = "architecture"
+    #    values = [ "${var.ami_architecture}" ]
+    #}
 
 }
 
@@ -28,7 +28,7 @@ data "aws_ami" "ami" {
 # Launch configuration
 
 resource "aws_launch_configuration" "lc" {
-    name              = "${var.lc_name}"
+    name_prefix       = "${var.lc_name_prefix}"
     image_id          = "${var.lc_ami_id != "" ? var.lc_ami_id : data.aws_ami.ami.id}"
     instance_type     = "${var.lc_instance_type}"
     key_name          = "${var.lc_key_name}"
@@ -66,4 +66,3 @@ resource "aws_autoscaling_group" "asg" {
 
     tags = "${var.tags_asg}"
 }
-

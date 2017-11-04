@@ -6,7 +6,7 @@ terraform {
 
     backend "s3" {
         bucket = "dcos-cortex-infrastructure-n911"
-        key    = "vpc/terraform.tfstate"
+        key    = "platform/terraform.tfstate"
         region = "us-east-2"
     }
 }
