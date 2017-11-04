@@ -13,6 +13,8 @@ resource "aws_vpc" "vpc" {
 }
 
 resource "aws_internet_gateway" "igw" {
+    depends_on = [ "aws_vpc.vpc" ]
+
     vpc_id = "${aws_vpc.vpc.id}"
 
     tags = "${merge(var.tags, map(
@@ -26,17 +28,21 @@ resource "aws_internet_gateway" "igw" {
 # << DHCP Options
 
 resource "aws_vpc_dhcp_options" "dhcp_opts" {
+    depends_on = [ "aws_vpc.vpc" ]
+
     domain_name         = "${var.vpc_dhcp_opts_domain_name}"
     domain_name_servers = "${var.vpc_dhcp_opts_domain_name_servers}"
 
     tags = "${merge(var.tags, map(
-            "Name", format("%s-%s-dhcp-options-set", var.tags["owner"], var.tags["environment"])
+           "Name", format("%s-%s-dhcp-options-set", var.tags["owner"], var.tags["environment"])
         )
     )}"
 
 }
 
 resource "aws_vpc_dhcp_options_association" "dhcp_assoc" {
+    depends_on = [ "aws_vpc.vpc" ]
+
     vpc_id          = "${aws_vpc.vpc.id}"
     dhcp_options_id = "${aws_vpc_dhcp_options.dhcp_opts.id}"
 }
@@ -47,6 +53,8 @@ resource "aws_vpc_dhcp_options_association" "dhcp_assoc" {
 ## Public route table
 
 resource "aws_route_table" "public" {
+    depends_on = [ "aws_vpc.vpc" ]
+
     vpc_id = "${aws_vpc.vpc.id}"
 
     tags = "${merge(var.tags, map(
@@ -61,7 +69,8 @@ resource "aws_route_table" "public" {
 ## Private route tables
 
 resource "aws_route_table" "private" {
-    count = "${length(var.private_subnets)}"
+    count      = "${length(var.private_subnets)}"
+    depends_on = [ "aws_vpc.vpc" ]
 
     vpc_id = "${aws_vpc.vpc.id}"
 
@@ -76,7 +85,8 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route_table" "private_egress" {
-    count = "${length(var.private_egress_subnets)}"
+    count      = "${length(var.private_egress_subnets)}"
+    depends_on = [ "aws_vpc.vpc" ]
 
     vpc_id = "${aws_vpc.vpc.id}"
 
@@ -94,6 +104,8 @@ resource "aws_route_table" "private_egress" {
 ## Public default route 
 
 resource "aws_route" "igw" {
+    depends_on = [ "aws_route_table.public" ]
+
    route_table_id         = "${aws_route_table.public.id}" 
    destination_cidr_block = "0.0.0.0/0"
    gateway_id             = "${aws_internet_gateway.igw.id}"
@@ -110,7 +122,8 @@ data "aws_region" "current" {
 ## Public subnets
 
 resource "aws_subnet" "public" {
-    count  = "${length(var.public_subnets)}"
+    count      = "${length(var.public_subnets)}"
+    depends_on = [ "aws_route_table.public" ]
 
     vpc_id                  = "${aws_vpc.vpc.id}"
     cidr_block              = "${element(var.public_subnets, count.index)}"
@@ -127,7 +140,8 @@ resource "aws_subnet" "public" {
 }
 
 resource "aws_subnet" "private" {
-    count  = "${length(var.private_subnets)}"
+    count      = "${length(var.private_subnets)}"
+    depends_on = [ "aws_route_table.private" ]
 
     vpc_id                  = "${aws_vpc.vpc.id}"
     cidr_block              = "${element(var.private_subnets, count.index)}"
@@ -144,7 +158,8 @@ resource "aws_subnet" "private" {
 }
 
 resource "aws_subnet" "private_egress" {
-    count  = "${length(var.private_egress_subnets)}"
+    count      = "${length(var.private_egress_subnets)}"
+    depends_on = [ "aws_route_table.private_egress" ]
 
     vpc_id                  = "${aws_vpc.vpc.id}"
     cidr_block              = "${element(var.private_egress_subnets, count.index)}"
@@ -178,24 +193,27 @@ resource "aws_vpc_endpoint" "s3" {
 }
 
 resource "aws_vpc_endpoint_route_table_association" "s3_public" {
-  count = "${length(var.public_subnets)}"
+    count      = "${length(var.public_subnets)}"
+    depends_on = [ "aws_route_table.public" ]
 
-  vpc_endpoint_id = "${aws_vpc_endpoint.s3.id}"
-  route_table_id  = "${element(aws_route_table.public.*.id, count.index)}"
+    vpc_endpoint_id = "${aws_vpc_endpoint.s3.id}"
+    route_table_id  = "${element(aws_route_table.public.*.id, count.index)}"
 }
 
 resource "aws_vpc_endpoint_route_table_association" "s3_private" {
-  count = "${length(var.private_subnets)}"
+    count = "${length(var.private_subnets)}"
+    depends_on = [ "aws_route_table.private" ]
 
-  vpc_endpoint_id = "${aws_vpc_endpoint.s3.id}"
-  route_table_id  = "${element(aws_route_table.private.*.id, count.index)}"
+    vpc_endpoint_id = "${aws_vpc_endpoint.s3.id}"
+    route_table_id  = "${element(aws_route_table.private.*.id, count.index)}"
 }
 
 resource "aws_vpc_endpoint_route_table_association" "s3_private_egress" {
-  count = "${length(var.private_subnets)}"
+    count = "${length(var.private_egress_subnets)}"
+    depends_on = [ "aws_route_table.private_egress" ]
 
-  vpc_endpoint_id = "${aws_vpc_endpoint.s3.id}"
-  route_table_id  = "${element(aws_route_table.private_egress.*.id, count.index)}"
+    vpc_endpoint_id = "${aws_vpc_endpoint.s3.id}"
+    route_table_id  = "${element(aws_route_table.private_egress.*.id, count.index)}"
 }
 
 ###############################################################################
