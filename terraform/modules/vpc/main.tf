@@ -178,6 +178,40 @@ resource "aws_subnet" "private_egress" {
 }
 
 ###############################################################################
+# << NAT gateways
+
+resource "aws_eip" "nat" {
+    count      = "${var.nat_gateway ? length(var.azs) : 0 }"
+    depends_on = [ "aws_route_table.public" ]
+    vpc = "true"
+}
+
+resource "aws_nat_gateway" "nat" {
+    count      = "${var.nat_gateway ? length(var.azs) : 0 }"
+    depends_on = [ "aws_eip.nat" ]
+
+    allocation_id = "${element(aws_eip.nat.*.id, count.index)}"
+    subnet_id     = "${element(aws_subnet.public.*.id, count.index)}"
+
+    tags = "${merge(var.tags, map(
+            "Name", format("nat-gw-%s", 
+                element(var.azs, count.index)
+            )
+        )
+    )}"
+}
+
+resource "aws_route" "nat" {
+    count      = "${var.nat_gateway ? length(var.azs) : 0 }"
+    depends_on = [ "aws_nat_gateway.nat" ]
+
+    route_table_id         = "${element(aws_route_table.private_egress.*.id, count.index)}" 
+    destination_cidr_block = "0.0.0.0/0"
+    nat_gateway_id         = "${element(aws_nat_gateway.nat.*.id, count.index)}"
+}
+
+
+###############################################################################
 # << VPC endpoints
 
 ## S3

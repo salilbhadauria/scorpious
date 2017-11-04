@@ -8,6 +8,7 @@ module "vpc" {
     public_subnets         = "${var.public_subnets}"
     private_subnets        = "${var.private_subnets}"
     private_egress_subnets = "${var.private_subnets_egress}"
+    nat_gateway            = "true"
 
     tags     = "${var.tags}" 
 }
