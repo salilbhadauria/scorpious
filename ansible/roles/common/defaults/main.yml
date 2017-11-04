@@ -1,0 +1,18 @@
+---
+common_default_packages:
+  - python-pip
+  - htop
+  - sysstat
+  - curl
+  - git
+  - iotop
+  - jq
+  - tar
+  - xz
+  - ipset
+  - ntp
+  - firewalld
+
+common_pip_packages:
+  - boto3
+  - awscli

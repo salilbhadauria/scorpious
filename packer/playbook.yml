@@ -1,0 +1,22 @@
+---
+- hosts: all
+  become: yes
+  pre_tasks:
+    - name: gather ec2 facts
+      action: ec2_metadata_facts
+      tags:
+        - always
+  roles:
+    - common
+    - docker
+
+- hosts: bootstrap
+  become: yes
+  vars:
+    - cluster_name: deepcortex
+    - s3_bucket: deepcortex-dcos-backend
+  roles:
+    - bootstrap
+
+- hosts: node
+  become: yes

@@ -4,3 +4,6 @@
 
 .terraform
 .backend
+*.iml
+*.retry
+*.pyc
