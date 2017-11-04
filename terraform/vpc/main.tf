@@ -52,7 +52,7 @@ module "asg_gateway" {
     source = "../modules/autoscaling_group"
     
     #ami_name           = "amzn-ami-2017*"
-    ami_id             = "ami-c5062ba0"
+    lc_ami_id          = "ami-c5062ba0"
     lc_name            = "gw-0.0.2"
     lc_instance_type   = "t2.small"
     lc_ebs_optimized   = "false"
