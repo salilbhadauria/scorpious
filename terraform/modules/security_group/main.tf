@@ -65,14 +65,19 @@ resource "aws_security_group_rule" "ingress_rule_cidr" {
 #
 
 resource "aws_security_group_rule" "ingress_rule_sgid" {
-    count = "${length(var.ingress_rules_sgid)}"
+    #count = "${length(var.ingress_rules_sgid)}"
+    # https://github.com/hashicorp/terraform/issues/10857
+    # TL;DR: list elements that are computed values restrain the ability to 
+    # calculate the length of the object
+    # count = "${length(var.routes)}"
+    count = "${var.ingress_rules_sgid_count}"
 
     security_group_id        = "${aws_security_group.sg.id}"
     type                     = "ingress"
     from_port                = "${lookup(var.ingress_rules_sgid[count.index], "from_port")}"
     to_port                  = "${lookup(var.ingress_rules_sgid[count.index], "to_port")}"
     protocol                 = "${lookup(var.ingress_rules_sgid[count.index], "protocol")}"
-    source_security_group_id = [ "${split(", ", lookup(var.ingress_rules_sgid[count.index], "sg_ids"))}" ]
+    source_security_group_id = "${lookup(var.ingress_rules_sgid[count.index], "sg_id")}"
     description              = "${lookup(var.ingress_rules_sgid[count.index], "description", "_")}"
 }
 
@@ -91,14 +96,19 @@ resource "aws_security_group_rule" "egress_rule_cidr" {
 }
 
 resource "aws_security_group_rule" "egress_rule_sgid" {
-    count = "${length(var.egress_rules_sgid)}"
+    #count = "${length(var.egress_rules_sgid)}"
+    # https://github.com/hashicorp/terraform/issues/10857
+    # TL;DR: list elements that are computed values restrain the ability to 
+    # calculate the length of the object
+    # count = "${length(var.routes)}"
+    count = "${var.egress_rules_sgid_count}"
 
     security_group_id        = "${aws_security_group.sg.id}"
     type                     = "egress"
     from_port                = "${lookup(var.egress_rules_sgid[count.index], "from_port")}"
     to_port                  = "${lookup(var.egress_rules_sgid[count.index], "to_port")}"
     protocol                 = "${lookup(var.egress_rules_sgid[count.index], "protocol")}"
-    source_security_group_id = [ "${split(", ", lookup(var.egress_rules_sgid[count.index], "sg_ids"))}" ]
+    source_security_group_id = "${lookup(var.egress_rules_sgid[count.index], "sg_id")}"
     description              = "${lookup(var.egress_rules_sgid[count.index], "description", "_")}"
 }
 
