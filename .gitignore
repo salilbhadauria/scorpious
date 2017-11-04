@@ -1,3 +1,9 @@
+*.swa
+*.swp
+*.swo
+
+.terraform
+.backend
 *.iml
 *.retry
 *.pyc
