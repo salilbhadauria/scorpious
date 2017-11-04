@@ -27,9 +27,9 @@ resource "aws_security_group" "sg" {
 # Example:
 # [
 #   { 
-#       protocol   = "tcp",
-#       from_port  = "80",
-#       to_port    = "80",
+#       protocol   = "tcp"
+#       from_port  = "80"
+#       to_port    = "80"
 #       cidr_block = "10.10.10.1, 10.10.10.2"
 #       desc      = "Some description"
 #   },
@@ -53,10 +53,10 @@ resource "aws_security_group_rule" "ingress_rule_cidr" {
 # Example:
 # [
 #   { 
-#       protocol  = "tcp",
-#       from_port = "80",
-#       to_port   = "80",
-#       sg_ids    = "10.10.10.1, 10.10.10.2"
+#       protocol  = "tcp"
+#       from_port = "80"
+#       to_port   = "80"
+#       sg_id     = "sg-id12345"
 #       desc      = "Some description"
 #   },
 #   { ... }
