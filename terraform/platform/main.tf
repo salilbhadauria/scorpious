@@ -56,6 +56,15 @@ module "sg_bootstrap" {
     tags = "${var.bootstrap_sg_tags}"
 }
 
+data "template_file" "bootstrap_userdata" {
+  template = "${file("../templates/bootstrap_userdata.tpl")}"
+}
+
+resource "aws_iam_instance_profile" "bootstrapp_instance_profile" {
+  name  = "bootstrapp_instance_profile"
+  role = "${data.terraform_remote_state.iam.bootstrap_iam_role_name}"
+}
+
 module "bootstrap" {
     source = "../modules/autoscaling_group"
 
@@ -65,8 +74,8 @@ module "bootstrap" {
     lc_ebs_optimized        = "false"
     lc_key_name             = "${module.devops_key.name}"
     lc_security_groups      = [ "${module.sg_bootstrap.id}" ]
-    lc_user_data            = "#!/bin/bash\nbash /var/lib/dcos-bootstrap/dcos_generate_config.sh \ndocker pull nginx \ndocker run --name dcos_nginx -p 8080:80 -v /var/lib/dcos-bootstrap/genconf/serve:/usr/share/nginx/html:ro nginx"
-    lc_iam_instance_profile = "${data.terraform_remote_state.iam.bootstrap_iam_role_id}"
+    lc_user_data            = "${data.template_file.bootstrap_userdata.rendered}"
+    lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrapp_instance_profile.id}"
 
     asg_name                = "bootstrap-asg"
     asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
