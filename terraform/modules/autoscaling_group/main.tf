@@ -62,7 +62,7 @@ resource "aws_autoscaling_group" "asg" {
     health_check_type         = "${var.asg_check_type}"
     force_delete              = "${var.asg_force_delete}"
     launch_configuration      = "${aws_launch_configuration.lc.name}"
-    load_balancers            = "${var.asg_load_balancers}"
+    load_balancers            = [ "${var.asg_load_balancers}" ]
     #target_group_arns         = [ "${var.asg_target_groups}" ]
 
     tags = "${var.tags_asg}"

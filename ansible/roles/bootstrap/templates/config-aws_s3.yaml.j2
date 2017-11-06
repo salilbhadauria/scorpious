@@ -4,7 +4,7 @@ bootstrap_url: http://bootstrap_dns_via_user_data:8080
 cluster_name: '{{ cluster_name }}'
 
 exhibitor_storage_backend: aws_s3
-exhibitor_explicit_keys: 'true'
+exhibitor_explicit_keys: 'false'
 exhibitor_address: masters_elb_dns_via_user_data
 aws_region: aws_region_via_user_data
 s3_bucket: {{ s3_bucket }}
