@@ -6,10 +6,6 @@ cluster_name: '{{ cluster_name }}'
 exhibitor_storage_backend: aws_s3
 exhibitor_explicit_keys: 'true'
 exhibitor_address: masters_elb_dns_via_user_data
-#this instance needs an instance profile allowing it to access to the S3 bucket
-#hence we're not going to use credentials here, will be removed soon.
-#aws_access_key_id:
-#aws_secret_access_key:
 aws_region: aws_region_via_user_data
 s3_bucket: {{ s3_bucket }}
 s3_prefix: {{ s3_prefix }}
