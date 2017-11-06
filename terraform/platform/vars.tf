@@ -89,6 +89,16 @@ variable "master_sg_tags" {
     }
 }
 
+variable "master_elb_sg_tags" {
+    description = "Tag Environment"
+    default = {
+        owner       = "owner"
+        environment = "env"
+        layer       = "layer"
+        usage       = "usage"
+    }
+}
+
 variable "master_asg_tags" {
     description = "Tag Environment"
     default = [
@@ -114,7 +124,7 @@ variable "master_asg_tags" {
         },
         {
             key   = "name"
-            value = "bootstrap"
+            value = "master"
             propagate_at_launch = "true"
         }
     ]

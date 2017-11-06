@@ -146,7 +146,7 @@ module "bootstrap" {
 
     tags_asg = "${var.bootstrap_asg_tags}"
 }
-/*
+
 #########################################################
 # Master
 module "sg_master" {
@@ -154,7 +154,7 @@ module "sg_master" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "ssh-master"
+    sg_name = "master"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -162,6 +162,33 @@ module "sg_master" {
             protocol    = "tcp"
             from_port   = "22"
             to_port     = "22"
+            cidr_blocks = "0.0.0.0/0"
+        },
+    ]
+
+    ingress_rules_cidr = [
+        {
+            protocol    = "tcp"
+            from_port   = "80"
+            to_port     = "80"
+            cidr_blocks = "0.0.0.0/0"
+        },
+    ]
+
+    ingress_rules_cidr = [
+        {
+            protocol    = "tcp"
+            from_port   = "443"
+            to_port     = "443"
+            cidr_blocks = "0.0.0.0/0"
+        },
+    ]
+
+    ingress_rules_cidr = [
+        {
+            protocol    = "tcp"
+            from_port   = "5050"
+            to_port     = "5050"
             cidr_blocks = "0.0.0.0/0"
         },
     ]
@@ -177,8 +204,62 @@ module "sg_master" {
     tags = "${var.master_sg_tags}"
 }
 
+module "master_elb_sg" {
+    source = "../modules/security_group"
+
+    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+
+    sg_name = "master-elb-sg"
+    sg_description = "some description"
+
+    ingress_rules_cidr = [
+        {
+            protocol    = "tcp"
+            from_port   = "80"
+            to_port     = "80"
+            cidr_blocks = "0.0.0.0/0"
+        },
+    ]
+
+    ingress_rules_cidr = [
+        {
+            protocol    = "tcp"
+            from_port   = "443"
+            to_port     = "443"
+            cidr_blocks = "0.0.0.0/0"
+        },
+    ]
+
+    egress_rules_cidr = [
+        {
+            protocol    = "all"
+            from_port   = "0"
+            to_port     = "0"
+            cidr_blocks = "0.0.0.0/0"
+        },
+    ]
+    tags = "${var.master_elb_sg_tags}"
+}
+
 data "template_file" "master_userdata" {
   template = "${file("../templates/master_userdata.tpl")}"
+
+  vars {
+    bootstrap_dns = "${var.bootstrap_dns_name}"
+  }
+}
+
+module "master_elb" {
+  source              = "../modules/elb_external_masters"
+  elb_name            = "master-elb"
+  elb_is_internal     = "true"
+  elb_security_group  = "${module.master_elb_sg.id}"
+  subnets             = [ "${data.terraform_remote_state.vpc.private_egress_subnet_ids}" ]
+  backend_port        = "80"
+  backend_protocol    = "http"
+  health_check_target = "TCP:5050"
+  environment         = "${var.environment}"
+  ssl_certificate_id  = ""
 }
 
 module "master" {
@@ -197,7 +278,7 @@ module "master" {
     asg_desired_capacity    = "${var.master_asg_desired_capacity}"
     asg_min_size            = "${var.master_asg_min_size}"
     asg_max_size            = "${var.master_asg_max_size}"
+    asg_load_balancers      = [ "${module.master_elb.elb_id}" ]
 
     tags_asg = "${var.master_asg_tags}"
 }
-*/

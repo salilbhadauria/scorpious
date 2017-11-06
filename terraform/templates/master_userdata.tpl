@@ -11,3 +11,5 @@ runcmd:
   - hostnamectl set-hostname $newhostn
   - echo "nameserver 8.8.8.8" >> /etc/resolv.conf
   - service rsyslog restart
+  - curl http://${bootstrap_dns}:8080/dcos_install.sh -o /tmp/dcos_install.sh -s
+  - cd /tmp; bash dcos_install.sh master
