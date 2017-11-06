@@ -1,3 +1,5 @@
+# vim: ts=4:sw=4:et:ft=hcl
+
 output "vpc_id" {
   value = "${module.vpc.vpc_id}"
 }

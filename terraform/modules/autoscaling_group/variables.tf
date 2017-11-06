@@ -57,6 +57,11 @@ variable "lc_ebs_optimized" {
   default     = "true"
 }
 
+variable "lc_iam_instance_profile" {
+  description = "IAM instance profile to attach"
+  default = ""
+}
+
 # Autoscaling group
 
 variable "asg_name" {
