@@ -1,6 +1,5 @@
 ---
 path_bootstrap: /var/lib/dcos-bootstrap
-port_webserver: 8080
 
 s3_prefix: "-exhibitor"
 
