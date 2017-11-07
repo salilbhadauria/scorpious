@@ -53,9 +53,6 @@ module "bootstrap_sg" {
             to_port     = "22"
             cidr_blocks = "0.0.0.0/0"
         },
-    ]
-
-    ingress_rules_cidr = [
         {
             protocol    = "tcp"
             from_port   = "8080"
@@ -90,9 +87,6 @@ module "bootstrap_elb_sg" {
             to_port     = "8080"
             cidr_blocks = "0.0.0.0/0"
         },
-    ]
-
-    egress_rules_cidr = [
         {
             protocol    = "all"
             from_port   = "0"
@@ -174,27 +168,18 @@ module "master_sg" {
             to_port     = "22"
             cidr_blocks = "0.0.0.0/0"
         },
-    ]
-
-    ingress_rules_cidr = [
         {
             protocol    = "tcp"
             from_port   = "80"
             to_port     = "80"
             cidr_blocks = "0.0.0.0/0"
         },
-    ]
-
-    ingress_rules_cidr = [
         {
             protocol    = "tcp"
             from_port   = "443"
             to_port     = "443"
             cidr_blocks = "0.0.0.0/0"
         },
-    ]
-
-    ingress_rules_cidr = [
         {
             protocol    = "tcp"
             from_port   = "5050"
@@ -229,9 +214,6 @@ module "master_elb_sg" {
             to_port     = "80"
             cidr_blocks = "0.0.0.0/0"
         },
-    ]
-
-    ingress_rules_cidr = [
         {
             protocol    = "tcp"
             from_port   = "443"
