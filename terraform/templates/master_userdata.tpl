@@ -1,4 +1,5 @@
 #cloud-config
+manage_resolv_conf: false
 preserve_hostname: true
 runcmd:
   - instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | tr -d 'i-')
@@ -11,5 +12,6 @@ runcmd:
   - hostnamectl set-hostname $newhostn
   - echo "nameserver 8.8.8.8" >> /etc/resolv.conf
   - service rsyslog restart
+  - until $(curl --output /dev/null --silent --head --fail http://${bootstrap_dns}:8080/dcos_install.sh); do sleep 5; done
   - curl http://${bootstrap_dns}:8080/dcos_install.sh -o /tmp/dcos_install.sh -s
   - cd /tmp; bash dcos_install.sh master

@@ -21,11 +21,22 @@ data "terraform_remote_state" "iam" {
   }
 }
 
+#########################################################
+# Create ssh key
 module "devops_key" {
     source = "../modules/key_pair"
 
     key_name   = "platform"
     public_key = "${var.ssh_public_key}"
+}
+
+#########################################################
+# Create a private zone
+module "zone_private_devops_deepcortex_ai" {
+    source = "../modules/dns_zone"
+    domain = "${var.domain}"
+    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+    tags   = "${var.zone_private_devops_deepcortex_ai_tags}"
 }
 
 #########################################################
@@ -35,7 +46,7 @@ module "bootstrap_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "bootstrap-sg"
+    sg_name = "bootstrap"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -72,7 +83,7 @@ module "bootstrap_elb_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "bootstrap-elb-sg"
+    sg_name = "bootstrap-elb"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -100,8 +111,8 @@ data "template_file" "bootstrap_userdata" {
 
   vars {
     num_masters = "${var.master_asg_desired_capacity}"
-    bootstrap_dns = "${var.bootstrap_dns_name}"
-    masters_elb = "${var.master_elb_dns_name}"
+    bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${var.domain}"
+    masters_elb = "${var.environment}-${var.master_elb_dns_name}.${var.domain}"
     aws_region = "${var.aws_region}"
   }
 }
@@ -123,13 +134,16 @@ module "bootstrap_elb" {
   backend_protocol    = "http"
   health_check_target = "TCP:8080"
   environment         = "${var.environment}"
+
+  dns_zone_id = "${module.zone_private_devops_deepcortex_ai.zone_id}"
+  dns_records = [ "${var.environment}-${var.bootstrap_elb_dns_name}.${var.domain}" ]
 }
 
 module "bootstrap_asg" {
     source = "../modules/autoscaling_group"
 
     ami_name                = "bootstrap*"
-    lc_name_prefix          = "bootstrap-"
+    lc_name_prefix          = "${var.environment}-bootstrap-"
     lc_instance_type        = "t2.medium"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${module.devops_key.name}"
@@ -137,7 +151,7 @@ module "bootstrap_asg" {
     lc_user_data            = "${data.template_file.bootstrap_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
 
-    asg_name                = "bootstrap-asg"
+    asg_name                = "${var.environment}-bootstrap-asg"
     asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
     asg_desired_capacity    = "${var.bootstrap_asg_desired_capacity}"
     asg_min_size            = "${var.bootstrap_asg_min_size}"
@@ -209,7 +223,7 @@ module "master_elb_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "master-elb-sg"
+    sg_name = "master-elb"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -245,35 +259,39 @@ data "template_file" "master_userdata" {
   template = "${file("../templates/master_userdata.tpl")}"
 
   vars {
-    bootstrap_dns = "${var.bootstrap_dns_name}"
+    bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${var.domain}"
   }
 }
 
 module "master_elb" {
-  source              = "../modules/elb_external_masters"
+  source              = "../modules/elb"
   elb_name            = "master-elb"
   elb_is_internal     = "true"
   elb_security_group  = "${module.master_elb_sg.id}"
   subnets             = [ "${data.terraform_remote_state.vpc.private_egress_subnet_ids}" ]
+  frontend_port       = "80"
+  frontend_protocol   = "http"
   backend_port        = "80"
   backend_protocol    = "http"
   health_check_target = "TCP:5050"
   environment         = "${var.environment}"
-  ssl_certificate_id  = ""
+
+  dns_zone_id = "${module.zone_private_devops_deepcortex_ai.zone_id}"
+  dns_records = [ "${var.environment}-${var.master_elb_dns_name}.${var.domain}" ]
 }
 
 module "master_asg" {
     source = "../modules/autoscaling_group"
 
     ami_name                = "master*"
-    lc_name_prefix          = "master-"
+    lc_name_prefix          = "${var.environment}-master-"
     lc_instance_type        = "t2.medium"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${module.devops_key.name}"
     lc_security_groups      = [ "${module.master_sg.id}" ]
     lc_user_data            = "${data.template_file.master_userdata.rendered}"
 
-    asg_name                = "master-asg"
+    asg_name                = "${var.environment}-master-asg"
     asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
     asg_desired_capacity    = "${var.master_asg_desired_capacity}"
     asg_min_size            = "${var.master_asg_min_size}"

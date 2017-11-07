@@ -1,4 +1,5 @@
 #cloud-config
+manage_resolv_conf: false
 preserve_hostname: true
 runcmd:
   - instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | tr -d 'i-')
