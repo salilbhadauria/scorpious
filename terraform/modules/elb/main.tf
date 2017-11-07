@@ -58,11 +58,11 @@ resource "aws_route53_record" "elb" {
         evaluate_target_health = "${var.dns_eval_target_health}"
     }
 
-    set_identifier = "primary"
-
-    failover_routing_policy {
-        type = "${var.dns_failover_type}"
-    }
+    #set_identifier = "primary"
+    #
+    #failover_routing_policy {
+    #    type = "${var.dns_failover_type}"
+    #}
 
 }
 
