@@ -149,7 +149,7 @@ module "bootstrap" {
 
 #########################################################
 # Master
-module "sg_master" {
+module "master_sg" {
     source = "../modules/security_group"
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
@@ -270,7 +270,7 @@ module "master" {
     lc_instance_type        = "t2.medium"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${module.devops_key.name}"
-    lc_security_groups      = [ "${module.sg_master.id}" ]
+    lc_security_groups      = [ "${module.master_sg.id}" ]
     lc_user_data            = "${data.template_file.master_userdata.rendered}"
 
     asg_name                = "master-asg"
