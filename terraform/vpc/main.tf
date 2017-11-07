@@ -2,7 +2,7 @@
 
 module "vpc" {
     source = "../modules/vpc"
-    
+
     vpc_cidr               = "${var.vpc_cidr}"
     azs                    = "${var.azs}"
     public_subnets         = "${var.public_subnets}"
@@ -10,7 +10,7 @@ module "vpc" {
     private_egress_subnets = "${var.private_subnets_egress}"
     nat_gateway            = "true"
 
-    tags     = "${var.tags}" 
+    tags     = "${var.tags}"
 }
 
 module "devops_key" {
@@ -27,7 +27,7 @@ module "sg_bastion" {
 
     sg_name = "ssh-bastion"
     sg_description = "some description"
-    
+
     ingress_rules_cidr = [
         {
             protocol    = "tcp"
@@ -55,7 +55,7 @@ module "sg_public_subnet" {
 
     sg_name = "public-subnet"
     sg_description = "Public subnets SG"
-    
+
     ingress_rules_sgid_count = 1
     ingress_rules_sgid = [
         {
@@ -85,7 +85,7 @@ module "sg_private_subnet" {
 
     sg_name = "private-subnet"
     sg_description = "Private subnets SG"
-    
+
     ingress_rules_sgid_count = 1
     ingress_rules_sgid = [
         {
@@ -115,7 +115,7 @@ module "sg_private_egress_subnet" {
 
     sg_name = "private-egress-subnet"
     sg_description = "Private Egress subnets SG"
-    
+
     ingress_rules_sgid_count = 1
     ingress_rules_sgid = [
         {
@@ -140,10 +140,10 @@ module "sg_private_egress_subnet" {
 
 module "asg_bastion" {
     source = "../modules/autoscaling_group"
-    
+
     #ami_name           = "amzn-ami-2017*"
     lc_ami_id          = "ami-c5062ba0"
-    lc_name            = "bastion-0.0.1"
+    lc_name_prefix     = "bastion-"
     lc_instance_type   = "t2.small"
     lc_ebs_optimized   = "false"
     lc_key_name        = "${module.devops_key.name}"
@@ -154,7 +154,6 @@ module "asg_bastion" {
     asg_desired_capacity = 1
     asg_min_size         = 1
     asg_max_size         = 1
-    
+
     tags_asg = "${var.tags_asg}"
 }
-

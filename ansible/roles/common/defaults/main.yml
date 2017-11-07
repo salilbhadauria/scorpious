@@ -12,6 +12,7 @@ common_default_packages:
   - ipset
   - ntp
   - firewalld
+  - cloud-init
 
 common_pip_packages:
   - boto3

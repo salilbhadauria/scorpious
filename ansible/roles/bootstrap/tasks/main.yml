@@ -46,19 +46,3 @@
 
 - name: generate DC/OS configuration with exhibitor backend AWS S3
   template: src=config-aws_s3.yaml.j2 dest={{ path_bootstrap }}/genconf/config.yaml mode=0644
-
-# this will be part of the user data
-
-#- name: generate DC/OS bootstrap files
-#  shell: "bash dcos_generate_config.sh"
-
-#- name: start web server to serve the bootstrap files
-#  docker_container:
-#    name: dcos_nginx
-#    image: nginx
-#    state: started
-#    recreate: yes
-#    ports:
-#    - "{{ port_webserver }}:80"
-#    volumes:
-#    - "{{ path_bootstrap }}/genconf/serve:/usr/share/nginx/html:ro"

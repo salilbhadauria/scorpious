@@ -18,5 +18,11 @@
   roles:
     - bootstrap
 
-- hosts: node
+- hosts: master
+  become: yes
+
+- hosts: private
+  become: yes
+
+- hosts: public
   become: yes

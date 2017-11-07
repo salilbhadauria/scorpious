@@ -20,8 +20,8 @@ variable "ami_hipervisor" {
 
 # Launch Config
 
-variable "lc_name" {
-  description = "Launch Configuration name"
+variable "lc_name_prefix" {
+  description = "Launch Configuration name prefix"
 }
 
 variable "lc_ami_id" {
@@ -55,6 +55,11 @@ variable "lc_monitoring" {
 variable "lc_ebs_optimized" {
   description = "EBS optiomized EC2 instance"
   default     = "true"
+}
+
+variable "lc_iam_instance_profile" {
+  description = "IAM instance profile to attach"
+  default = ""
 }
 
 # Autoscaling group
