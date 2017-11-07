@@ -12,57 +12,6 @@ SPK
 
 # Bootstrap vars
 
-variable "bootstrap_sg_tags" {
-    description = "Tag Environment"
-    default = {
-        owner       = "owner"
-        environment = "env"
-        layer       = "layer"
-        usage       = "usage"
-    }
-}
-
-variable "bootstrap_elb_sg_tags" {
-    description = "Tag Environment"
-    default = {
-        owner       = "owner"
-        environment = "env"
-        layer       = "layer"
-        usage       = "usage"
-    }
-}
-
-variable "bootstrap_asg_tags" {
-    description = "Tag Environment"
-    default = [
-        {
-            key   = "owner"
-            value = "owner"
-            propagate_at_launch = "true"
-        },
-        {
-            key   = "environment"
-            value = "env"
-            propagate_at_launch = "true"
-        },
-        {
-            key   = "layer"
-            value = "layer"
-            propagate_at_launch = "true"
-        },
-        {
-            key   = "usage"
-            value = "usage"
-            propagate_at_launch = "true"
-        },
-        {
-            key   = "name"
-            value = "bootstrap"
-            propagate_at_launch = "true"
-        }
-    ]
-}
-
 variable "bootstrap_asg_desired_capacity" {
   default = "1"
 }
@@ -79,8 +28,23 @@ variable "bootstrap_dns_name" {
 
 # Master vars
 
-variable "master_sg_tags" {
-    description = "Tag Environment"
+variable "master_asg_desired_capacity" {
+  default = "3"
+}
+variable "master_asg_min_size" {
+  default = "1"
+}
+variable "master_asg_max_size" {
+  default = "3"
+}
+
+variable "master_elb_dns_name" {
+  default = "master"
+}
+
+# tags
+
+variable "tags" {
     default = {
         owner       = "owner"
         environment = "env"
@@ -89,17 +53,7 @@ variable "master_sg_tags" {
     }
 }
 
-variable "master_elb_sg_tags" {
-    description = "Tag Environment"
-    default = {
-        owner       = "owner"
-        environment = "env"
-        layer       = "layer"
-        usage       = "usage"
-    }
-}
-
-variable "master_asg_tags" {
+variable "tags_asg" {
     description = "Tag Environment"
     default = [
         {
@@ -130,16 +84,4 @@ variable "master_asg_tags" {
     ]
 }
 
-variable "master_asg_desired_capacity" {
-  default = "3"
-}
-variable "master_asg_min_size" {
-  default = "1"
-}
-variable "master_asg_max_size" {
-  default = "3"
-}
 
-variable "master_elb_dns_name" {
-  default = "master.dcos_stack.com"
-}
