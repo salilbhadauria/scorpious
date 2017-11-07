@@ -51,7 +51,7 @@ variable "vpc_dhcp_opts_domain_name" {
 variable "vpc_dhcp_opts_domain_name_servers" {
     description = "VPC DHCP Domain name suffix"
     type        = "list"
-    default     = []
+    default     = [ "AmazonProvidedDNS" ]
 }
 
 variable "tags" {
