@@ -28,6 +28,14 @@ module "devops_key" {
     public_key = "${var.ssh_public_key}"
 }
 
+# Internal zone
+module "dcos_stack_zone" {
+    source = "../modules/dns_zone"
+    domain = "dcos_stack.com"
+    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+    tags   = "${var.tags}"
+}
+
 #########################################################
 # Bootstrap
 module "bootstrap_sg" {
@@ -122,7 +130,9 @@ module "bootstrap_elb" {
   backend_port        = "8080"
   backend_protocol    = "http"
   health_check_target = "TCP:8080"
-  environment         = "${var.environment}"
+  dns_records         = [ "bootstrap" ]
+  dns_zone_id         = "${module.dcos_stack_zone.zone_id}"
+  tags                = "${var.tags}"
 }
 
 module "bootstrap_asg" {
