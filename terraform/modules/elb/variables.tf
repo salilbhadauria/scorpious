@@ -1,3 +1,5 @@
+# vim: ts=4:sw=4:et:ft=hcl
+
 variable "elb_name" {}
 
 variable "elb_is_internal" {
@@ -102,4 +104,3 @@ variable "tags" {
     type        = "map"
     default     = {}
 }
-
