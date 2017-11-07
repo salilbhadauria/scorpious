@@ -27,9 +27,9 @@ resource "aws_elb" "elb" {
     connection_draining_timeout = "${var.connection_draining_timeout}"
 
     tags = "${merge(var.tags, map(
-        "Name", format("%s-%s-%s-elb", 
+        "Name", format("%s-%s-%s-elb",
                 var.elb_name,
-                var.tags["owner"], 
+                var.tags["owner"],
                 var.tags["environment"]
             )
         )
@@ -65,4 +65,3 @@ resource "aws_route53_record" "elb" {
     #}
 
 }
-

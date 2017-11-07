@@ -1,3 +1,5 @@
+# vim: ts=4:sw=4:et:ft=hcl
+
 output "elb_id" {
   value = "${aws_elb.elb.id}"
 }
