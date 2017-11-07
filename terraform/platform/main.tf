@@ -31,12 +31,12 @@ module "devops_key" {
 }
 
 #########################################################
-# Create a private zone
-module "zone_private_devops_deepcortex_ai" {
+# Internal zone
+module "dcos_stack_zone" {
     source = "../modules/dns_zone"
     domain = "${var.domain}"
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
-    tags   = "${var.zone_private_devops_deepcortex_ai_tags}"
+    tags   = "${var.tags}"
 }
 
 #########################################################
@@ -56,9 +56,6 @@ module "bootstrap_sg" {
             to_port     = "22"
             cidr_blocks = "0.0.0.0/0"
         },
-    ]
-
-    ingress_rules_cidr = [
         {
             protocol    = "tcp"
             from_port   = "8080"
@@ -75,7 +72,7 @@ module "bootstrap_sg" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
-    tags = "${var.bootstrap_sg_tags}"
+    tags = "${var.tags}"
 }
 
 module "bootstrap_elb_sg" {
@@ -93,9 +90,6 @@ module "bootstrap_elb_sg" {
             to_port     = "8080"
             cidr_blocks = "0.0.0.0/0"
         },
-    ]
-
-    egress_rules_cidr = [
         {
             protocol    = "all"
             from_port   = "0"
@@ -103,7 +97,7 @@ module "bootstrap_elb_sg" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
-    tags = "${var.bootstrap_elb_sg_tags}"
+    tags = "${var.tags}"
 }
 
 data "template_file" "bootstrap_userdata" {
@@ -111,8 +105,8 @@ data "template_file" "bootstrap_userdata" {
 
   vars {
     num_masters = "${var.master_asg_desired_capacity}"
-    bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${var.domain}"
-    masters_elb = "${var.environment}-${var.master_elb_dns_name}.${var.domain}"
+    bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${module.dcos_stack_zone.domain}"
+    masters_elb = "${var.environment}-${var.master_elb_dns_name}.${module.dcos_stack_zone.domain}"
     aws_region = "${var.aws_region}"
   }
 }
@@ -133,10 +127,9 @@ module "bootstrap_elb" {
   backend_port        = "8080"
   backend_protocol    = "http"
   health_check_target = "TCP:8080"
-  environment         = "${var.environment}"
-
-  dns_zone_id = "${module.zone_private_devops_deepcortex_ai.zone_id}"
-  dns_records = [ "${var.environment}-${var.bootstrap_elb_dns_name}.${var.domain}" ]
+  dns_records         = [ "${var.environment}-${var.bootstrap_elb_dns_name}" ]
+  dns_zone_id         = "${module.dcos_stack_zone.zone_id}"
+  tags                = "${var.tags}"
 }
 
 module "bootstrap_asg" {
@@ -158,7 +151,7 @@ module "bootstrap_asg" {
     asg_max_size            = "${var.bootstrap_asg_max_size}"
     asg_load_balancers      = [ "${module.bootstrap_elb.elb_id}" ]
 
-    tags_asg = "${var.bootstrap_asg_tags}"
+    tags_asg = "${var.tags_asg}"
 }
 
 #########################################################
@@ -178,27 +171,18 @@ module "master_sg" {
             to_port     = "22"
             cidr_blocks = "0.0.0.0/0"
         },
-    ]
-
-    ingress_rules_cidr = [
         {
             protocol    = "tcp"
             from_port   = "80"
             to_port     = "80"
             cidr_blocks = "0.0.0.0/0"
         },
-    ]
-
-    ingress_rules_cidr = [
         {
             protocol    = "tcp"
             from_port   = "443"
             to_port     = "443"
             cidr_blocks = "0.0.0.0/0"
         },
-    ]
-
-    ingress_rules_cidr = [
         {
             protocol    = "tcp"
             from_port   = "5050"
@@ -215,7 +199,7 @@ module "master_sg" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
-    tags = "${var.master_sg_tags}"
+    tags = "${var.tags}"
 }
 
 module "master_elb_sg" {
@@ -233,9 +217,6 @@ module "master_elb_sg" {
             to_port     = "80"
             cidr_blocks = "0.0.0.0/0"
         },
-    ]
-
-    ingress_rules_cidr = [
         {
             protocol    = "tcp"
             from_port   = "443"
@@ -252,14 +233,14 @@ module "master_elb_sg" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
-    tags = "${var.master_elb_sg_tags}"
+    tags = "${var.tags}"
 }
 
 data "template_file" "master_userdata" {
   template = "${file("../templates/master_userdata.tpl")}"
 
   vars {
-    bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${var.domain}"
+    bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${module.dcos_stack_zone.domain}"
   }
 }
 
@@ -274,10 +255,9 @@ module "master_elb" {
   backend_port        = "80"
   backend_protocol    = "http"
   health_check_target = "TCP:5050"
-  environment         = "${var.environment}"
-
-  dns_zone_id = "${module.zone_private_devops_deepcortex_ai.zone_id}"
-  dns_records = [ "${var.environment}-${var.master_elb_dns_name}.${var.domain}" ]
+  dns_records         = [ "${var.environment}-${var.bootstrap_elb_dns_name}" ]
+  dns_zone_id         = "${module.dcos_stack_zone.zone_id}"
+  tags                = "${var.tags}"
 }
 
 module "master_asg" {
@@ -298,5 +278,5 @@ module "master_asg" {
     asg_max_size            = "${var.master_asg_max_size}"
     asg_load_balancers      = [ "${module.master_elb.elb_id}" ]
 
-    tags_asg = "${var.master_asg_tags}"
+    tags_asg = "${var.tags_asg}"
 }
