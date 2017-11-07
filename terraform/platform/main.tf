@@ -125,7 +125,7 @@ module "bootstrap_elb" {
   environment         = "${var.environment}"
 }
 
-module "bootstrap" {
+module "bootstrap_asg" {
     source = "../modules/autoscaling_group"
 
     ami_name                = "bootstrap*"
@@ -262,7 +262,7 @@ module "master_elb" {
   ssl_certificate_id  = ""
 }
 
-module "master" {
+module "master_asg" {
     source = "../modules/autoscaling_group"
 
     ami_name                = "master*"
