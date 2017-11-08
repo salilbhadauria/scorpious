@@ -97,6 +97,15 @@ module "bootstrap_elb_sg" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
+
+    egress_rules_cidr = [
+        {
+            protocol    = "all"
+            from_port   = "0"
+            to_port     = "0"
+            cidr_blocks = "0.0.0.0/0"
+        },
+    ]
     tags = "${var.tags}"
 }
 
@@ -255,7 +264,7 @@ module "master_elb" {
   backend_port        = "80"
   backend_protocol    = "http"
   health_check_target = "TCP:5050"
-  dns_records         = [ "${var.environment}-${var.bootstrap_elb_dns_name}" ]
+  dns_records         = [ "${var.environment}-${var.master_elb_dns_name}" ]
   dns_zone_id         = "${module.dcos_stack_zone.zone_id}"
   tags                = "${var.tags}"
 }
