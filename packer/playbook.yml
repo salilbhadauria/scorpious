@@ -21,8 +21,5 @@
 - hosts: master
   become: yes
 
-- hosts: private
-  become: yes
-
-- hosts: public
+- hosts: slave
   become: yes
