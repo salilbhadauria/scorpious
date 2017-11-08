@@ -40,6 +40,36 @@ module "dcos_stack_zone" {
 }
 
 #########################################################
+# Security Groups
+
+module "dcos_stack_sg" {
+    source = "../modules/security_group"
+
+    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+
+    sg_name = "docker_stack"
+    sg_description = "some description"
+
+    ingress_rules_self = [
+        {
+            protocol    = "all"
+            from_port   = "0"
+            to_port     = "0"
+        },
+    ]
+
+    egress_rules_cidr = [
+        {
+            protocol    = "all"
+            from_port   = "0"
+            to_port     = "0"
+            cidr_blocks = "0.0.0.0/0"
+        },
+    ]
+    tags = "${var.tags}"
+}
+
+#########################################################
 # Bootstrap
 module "bootstrap_sg" {
     source = "../modules/security_group"
@@ -149,7 +179,7 @@ module "bootstrap_asg" {
     lc_instance_type        = "t2.medium"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${module.devops_key.name}"
-    lc_security_groups      = [ "${module.bootstrap_sg.id}" ]
+    lc_security_groups      = [ "${module.bootstrap_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.bootstrap_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
 
@@ -277,7 +307,7 @@ module "master_asg" {
     lc_instance_type        = "t2.medium"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${module.devops_key.name}"
-    lc_security_groups      = [ "${module.master_sg.id}" ]
+    lc_security_groups      = [ "${module.master_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.master_userdata.rendered}"
 
     asg_name                = "${var.environment}-master-asg"
