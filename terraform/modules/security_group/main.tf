@@ -88,7 +88,7 @@ resource "aws_security_group_rule" "ingress_rule_sgid" {
 #       protocol  = "tcp"
 #       from_port = "80"
 #       to_port   = "80"
-#       self      = true
+#       selfie    = true
 #       desc      = "Some description"
 #   },
 #   { ... }
