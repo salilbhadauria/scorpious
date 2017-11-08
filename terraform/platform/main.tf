@@ -55,7 +55,6 @@ module "dcos_stack_sg" {
             protocol    = "all"
             from_port   = "0"
             to_port     = "0"
-            selfie      = true
         },
     ]
 
