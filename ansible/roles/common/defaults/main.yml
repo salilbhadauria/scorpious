@@ -9,6 +9,8 @@ common_default_packages:
   - jq
   - tar
   - xz
+  - zip
+  - unzip
   - ipset
   - ntp
   - firewalld

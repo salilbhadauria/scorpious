@@ -33,13 +33,13 @@ variable "bootstrap_elb_dns_name" {
 # Master vars
 
 variable "master_asg_desired_capacity" {
-  default = "3"
+  default = "1" # Must be 3, changed to 1 for testing purposes
 }
 variable "master_asg_min_size" {
   default = "1"
 }
 variable "master_asg_max_size" {
-  default = "3"
+  default = "1" # Must be 3, changed to 1 for testing purposes
 }
 
 variable "master_elb_dns_name" {
