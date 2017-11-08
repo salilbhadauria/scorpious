@@ -10,9 +10,9 @@ resource "aws_security_group" "sg" {
     description = "${var.sg_description}"
 
     tags = "${merge(var.tags, map(
-            "Name", format("%s-sg-%s-%s", 
-                var.sg_name, 
-                var.tags["owner"], 
+            "Name", format("%s-sg-%s-%s",
+                var.sg_name,
+                var.tags["owner"],
                 var.tags["environment"]
             )
         )
@@ -26,7 +26,7 @@ resource "aws_security_group" "sg" {
 #
 # Example:
 # [
-#   { 
+#   {
 #       protocol   = "tcp"
 #       from_port  = "80"
 #       to_port    = "80"
@@ -52,7 +52,7 @@ resource "aws_security_group_rule" "ingress_rule_cidr" {
 ## Security Group ID
 # Example:
 # [
-#   { 
+#   {
 #       protocol  = "tcp"
 #       from_port = "80"
 #       to_port   = "80"
@@ -67,7 +67,7 @@ resource "aws_security_group_rule" "ingress_rule_cidr" {
 resource "aws_security_group_rule" "ingress_rule_sgid" {
     #count = "${length(var.ingress_rules_sgid)}"
     # https://github.com/hashicorp/terraform/issues/10857
-    # TL;DR: list elements that are computed values restrain the ability to 
+    # TL;DR: list elements that are computed values restrain the ability to
     # calculate the length of the object
     # count = "${length(var.routes)}"
     count = "${var.ingress_rules_sgid_count}"
@@ -79,6 +79,38 @@ resource "aws_security_group_rule" "ingress_rule_sgid" {
     protocol                 = "${lookup(var.ingress_rules_sgid[count.index], "protocol")}"
     source_security_group_id = "${lookup(var.ingress_rules_sgid[count.index], "sg_id")}"
     description              = "${lookup(var.ingress_rules_sgid[count.index], "description", "_")}"
+}
+
+## Self
+# Example:
+# [
+#   {
+#       protocol  = "tcp"
+#       from_port = "80"
+#       to_port   = "80"
+#       self      = true
+#       desc      = "Some description"
+#   },
+#   { ... }
+# ]
+#
+#
+
+resource "aws_security_group_rule" "ingress_rule_self" {
+    #count = "${length(var.ingress_rules_self)}"
+    # https://github.com/hashicorp/terraform/issues/10857
+    # TL;DR: list elements that are computed values restrain the ability to
+    # calculate the length of the object
+    # count = "${length(var.routes)}"
+    count = "${length(var.ingress_rules_self)}"
+
+    security_group_id        = "${aws_security_group.sg.id}"
+    type                     = "ingress"
+    from_port                = "${lookup(var.ingress_rules_self[count.index], "from_port")}"
+    to_port                  = "${lookup(var.ingress_rules_self[count.index], "to_port")}"
+    protocol                 = "${lookup(var.ingress_rules_self[count.index], "protocol")}"
+    self                     = "${lookup(var.ingress_rules_self[count.index], "selfie")}"
+    description              = "${lookup(var.ingress_rules_self[count.index], "description", "_")}"
 }
 
 ## Egress
@@ -98,7 +130,7 @@ resource "aws_security_group_rule" "egress_rule_cidr" {
 resource "aws_security_group_rule" "egress_rule_sgid" {
     #count = "${length(var.egress_rules_sgid)}"
     # https://github.com/hashicorp/terraform/issues/10857
-    # TL;DR: list elements that are computed values restrain the ability to 
+    # TL;DR: list elements that are computed values restrain the ability to
     # calculate the length of the object
     # count = "${length(var.routes)}"
     count = "${var.egress_rules_sgid_count}"
@@ -112,3 +144,19 @@ resource "aws_security_group_rule" "egress_rule_sgid" {
     description              = "${lookup(var.egress_rules_sgid[count.index], "description", "_")}"
 }
 
+resource "aws_security_group_rule" "egress_rule_self" {
+    #count = "${length(var.egress_rules_self)}"
+    # https://github.com/hashicorp/terraform/issues/10857
+    # TL;DR: list elements that are computed values restrain the ability to
+    # calculate the length of the object
+    # count = "${length(var.routes)}"
+    count = "${length(var.egress_rules_self)}"
+
+    security_group_id        = "${aws_security_group.sg.id}"
+    type                     = "egress"
+    from_port                = "${lookup(var.egress_rules_self[count.index], "from_port")}"
+    to_port                  = "${lookup(var.egress_rules_self[count.index], "to_port")}"
+    protocol                 = "${lookup(var.egress_rules_self[count.index], "protocol")}"
+    self                     = "${lookup(var.egress_rules_self[count.index], "selfie")}"
+    description              = "${lookup(var.egress_rules_self[count.index], "description", "_")}"
+}

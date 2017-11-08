@@ -26,7 +26,7 @@ variable "ingress_rules_cidr" {
 }
 
 # https://github.com/hashicorp/terraform/issues/10857
-# TL;DR: list elements that are computed values restrain the ability to 
+# TL;DR: list elements that are computed values restrain the ability to
 # calculate the length of the object
 # count = "${length(var.routes)}"
 variable "ingress_rules_sgid_count" {
@@ -39,6 +39,12 @@ variable "ingress_rules_sgid" {
   default     = []
 }
 
+variable "ingress_rules_self" {
+  description = "List of maps containing rules and source as Self"
+  type        = "list"
+  default     = []
+}
+
 variable "egress_rules_cidr" {
   description = "List of maps containing rules and source as CIDR blocks"
   type        = "list"
@@ -46,7 +52,7 @@ variable "egress_rules_cidr" {
 }
 
 # https://github.com/hashicorp/terraform/issues/10857
-# TL;DR: list elements that are computed values restrain the ability to 
+# TL;DR: list elements that are computed values restrain the ability to
 # calculate the length of the object
 # count = "${length(var.routes)}"
 variable "egress_rules_sgid_count" {
@@ -59,3 +65,8 @@ variable "egress_rules_sgid" {
   default     = []
 }
 
+variable "egress_rules_self" {
+  description = "List of maps containing rules and source as Self"
+  type        = "list"
+  default     = []
+}
