@@ -11,6 +11,8 @@ runcmd:
   - sed -i "s/$hostn/$newhostn/g" /etc/hostname
   - hostnamectl set-hostname $newhostn
   - service rsyslog restart
+  - sysctl net.bridge.bridge-nf-call-iptables=1
+  - sysctl net.bridge.bridge-nf-call-ip6tables=1
   - until $(curl --output /dev/null --silent --head --fail http://${bootstrap_dns}:8080/dcos_install.sh); do sleep 5; done
   - curl http://${bootstrap_dns}:8080/dcos_install.sh -o /tmp/dcos_install.sh -s
   - cd /tmp; bash dcos_install.sh master
