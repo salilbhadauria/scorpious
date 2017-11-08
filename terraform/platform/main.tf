@@ -319,3 +319,155 @@ module "master_asg" {
 
     tags_asg = "${var.tags_asg}"
 }
+
+#########################################################
+# Slaves
+module "slave_sg" {
+    source = "../modules/security_group"
+
+    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+
+    sg_name = "slave"
+    sg_description = "some description"
+
+    ingress_rules_cidr = [
+        {
+            protocol    = "tcp"
+            from_port   = "22"
+            to_port     = "22"
+            cidr_blocks = "0.0.0.0/0"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "80"
+            to_port     = "80"
+            cidr_blocks = "0.0.0.0/0"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "443"
+            to_port     = "443"
+            cidr_blocks = "0.0.0.0/0"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "5050"
+            to_port     = "5050"
+            cidr_blocks = "0.0.0.0/0"
+        },
+    ]
+
+    egress_rules_cidr = [
+        {
+            protocol    = "all"
+            from_port   = "0"
+            to_port     = "0"
+            cidr_blocks = "0.0.0.0/0"
+        },
+    ]
+    tags = "${var.tags}"
+}
+
+data "template_file" "slave_userdata" {
+  template = "${file("../templates/private_slave_userdata.tpl")}"
+
+  vars {
+    bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${module.dcos_stack_zone.domain}"
+  }
+}
+
+module "slave_asg" {
+    source = "../modules/autoscaling_group"
+
+    ami_name                = "slave*"
+    lc_name_prefix          = "${var.environment}-slave-"
+    lc_instance_type        = "t2.medium"
+    lc_ebs_optimized        = "false"
+    lc_key_name             = "${module.devops_key.name}"
+    lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}" ]
+    lc_user_data            = "${data.template_file.slave_userdata.rendered}"
+
+    asg_name                = "${var.environment}-slave-asg"
+    asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
+    asg_desired_capacity    = "${var.slave_asg_desired_capacity}"
+    asg_min_size            = "${var.slave_asg_min_size}"
+    asg_max_size            = "${var.slave_asg_max_size}"
+
+    tags_asg = "${var.tags_asg}"
+}
+
+#########################################################
+# Public slaves
+module "public_slave_sg" {
+    source = "../modules/security_group"
+
+    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+
+    sg_name = "public-slave"
+    sg_description = "some description"
+
+    ingress_rules_cidr = [
+        {
+            protocol    = "tcp"
+            from_port   = "22"
+            to_port     = "22"
+            cidr_blocks = "0.0.0.0/0"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "80"
+            to_port     = "80"
+            cidr_blocks = "0.0.0.0/0"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "443"
+            to_port     = "443"
+            cidr_blocks = "0.0.0.0/0"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "5050"
+            to_port     = "5050"
+            cidr_blocks = "0.0.0.0/0"
+        },
+    ]
+
+    egress_rules_cidr = [
+        {
+            protocol    = "all"
+            from_port   = "0"
+            to_port     = "0"
+            cidr_blocks = "0.0.0.0/0"
+        },
+    ]
+    tags = "${var.tags}"
+}
+
+data "template_file" "public_slave_userdata" {
+  template = "${file("../templates/public_slave_userdata.tpl")}"
+
+  vars {
+    bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${module.dcos_stack_zone.domain}"
+  }
+}
+
+module "public_slave_asg" {
+    source = "../modules/autoscaling_group"
+
+    ami_name                = "slave*"
+    lc_name_prefix          = "${var.environment}-public-slave-"
+    lc_instance_type        = "t2.medium"
+    lc_ebs_optimized        = "false"
+    lc_key_name             = "${module.devops_key.name}"
+    lc_security_groups      = [ "${module.public_slave_sg.id}", "${module.dcos_stack_sg.id}" ]
+    lc_user_data            = "${data.template_file.public_slave_userdata.rendered}"
+
+    asg_name                = "${var.environment}-public-slave-asg"
+    asg_subnet_ids          = "${data.terraform_remote_state.vpc.public_subnet_ids}"
+    asg_desired_capacity    = "${var.public_slave_asg_desired_capacity}"
+    asg_min_size            = "${var.public_slave_asg_min_size}"
+    asg_max_size            = "${var.public_slave_asg_max_size}"
+
+    tags_asg = "${var.tags_asg}"
+}

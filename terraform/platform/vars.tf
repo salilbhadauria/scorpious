@@ -48,6 +48,30 @@ variable "master_elb_dns_name" {
 
 # tags
 
+# Slave vars
+
+variable "slave_asg_desired_capacity" {
+  default = "1" # Must be 3, changed to 1 for testing purposes
+}
+variable "slave_asg_min_size" {
+  default = "1"
+}
+variable "slave_asg_max_size" {
+  default = "1" # Must be 3, changed to 1 for testing purposes
+}
+
+# Public slave vars
+
+variable "public_slave_asg_desired_capacity" {
+  default = "1" # Must be 3, changed to 1 for testing purposes
+}
+variable "public_slave_asg_min_size" {
+  default = "1"
+}
+variable "public_slave_asg_max_size" {
+  default = "1" # Must be 3, changed to 1 for testing purposes
+}
+
 variable "tags" {
     default = {
         owner       = "owner"
