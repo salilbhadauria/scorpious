@@ -88,7 +88,6 @@ resource "aws_security_group_rule" "ingress_rule_sgid" {
 #       protocol  = "tcp"
 #       from_port = "80"
 #       to_port   = "80"
-#       selfie    = true
 #       desc      = "Some description"
 #   },
 #   { ... }
@@ -109,7 +108,7 @@ resource "aws_security_group_rule" "ingress_rule_self" {
     from_port                = "${lookup(var.ingress_rules_self[count.index], "from_port")}"
     to_port                  = "${lookup(var.ingress_rules_self[count.index], "to_port")}"
     protocol                 = "${lookup(var.ingress_rules_self[count.index], "protocol")}"
-    self                     = "${lookup(var.ingress_rules_self[count.index], "selfie")}"
+    self                     = true
     description              = "${lookup(var.ingress_rules_self[count.index], "description", "_")}"
 }
 
@@ -157,6 +156,6 @@ resource "aws_security_group_rule" "egress_rule_self" {
     from_port                = "${lookup(var.egress_rules_self[count.index], "from_port")}"
     to_port                  = "${lookup(var.egress_rules_self[count.index], "to_port")}"
     protocol                 = "${lookup(var.egress_rules_self[count.index], "protocol")}"
-    self                     = "${lookup(var.egress_rules_self[count.index], "selfie")}"
+    self                     = true
     description              = "${lookup(var.egress_rules_self[count.index], "description", "_")}"
 }
