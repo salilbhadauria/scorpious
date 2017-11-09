@@ -39,15 +39,6 @@ resource "aws_s3_bucket" "dcos_stack_bucket" {
 }
 
 #########################################################
-# Create ssh key
-module "devops_key" {
-    source = "../modules/key_pair"
-
-    key_name   = "platform"
-    public_key = "${var.ssh_public_key}"
-}
-
-#########################################################
 # Internal zone
 module "dcos_stack_zone" {
     source = "../modules/dns_zone"
@@ -195,7 +186,7 @@ module "bootstrap_asg" {
     lc_name_prefix          = "${var.environment}-bootstrap-"
     lc_instance_type        = "t2.medium"
     lc_ebs_optimized        = "false"
-    lc_key_name             = "${module.devops_key.name}"
+    lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.bootstrap_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.bootstrap_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
@@ -406,7 +397,7 @@ module "master_asg" {
     lc_name_prefix          = "${var.environment}-master-"
     lc_instance_type        = "t2.medium"
     lc_ebs_optimized        = "false"
-    lc_key_name             = "${module.devops_key.name}"
+    lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.master_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.master_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
@@ -484,7 +475,7 @@ module "slave_asg" {
     lc_name_prefix          = "${var.environment}-slave-"
     lc_instance_type        = "t2.large"
     lc_ebs_optimized        = "false"
-    lc_key_name             = "${module.devops_key.name}"
+    lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.slave_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
@@ -561,7 +552,7 @@ module "public_slave_asg" {
     lc_name_prefix          = "${var.environment}-public-slave-"
     lc_instance_type        = "t2.large"
     lc_ebs_optimized        = "false"
-    lc_key_name             = "${module.devops_key.name}"
+    lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.public_slave_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.public_slave_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
