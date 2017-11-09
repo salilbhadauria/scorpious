@@ -151,10 +151,14 @@ data "template_file" "bootstrap_userdata" {
   template = "${file("../templates/bootstrap_userdata.tpl")}"
 
   vars {
+    cluster_name = "${var.cluster_name}"
+    s3_bucket = "${aws_s3_bucket.dcos_stack_bucket.id}"
+    s3_prefix = "${var.environment}-${var.s3_prefix}"
     num_masters = "${var.master_asg_desired_capacity}"
     bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${module.dcos_stack_zone.domain}"
     masters_elb = "${var.environment}-${var.master_elb_dns_name}-internal.${module.dcos_stack_zone.domain}"
     aws_region = "${var.aws_region}"
+    dns_ip = "${cidrhost(data.terraform_remote_state.vpc.vpc_cidr, 2)}"
   }
 }
 

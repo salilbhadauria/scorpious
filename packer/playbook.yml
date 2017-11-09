@@ -13,8 +13,10 @@
 - hosts: bootstrap
   become: yes
   vars:
-    - cluster_name: deepcortex
-    - s3_bucket: deepcortex-dcos-backend
+    resolvers:
+      - provider_dns_via_user_data
+      - 8.8.4.4
+      - 8.8.8.8
   roles:
     - bootstrap
 
