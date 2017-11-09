@@ -16,7 +16,7 @@ module "vpc" {
 module "devops_key" {
     source = "../modules/key_pair"
 
-    key_name   = "devops"
+    key_name   = "${var.environment}-devops"
     public_key = "${var.ssh_public_key}"
 }
 
