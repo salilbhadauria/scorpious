@@ -11,6 +11,7 @@ runcmd:
   - sed -i "s/$hostn/$newhostn/g" /etc/hostname
   - hostnamectl set-hostname $newhostn
   - service rsyslog restart
+  - service ntpd restart
   - sed -i "s/num_masters_via_user_data/${num_masters}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
   - sed -i "s/masters_elb_dns_via_user_data/${masters_elb}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
   - sed -i "s/bootstrap_dns_via_user_data/${bootstrap_dns}/g" /var/lib/dcos-bootstrap/genconf/config.yaml

@@ -11,6 +11,7 @@ runcmd:
   - sed -i "s/$hostn/$newhostn/g" /etc/hostname
   - hostnamectl set-hostname $newhostn
   - service rsyslog restart
+  - service ntpd restart
   - sysctl net.bridge.bridge-nf-call-iptables=1
   - sysctl net.bridge.bridge-nf-call-ip6tables=1
   - zone_id=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
