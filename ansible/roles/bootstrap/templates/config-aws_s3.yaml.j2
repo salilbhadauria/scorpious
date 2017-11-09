@@ -1,14 +1,14 @@
 ---
 # All variables with values ending in "_via_user_data" will be replaced via user data
 bootstrap_url: http://bootstrap_dns_via_user_data:8080
-cluster_name: '{{ cluster_name }}'
+cluster_name: 'cluster_name_via_user_data'
 
 exhibitor_storage_backend: aws_s3
 exhibitor_explicit_keys: 'false'
 exhibitor_address: masters_elb_dns_via_user_data
 aws_region: aws_region_via_user_data
-s3_bucket: {{ s3_bucket }}
-s3_prefix: {{ s3_prefix }}
+s3_bucket: s3_bucket_via_user_data
+s3_prefix: s3_prefix_via_user_data
 master_discovery: master_http_loadbalancer
 num_masters: num_masters_via_user_data
 resolvers:

@@ -24,6 +24,14 @@ variable "bootstrap_elb_dns_name" {
   default = "bootstrap"
 }
 
+variable "s3_prefix" {
+  default = "deepcortex"
+}
+
+variable "cluster_name" {
+  default = "deepcortex"
+}
+
 # Master vars
 
 variable "master_asg_desired_capacity" {

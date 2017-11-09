@@ -12,9 +12,6 @@
 
 - hosts: bootstrap
   become: yes
-  vars:
-    - cluster_name: deepcortex
-    - s3_bucket: deepcortex-dcos-backend
   roles:
     - bootstrap
 

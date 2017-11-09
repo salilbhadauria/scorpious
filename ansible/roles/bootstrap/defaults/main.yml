@@ -1,9 +1,6 @@
 ---
 path_bootstrap: /var/lib/dcos-bootstrap
 
-s3_prefix: "-exhibitor"
-
-cluster_name: null
 dcos_download: https://downloads.dcos.io/dcos/stable/dcos_generate_config.sh
 
 resolvers:
