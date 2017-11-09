@@ -8,12 +8,6 @@ variable "domain" {
   default = "private.devops.deepcortex.ai"
 }
 
-variable "ssh_public_key" {
-    default = <<SPK
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDEUank0MqgF6h0lyixJ7kBtQSblFXCo8SIHK8+OvThmUAQHYED4f9KXCj+6IdBR3mJxnkZ3mgQHkQdXfhrGfpDi3EryDkeon3t8bACvpe9AmKpxx2oZPinmG+r7th6sZeQiwBLJAmJkKtEXsQE+gvSPkXEEQEK3/90rrF0d7QbF0F88pIM3B4iPb5ppq+NqISlJkgynlKt28MWBYj3Z6PFiYUcDe6zKS8kq+kfJOIav6o7xHwZUm5EWWdCs5zMfcFAoPrb1tdsr3ft/fML+lXMHrfY+wv+W7g2ByhX4UmPLOjPhit/yhGweP3M7mIPpYN9iqnFaLbUmW+8t81CXSxj
-SPK
-}
-
 # Bootstrap vars
 
 variable "bootstrap_asg_desired_capacity" {
