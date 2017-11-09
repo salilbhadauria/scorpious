@@ -158,6 +158,7 @@ data "template_file" "bootstrap_userdata" {
     bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${module.dcos_stack_zone.domain}"
     masters_elb = "${var.environment}-${var.master_elb_dns_name}-internal.${module.dcos_stack_zone.domain}"
     aws_region = "${var.aws_region}"
+    dns_ip = "${cidrhost(data.terraform_remote_state.vpc.vpc_cidr, 2)}"
   }
 }
 

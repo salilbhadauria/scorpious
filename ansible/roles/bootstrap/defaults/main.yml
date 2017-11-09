@@ -4,7 +4,6 @@ path_bootstrap: /var/lib/dcos-bootstrap
 dcos_download: https://downloads.dcos.io/dcos/stable/dcos_generate_config.sh
 
 resolvers:
-  - 10.0.0.2
   - 8.8.4.4
   - 8.8.8.8
 dns_search: None
