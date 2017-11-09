@@ -19,3 +19,6 @@ common_default_packages:
 common_pip_packages:
   - boto3
   - awscli
+
+common_removed_packages:
+  - chrony
