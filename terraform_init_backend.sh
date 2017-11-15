@@ -20,7 +20,7 @@ shift 1
 
 OS=$(uname -a)
 
-for i in `find terraform -name main.tf | grep -v modules`;
+for i in $(find terraform -name main.tf | grep -v modules);
   do
     if [[ $OS == *"Darwin"* ]]; then
       echo "Updating: $i"
