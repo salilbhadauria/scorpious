@@ -49,7 +49,8 @@ init)
     cd "$WORKDIR"
     terraform init \
       -backend-config "bucket=$BUCKET" \
-      -backend-config "key=$REGION/$ENVIRONMENT/$STACK/terraform.tfstate"
+      -backend-config "key=$REGION/$ENVIRONMENT/$STACK/terraform.tfstate" \
+      -backend-config "region=${REGION}"
   else
     echo "Inititializing $DEBUG_OUT"
     mkdir -p "$WORKDIR"
@@ -57,6 +58,7 @@ init)
     terraform init  \
       -backend-config "bucket=$BUCKET" \
       -backend-config "key=$REGION/$ENVIRONMENT/$STACK/terraform.tfstate" \
+      -backend-config "region=${REGION}" \
       -from-module="../../terraform/$STACK/"
   fi
   #echo "Copying environment setting to workspace"

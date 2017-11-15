@@ -7,7 +7,7 @@
 
 terraform {
     required_version = ">= 0.10.7"
-    backend "s3" { region = "us-east-2" }
+    backend "s3" {}
 }
 
 module "zone_public_deepcortex_com" {

@@ -38,13 +38,8 @@ First of all we need a bucket where Terraform will store all the state files for
 On environments/CONFIG.tfvars file for your environment/region/cloud you will need to update the following variables:
 
  - bucket
- - account
-
-Bucket name gets calculated from those two variables.
 
 Creating the bucket and updating the terraform code will be done by running the terraform_init_backend.sh script.
-
-Note: Terraform does not support interpolations on the bucket definition for the backend, hence this script.
 
 Update environments/CONFIG.tfvars file for your environment/region/cloud using environments/integration.tfvars as example.
 
