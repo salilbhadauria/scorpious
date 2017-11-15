@@ -31,7 +31,7 @@ function set_backend_variables {
   REGION=$(awk -F\" '/region/{print $2}'  "environments/$CONFIG.tfvars")
   ACCOUNT=$(awk -F\" '/account/{print $2}'  "environments/$CONFIG.tfvars")
   ENVIRONMENT=$(awk -F\" '/environment /{print $2}'  "environments/$CONFIG.tfvars" | tr -d '\n')
-  BUCKET="$(awk -F\" '/bucket/{print $2}'  "environments/$CONFIG.tfvars")-$ACCOUNT"
+  BUCKET="$(awk -F\" '/bucket/{print $2}'  "environments/$CONFIG.tfvars")"
   echo "Using bucket [$BUCKET] for account [$ACCOUNT]"
 }
 

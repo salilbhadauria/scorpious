@@ -14,7 +14,6 @@ fi
 export CONFIG=$1
 export REGION=$(awk -F\" '/aws_region/{print $2}'  "environments/$CONFIG.tfvars")
 export BUCKET=$(awk -F\" '/bucket/{print $2}'  "environments/$CONFIG.tfvars")
-export ACCOUNT=$(awk -F\" '/account/{print $2}'  "environments/$CONFIG.tfvars")
 
 shift 1
 
@@ -30,9 +29,9 @@ for i in $(find terraform -name main.tf | grep -v modules);
     fi
 done
 
-if aws s3 ls "s3://$BUCKET-$ACCOUNT" 2>&1 | grep -q 'NoSuchBucket'
+if aws s3 ls "s3://$BUCKET" 2>&1 | grep -q 'NoSuchBucket'
   then
-    aws s3 mb s3://$BUCKET-$ACCOUNT
+    aws s3 mb s3://$BUCKET
 else
   echo "Bucket already exits"
 fi
