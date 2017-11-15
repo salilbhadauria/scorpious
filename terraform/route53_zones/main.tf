@@ -5,16 +5,20 @@
 # defined along the VPC resources.
 #
 
+terraform {
+    required_version = ">= 0.10.7"
+    backend "s3" { region = "us-east-2" }
+}
+
 module "zone_public_deepcortex_com" {
-    source = "../modules/dns_zone"
+    source = "../../terraform/modules/dns_zone"
     domain = "public.deepcortex.com"
-    tags   = "${var.tags}"
+    tags   = "${local.tags}"
 }
 
 #module "zone_private_deepcortex_com" {
-#    source = "../modules/dns_zone"
+#    source = "../../terraform/modules/dns_zone"
 #    domain = "private.deepcortex.com"
 #    vpc_id = "vpc-391eae50"
-#    tags   = "${var.tags}"
+#    tags   = "${local.tags}"
 #}
-

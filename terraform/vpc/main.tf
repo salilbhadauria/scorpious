@@ -1,7 +1,12 @@
 # vim: ts=4:sw=4:et:ft=hcl
 
+terraform {
+    required_version = ">= 0.10.7"
+    backend "s3" { region = "us-east-2" }
+}
+
 module "vpc" {
-    source = "../modules/vpc"
+    source = "../../terraform/modules/vpc"
 
     vpc_cidr               = "${var.vpc_cidr}"
     azs                    = "${var.azs}"
@@ -10,18 +15,18 @@ module "vpc" {
     private_egress_subnets = "${var.private_subnets_egress}"
     nat_gateway            = "true"
 
-    tags     = "${var.tags}"
+    tags     = "${local.tags}"
 }
 
 module "devops_key" {
-    source = "../modules/key_pair"
+    source = "../../terraform/modules/key_pair"
 
     key_name   = "${var.environment}-devops"
     public_key = "${var.ssh_public_key}"
 }
 
 module "sg_bastion" {
-    source = "../modules/security_group"
+    source = "../../terraform/modules/security_group"
 
     vpc_id = "${module.vpc.vpc_id}"
 
@@ -45,11 +50,11 @@ module "sg_bastion" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
-    tags = "${var.tags}"
+    tags = "${local.tags}"
 }
 
 module "sg_public_subnet" {
-    source = "../modules/security_group"
+    source = "../../terraform/modules/security_group"
 
     vpc_id = "${module.vpc.vpc_id}"
 
@@ -75,11 +80,11 @@ module "sg_public_subnet" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
-    tags = "${var.tags}"
+    tags = "${local.tags}"
 }
 
 module "sg_private_subnet" {
-    source = "../modules/security_group"
+    source = "../../terraform/modules/security_group"
 
     vpc_id = "${module.vpc.vpc_id}"
 
@@ -105,11 +110,11 @@ module "sg_private_subnet" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
-    tags = "${var.tags}"
+    tags = "${local.tags}"
 }
 
 module "sg_private_egress_subnet" {
-    source = "../modules/security_group"
+    source = "../../terraform/modules/security_group"
 
     vpc_id = "${module.vpc.vpc_id}"
 
@@ -135,15 +140,14 @@ module "sg_private_egress_subnet" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
-    tags = "${var.tags}"
+    tags = "${local.tags}"
 }
 
 module "asg_bastion" {
-    source = "../modules/autoscaling_group"
+    source = "../../terraform/modules/autoscaling_group"
 
-    #ami_name           = "amzn-ami-2017*"
-    lc_ami_id          = "ami-c5062ba0"
-    lc_name_prefix     = "bastion-"
+    lc_ami_id          = "${var.bastion_ami_id}"
+    lc_name_prefix     = "${var.environment}-bastion-"
     lc_instance_type   = "t2.small"
     lc_ebs_optimized   = "false"
     lc_key_name        = "${module.devops_key.name}"
@@ -155,5 +159,5 @@ module "asg_bastion" {
     asg_min_size         = 1
     asg_max_size         = 1
 
-    tags_asg = "${var.tags_asg}"
+    tags_asg = "${local.tags_asg}"
 }

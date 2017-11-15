@@ -1,18 +1,24 @@
 # vim:ts=4:sw=4:et:ft=hcl
+
+terraform {
+    required_version = ">= 0.10.7"
+    backend "s3" { region = "us-east-2" }
+}
+
 #########################################################
 # Retrieve VPC data
 data "terraform_remote_state" "vpc" {
   backend = "s3"
   config {
-    bucket = "dcos-cortex-infrastructure-n911"
-    key    = "vpc/terraform.tfstate"
-    region = "us-east-2"
+    bucket = "${var.bucket}-${var.account}"
+    key    = "${var.aws_region}/${var.environment}/vpc/terraform.tfstate"
+    region = "${var.aws_region}"
   }
 }
 #########################################################
 # Creates a Redshift Cluster
 module "redshift-clstr-sg" {
-    source = "../modules/security_group"
+    source = "../../terraform/modules/security_group"
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
@@ -36,7 +42,7 @@ module "redshift-clstr-sg" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
-    tags = "${var.redshift_sg_tags}"
+    tags = "${local.tags}"
 }
 
 resource "aws_redshift_parameter_group" "redshift-clstr-pg" {
@@ -48,7 +54,7 @@ resource "aws_redshift_subnet_group" "redshift-subnet-grp" {
   name       = "redshift-subnet-group"
   subnet_ids = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
 
-  tags = "${var.redshift_subnet_group_tags}"
+  tags = "${local.tags}"
 }
 
 resource "random_string" "redshift_password" {
@@ -71,5 +77,5 @@ resource "aws_redshift_cluster" "redshift-clstr" {
   final_snapshot_identifier    = "final-redshift-snapshot"
   cluster_parameter_group_name = "${aws_redshift_parameter_group.redshift-clstr-pg.id}"
 
-  tags = "${var.redshift_clstr_tags}"
+  tags = "${local.tags}"
 }

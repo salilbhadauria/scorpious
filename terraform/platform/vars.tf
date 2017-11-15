@@ -1,110 +1,69 @@
 # vim: ts=4:sw=4:et:ft=hcl
 
-variable "environment" {
-  default = "prd"
-}
-
-variable "domain" {
-  default = "private.devops.deepcortex.ai"
-}
+variable "aws_region" {}
+variable "environment" {}
+variable "bucket" {}
+variable "account" {}
+variable "private_domain" {}
 
 # Bootstrap vars
 
-variable "bootstrap_asg_desired_capacity" {
-  default = "1"
-}
-variable "bootstrap_asg_min_size" {
-  default = "1"
-}
-variable "bootstrap_asg_max_size" {
-  default = "1"
-}
-
-variable "bootstrap_elb_dns_name" {
-  default = "bootstrap"
-}
-
-variable "s3_prefix" {
-  default = "deepcortex"
-}
-
-variable "cluster_name" {
-  default = "deepcortex"
-}
+variable "bootstrap_asg_desired_capacity" {}
+variable "bootstrap_asg_min_size" {}
+variable "bootstrap_asg_max_size" {}
+variable "bootstrap_elb_dns_name" {}
+variable "s3_prefix" {}
+variable "cluster_name" {}
 
 # Master vars
 
-variable "master_asg_desired_capacity" {
-  default = "3"
-}
-variable "master_asg_min_size" {
-  default = "1"
-}
-variable "master_asg_max_size" {
-  default = "3"
-}
-
-variable "master_elb_dns_name" {
-  default = "master"
-}
-
-# tags
+variable "master_asg_desired_capacity" {}
+variable "master_asg_min_size" {}
+variable "master_asg_max_size" {}
+variable "master_elb_dns_name" {}
 
 # Slave vars
 
-variable "slave_asg_desired_capacity" {
-  default = "3"
-}
-variable "slave_asg_min_size" {
-  default = "1"
-}
-variable "slave_asg_max_size" {
-  default = "3"
-}
+variable "slave_asg_desired_capacity" {}
+variable "slave_asg_min_size" {}
+variable "slave_asg_max_size" {}
 
 # Public slave vars
 
-variable "public_slave_asg_desired_capacity" {
-  default = "3"
-}
-variable "public_slave_asg_min_size" {
-  default = "1"
-}
-variable "public_slave_asg_max_size" {
-  default = "3"
-}
+variable "public_slave_asg_desired_capacity" {}
+variable "public_slave_asg_min_size" {}
+variable "public_slave_asg_max_size" {}
 
-variable "tags" {
-    default = {
-        owner       = "owner"
-        environment = "env"
-        layer       = "layer"
-        usage       = "usage"
+variable "tag_owner" {}
+variable "tag_usage" {}
+
+locals {
+    tags = {
+        owner       = "${var.tag_owner}"
+        environment = "${var.environment}"
+        layer       = "platform"
+        usage       = "${var.tag_usage}"
     }
-}
-
-variable "tags_asg" {
-    description = "Tag Environment"
-    default = [
+    tags_asg = [
         {
             key   = "owner"
-            value = "owner"
+            value = "${var.tag_owner}"
             propagate_at_launch = "true"
         },
         {
             key   = "environment"
-            value = "env"
+            value = "${var.environment}"
             propagate_at_launch = "true"
         },
         {
             key   = "layer"
-            value = "layer"
+            value = "platform"
             propagate_at_launch = "true"
         },
         {
             key   = "usage"
-            value = "usage"
+            value = "${var.tag_usage}"
             propagate_at_launch = "true"
-        }
+        },
     ]
 }

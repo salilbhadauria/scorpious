@@ -2,13 +2,17 @@
 set -e
 
 usage() {
-  echo "Usage: $0 <image> [args...]"
-  echo " e.g.: $0 base"
+  echo "Usage: $0 <image> <config_file> [args...]"
+  echo " e.g.: $0 bootstrap integration"
   echo "Requires environment variable AWS_PROFILE to be set"
   exit 1
 }
 
 if [ -z "$1" ];then
+  usage
+fi
+
+if [ -z "$2" ];then
   usage
 fi
 
@@ -18,7 +22,11 @@ if [ -z "$AWS_PROFILE" ];then
 fi
 
 export IMAGE=$1
-shift 1
+export CONFIG=$2
+export AMI=$(awk -F\" '/packer_base_ami/{print $2}'  "environments/$CONFIG.tfvars")
+export REGION=$(awk -F\" '/aws_region/{print $2}'  "environments/$CONFIG.tfvars")
+export SSH_USER=$(awk -F\" '/packer_ssh_user/{print $2}'  "environments/$CONFIG.tfvars")
+shift 2
 
 export AWS_REGION="${AWS_REGION:-us-east-2}"
 
