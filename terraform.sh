@@ -12,12 +12,8 @@ usage() {
   exit 1
 }
 
-if [ -z "$2" ];then
-  usage
-fi
-
-if [ -z "$3" ];then
-  usage
+if [ ${#} -ne 3 ]; then
+ usage
 fi
 
 if [ -z "$AWS_PROFILE" ];then
