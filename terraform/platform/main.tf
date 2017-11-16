@@ -36,15 +36,6 @@ resource "aws_s3_bucket" "dcos_stack_bucket" {
 }
 
 #########################################################
-# Internal zone
-module "dcos_stack_zone" {
-    source = "../../terraform/modules/dns_zone"
-    domain = "${var.private_domain}"
-    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
-    tags   = "${local.tags}"
-}
-
-#########################################################
 # Security Groups
 
 module "dcos_stack_sg" {
@@ -152,11 +143,16 @@ data "template_file" "bootstrap_userdata" {
     s3_bucket = "${aws_s3_bucket.dcos_stack_bucket.id}"
     s3_prefix = "${var.environment}-${var.s3_prefix}"
     num_masters = "${var.master_asg_desired_capacity}"
-    bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${module.dcos_stack_zone.domain}"
-    masters_elb = "${var.environment}-${var.master_elb_dns_name}-internal.${module.dcos_stack_zone.domain}"
+    bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
+    masters_elb = "${module.master_elb_internal.elb_dns_name}"
     aws_region = "${var.aws_region}"
     dns_ip = "${cidrhost(data.terraform_remote_state.vpc.vpc_cidr, 2)}"
   }
+
+  depends_on = [
+    "module.bootstrap_elb",
+    "module.master_elb_internal"
+  ]
 }
 
 resource "aws_iam_instance_profile" "bootstrap_instance_profile" {
@@ -175,8 +171,7 @@ module "bootstrap_elb" {
   backend_port        = "8080"
   backend_protocol    = "http"
   health_check_target = "TCP:8080"
-  dns_records         = [ "${var.environment}-${var.bootstrap_elb_dns_name}" ]
-  dns_zone_id         = "${module.dcos_stack_zone.zone_id}"
+
   tags                = "${local.tags}"
 }
 
@@ -364,8 +359,12 @@ data "template_file" "master_userdata" {
   template = "${file("../../terraform/templates/master_userdata.tpl")}"
 
   vars {
-    bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${module.dcos_stack_zone.domain}"
+    bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
   }
+
+  depends_on = [
+    "module.bootstrap_elb"
+  ]
 }
 
 module "master_elb" {
@@ -375,8 +374,7 @@ module "master_elb" {
   elb_security_group  = "${module.master_elb_sg.id}"
   subnets             = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
   health_check_target = "TCP:5050"
-  dns_records         = [ "${var.environment}-${var.master_elb_dns_name}" ]
-  dns_zone_id         = "${module.dcos_stack_zone.zone_id}"
+
   tags                = "${local.tags}"
 }
 
@@ -386,8 +384,7 @@ module "master_elb_internal" {
   elb_security_group  = "${module.master_elb_internal_sg.id}"
   subnets             = [ "${data.terraform_remote_state.vpc.private_egress_subnet_ids}" ]
   health_check_target = "TCP:5050"
-  dns_records         = [ "${var.environment}-${var.master_elb_dns_name}-internal" ]
-  dns_zone_id         = "${module.dcos_stack_zone.zone_id}"
+
   tags                = "${local.tags}"
 }
 
@@ -465,8 +462,12 @@ data "template_file" "slave_userdata" {
   template = "${file("../../terraform/templates/private_slave_userdata.tpl")}"
 
   vars {
-    bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${module.dcos_stack_zone.domain}"
+    bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
   }
+
+  depends_on = [
+    "module.bootstrap_elb"
+  ]
 }
 
 module "slave_asg" {
@@ -542,8 +543,12 @@ data "template_file" "public_slave_userdata" {
   template = "${file("../../terraform/templates/public_slave_userdata.tpl")}"
 
   vars {
-    bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${module.dcos_stack_zone.domain}"
+    bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
   }
+
+  depends_on = [
+    "module.bootstrap_elb"
+  ]
 }
 
 module "public_slave_asg" {
