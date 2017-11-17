@@ -4,20 +4,32 @@ set -e
 usage() {
   echo "Usage: $0 <image> <config_file> [args...]"
   echo " e.g.: $0 bootstrap integration"
-  echo "Requires environment variable AWS_PROFILE to be set"
+  echo "All images requires environment variable AWS_PROFILE to be set"
+  echo "Bootstrap image requires environment variable CUSTOMER_KEY, SUPERUSER_PASSWORD_HASH and DOCKER_REGISTRY_AUTH_TOKEN to be set"
   exit 1
 }
 
-if [ -z "$1" ];then
-  usage
-fi
-
-if [ -z "$2" ];then
+if [ ${#} -ne 2 ]; then
   usage
 fi
 
 if [ -z "$AWS_PROFILE" ];then
   echo "AWS_PROFILE is not set"
+  usage
+fi
+
+if [ -z "$CUSTOMER_KEY" ] && [ $1 = "bootstrap" ];then
+  echo "Warning: CUSTOMER_KEY is not set"
+  usage
+fi
+
+if [ -z "$SUPERUSER_PASSWORD_HASH" ] && [ $1 = "bootstrap" ];then
+  echo "Warning: SUPERUSER_PASSWORD_HASH is not set"
+  usage
+fi
+
+if [ -z "$DOCKER_REGISTRY_AUTH_TOKEN" ] && [ $1 = "bootstrap" ];then
+  echo "Warning: DOCKER_REGISTRY_AUTH_TOKEN is not set"
   usage
 fi
 

@@ -26,3 +26,13 @@ superuser_password_hash: {{ superuser_password_hash }}
 customer_key: {{ customer_key }}
 security: {{ security }}
 {% endif %}
+
+{% if registry == true %}
+cluster_docker_credentials:
+  auths:
+    '{{ registry_url }}':
+       auth: {{ docker_registry_auth_token }}
+       email: {{ email }}
+cluster_docker_credentials_dcos_owned: true
+cluster_docker_credentials_enabled: true
+{% endif %}
