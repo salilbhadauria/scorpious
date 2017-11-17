@@ -1,13 +1,18 @@
 # vim: ts=4:sw=4:et:ft=hcl
 
+terraform {
+    required_version = ">= 0.10.7"
+    backend "s3" {}
+}
+
 #########################################################
 # Retrieve VPC data
 data "terraform_remote_state" "vpc" {
   backend = "s3"
   config {
-    bucket = "dcos-cortex-infrastructure-n911"
-    key    = "vpc/terraform.tfstate"
-    region = "us-east-2"
+    bucket = "${var.bucket}"
+    key    = "${var.aws_region}/${var.environment}/vpc/terraform.tfstate"
+    region = "${var.aws_region}"
   }
 }
 
@@ -15,43 +20,26 @@ data "terraform_remote_state" "vpc" {
 data "terraform_remote_state" "iam" {
   backend = "s3"
   config {
-    bucket = "dcos-cortex-infrastructure-n911"
-    key    = "iam/terraform.tfstate"
-    region = "us-east-2"
+    bucket = "${var.bucket}"
+    key    = "${var.aws_region}/${var.environment}/iam/terraform.tfstate"
+    region = "${var.aws_region}"
   }
 }
 
 resource "aws_s3_bucket" "dcos_stack_bucket" {
   bucket = "deepcortex-dcos-backend"
   acl    = "private"
-
-  tags {
-      name = "deepcortex-dcos-backend"
-      owner       = "owner"
-      environment = "env"
-      layer       = "layer"
-      usage       = "usage"
-  }
-
+  tags   = "${merge(local.tags, map("name", "deepcortex-dcos-backend"))}"
   lifecycle {
       prevent_destroy = false
   }
 }
 
 #########################################################
-# Internal zone
-module "dcos_stack_zone" {
-    source = "../modules/dns_zone"
-    domain = "${var.domain}"
-    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
-    tags   = "${var.tags}"
-}
-
-#########################################################
 # Security Groups
 
 module "dcos_stack_sg" {
-    source = "../modules/security_group"
+    source = "../../terraform/modules/security_group"
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
@@ -74,13 +62,13 @@ module "dcos_stack_sg" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
-    tags = "${var.tags}"
+    tags = "${local.tags}"
 }
 
 #########################################################
 # Bootstrap
 module "bootstrap_sg" {
-    source = "../modules/security_group"
+    source = "../../terraform/modules/security_group"
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
@@ -110,11 +98,11 @@ module "bootstrap_sg" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
-    tags = "${var.tags}"
+    tags = "${local.tags}"
 }
 
 module "bootstrap_elb_sg" {
-    source = "../modules/security_group"
+    source = "../../terraform/modules/security_group"
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
@@ -144,22 +132,27 @@ module "bootstrap_elb_sg" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
-    tags = "${var.tags}"
+    tags = "${local.tags}"
 }
 
 data "template_file" "bootstrap_userdata" {
-  template = "${file("../templates/bootstrap_userdata.tpl")}"
+  template = "${file("../../terraform/templates/bootstrap_userdata.tpl")}"
 
   vars {
     cluster_name = "${var.cluster_name}"
     s3_bucket = "${aws_s3_bucket.dcos_stack_bucket.id}"
     s3_prefix = "${var.environment}-${var.s3_prefix}"
     num_masters = "${var.master_asg_desired_capacity}"
-    bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${module.dcos_stack_zone.domain}"
-    masters_elb = "${var.environment}-${var.master_elb_dns_name}-internal.${module.dcos_stack_zone.domain}"
+    bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
+    masters_elb = "${module.master_elb_internal.elb_dns_name}"
     aws_region = "${var.aws_region}"
     dns_ip = "${cidrhost(data.terraform_remote_state.vpc.vpc_cidr, 2)}"
   }
+
+  depends_on = [
+    "module.bootstrap_elb",
+    "module.master_elb_internal"
+  ]
 }
 
 resource "aws_iam_instance_profile" "bootstrap_instance_profile" {
@@ -168,7 +161,7 @@ resource "aws_iam_instance_profile" "bootstrap_instance_profile" {
 }
 
 module "bootstrap_elb" {
-  source              = "../modules/elb"
+  source              = "../../terraform/modules/elb"
   elb_name            = "bootstrap-elb"
   elb_is_internal     = "true"
   elb_security_group  = "${module.bootstrap_elb_sg.id}"
@@ -178,13 +171,12 @@ module "bootstrap_elb" {
   backend_port        = "8080"
   backend_protocol    = "http"
   health_check_target = "TCP:8080"
-  dns_records         = [ "${var.environment}-${var.bootstrap_elb_dns_name}" ]
-  dns_zone_id         = "${module.dcos_stack_zone.zone_id}"
-  tags                = "${var.tags}"
+
+  tags                = "${local.tags}"
 }
 
 module "bootstrap_asg" {
-    source = "../modules/autoscaling_group"
+    source = "../../terraform/modules/autoscaling_group"
 
     ami_name                = "bootstrap*"
     lc_name_prefix          = "${var.environment}-bootstrap-"
@@ -202,13 +194,13 @@ module "bootstrap_asg" {
     asg_max_size            = "${var.bootstrap_asg_max_size}"
     asg_load_balancers      = [ "${module.bootstrap_elb.elb_id}" ]
 
-    tags_asg = "${var.tags_asg}"
+    tags_asg = "${local.tags_asg}"
 }
 
 #########################################################
 # Master
 module "master_sg" {
-    source = "../modules/security_group"
+    source = "../../terraform/modules/security_group"
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
@@ -268,11 +260,11 @@ module "master_sg" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
-    tags = "${var.tags}"
+    tags = "${local.tags}"
 }
 
 module "master_elb_sg" {
-    source = "../modules/security_group"
+    source = "../../terraform/modules/security_group"
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
@@ -302,11 +294,11 @@ module "master_elb_sg" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
-    tags = "${var.tags}"
+    tags = "${local.tags}"
 }
 
 module "master_elb_internal_sg" {
-    source = "../modules/security_group"
+    source = "../../terraform/modules/security_group"
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
@@ -360,42 +352,44 @@ module "master_elb_internal_sg" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
-    tags = "${var.tags}"
+    tags = "${local.tags}"
 }
 
 data "template_file" "master_userdata" {
-  template = "${file("../templates/master_userdata.tpl")}"
+  template = "${file("../../terraform/templates/master_userdata.tpl")}"
 
   vars {
-    bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${module.dcos_stack_zone.domain}"
+    bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
   }
+
+  depends_on = [
+    "module.bootstrap_elb"
+  ]
 }
 
 module "master_elb" {
-  source              = "../modules/elb_external_masters"
+  source              = "../../terraform/modules/elb_external_masters"
   elb_name            = "master-elb"
   elb_is_internal     = "false"
   elb_security_group  = "${module.master_elb_sg.id}"
   subnets             = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
   health_check_target = "TCP:5050"
-  dns_records         = [ "${var.environment}-${var.master_elb_dns_name}" ]
-  dns_zone_id         = "${module.dcos_stack_zone.zone_id}"
-  tags                = "${var.tags}"
+
+  tags                = "${local.tags}"
 }
 
 module "master_elb_internal" {
-  source              = "../modules/elb_internal_masters"
+  source              = "../../terraform/modules/elb_internal_masters"
   elb_name            = "master-elb-internal"
   elb_security_group  = "${module.master_elb_internal_sg.id}"
   subnets             = [ "${data.terraform_remote_state.vpc.private_egress_subnet_ids}" ]
   health_check_target = "TCP:5050"
-  dns_records         = [ "${var.environment}-${var.master_elb_dns_name}-internal" ]
-  dns_zone_id         = "${module.dcos_stack_zone.zone_id}"
-  tags                = "${var.tags}"
+
+  tags                = "${local.tags}"
 }
 
 module "master_asg" {
-    source = "../modules/autoscaling_group"
+    source = "../../terraform/modules/autoscaling_group"
 
     ami_name                = "master*"
     lc_name_prefix          = "${var.environment}-master-"
@@ -413,13 +407,13 @@ module "master_asg" {
     asg_max_size            = "${var.master_asg_max_size}"
     asg_load_balancers      = [ "${module.master_elb.elb_id}", "${module.master_elb_internal.elb_id}" ]
 
-    tags_asg = "${var.tags_asg}"
+    tags_asg = "${local.tags_asg}"
 }
 
 #########################################################
 # Slaves
 module "slave_sg" {
-    source = "../modules/security_group"
+    source = "../../terraform/modules/security_group"
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
@@ -461,19 +455,23 @@ module "slave_sg" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
-    tags = "${var.tags}"
+    tags = "${local.tags}"
 }
 
 data "template_file" "slave_userdata" {
-  template = "${file("../templates/private_slave_userdata.tpl")}"
+  template = "${file("../../terraform/templates/private_slave_userdata.tpl")}"
 
   vars {
-    bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${module.dcos_stack_zone.domain}"
+    bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
   }
+
+  depends_on = [
+    "module.bootstrap_elb"
+  ]
 }
 
 module "slave_asg" {
-    source = "../modules/autoscaling_group"
+    source = "../../terraform/modules/autoscaling_group"
 
     ami_name                = "slave*"
     lc_name_prefix          = "${var.environment}-slave-"
@@ -490,13 +488,13 @@ module "slave_asg" {
     asg_min_size            = "${var.slave_asg_min_size}"
     asg_max_size            = "${var.slave_asg_max_size}"
 
-    tags_asg = "${var.tags_asg}"
+    tags_asg = "${local.tags_asg}"
 }
 
 #########################################################
 # Public slaves
 module "public_slave_sg" {
-    source = "../modules/security_group"
+    source = "../../terraform/modules/security_group"
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
@@ -538,19 +536,23 @@ module "public_slave_sg" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
-    tags = "${var.tags}"
+    tags = "${local.tags}"
 }
 
 data "template_file" "public_slave_userdata" {
-  template = "${file("../templates/public_slave_userdata.tpl")}"
+  template = "${file("../../terraform/templates/public_slave_userdata.tpl")}"
 
   vars {
-    bootstrap_dns = "${var.environment}-${var.bootstrap_elb_dns_name}.${module.dcos_stack_zone.domain}"
+    bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
   }
+
+  depends_on = [
+    "module.bootstrap_elb"
+  ]
 }
 
 module "public_slave_asg" {
-    source = "../modules/autoscaling_group"
+    source = "../../terraform/modules/autoscaling_group"
 
     ami_name                = "slave*"
     lc_name_prefix          = "${var.environment}-public-slave-"
@@ -567,5 +569,5 @@ module "public_slave_asg" {
     asg_min_size            = "${var.public_slave_asg_min_size}"
     asg_max_size            = "${var.public_slave_asg_max_size}"
 
-    tags_asg = "${var.tags_asg}"
+    tags_asg = "${local.tags_asg}"
 }

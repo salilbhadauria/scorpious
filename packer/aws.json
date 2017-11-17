@@ -2,14 +2,14 @@
     "variables": {
         "aws_access_key": "",
         "aws_secret_key": "",
-        "aws_region": "us-east-2",
-        "aws_build_regions": "us-east-2",
-        "aws_source_ami": "ami-0d7c5868",
+        "aws_region": "{{env `REGION`}}",
+        "aws_build_regions": "{{env `REGION`}}",
+        "aws_source_ami": "{{env `AMI`}}",
         "aws_instance_type": "t2.medium",
         "aws_vpc_id": "",
         "aws_subnet_id": "",
         "image_name": "",
-        "ssh_username": "ec2-user",
+        "ssh_username": "{{env `SSH_USER`}}",
         "git_commit": "",
         "build_author": "{{env `USER`}}",
         "build_uuid": ""

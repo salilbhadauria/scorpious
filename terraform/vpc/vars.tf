@@ -1,99 +1,61 @@
 # vim: ts=4:sw=4:et:ft=hcl
 
-variable "environment" {
-  default = "prd"
-}
-
-variable "vpc_cidr" {
-    default = "10.0.0.0/16"
-}
-
+variable "aws_region" {}
+variable "environment" {}
+variable "vpc_cidr" {}
 variable "azs" {
     description = "Array AVZs. Must match number of public and or private subnets"
     type    = "list"
-    default = [
-        "2a",
-        "2b",
-        "2c",
-#        "1d",
-#        "1e",
-    ]
 }
 
 variable "public_subnets" {
     description = "Array of public subnet CIDR. Must match number of AVZs"
     type        = "list"
-    default     = [
-        "10.0.1.0/24",
-        "10.0.2.0/24",
-        "10.0.3.0/24",
-#        "10.0.4.0/24",
-#        "10.0.5.0/24"
-    ]
 }
 
 variable "private_subnets" {
     description = "Array of private subnet CIDR. Must match number of AVZs"
     type    = "list"
-    default = [
-        "10.0.11.0/24",
-        "10.0.12.0/24",
-        "10.0.13.0/24",
-#        "10.0.14.0/24",
-#        "10.0.15.0/24"
-    ]
 }
 
 variable "private_subnets_egress" {
     description = "Array of private egress subnet CIDR. Must match number of AVZs"
     type    = "list"
-    default = [
-        "10.0.21.0/24",
-        "10.0.22.0/24",
-        "10.0.23.0/24",
-#        "10.0.24.0/24",
-#        "10.0.25.0/24"
-    ]
 }
 
-variable "tags" {
-    description = "Tag Environment"
-    default = {
-        owner       = "owner"
-        environment = "env"
-        layer       = "layer"
-        usage       = "usage"
+variable "tag_owner" {}
+variable "tag_usage" {}
+
+locals {
+    tags = {
+        owner       = "${var.tag_owner}"
+        environment = "${var.environment}"
+        layer       = "vpc"
+        usage       = "${var.tag_usage}"
     }
-}
-
-variable "tags_asg" {
-    description = "Tag Environment"
-    default = [
+    tags_asg = [
         {
             key   = "owner"
-            value = "owner"
+            value = "${var.tag_owner}"
             propagate_at_launch = "true"
         },
         {
             key   = "environment"
-            value = "env"
+            value = "${var.environment}"
             propagate_at_launch = "true"
         },
         {
             key   = "layer"
-            value = "layer"
+            value = "vpc"
             propagate_at_launch = "true"
         },
         {
             key   = "usage"
-            value = "usage"
+            value = "${var.tag_usage}"
             propagate_at_launch = "true"
         },
     ]
 }
 
-variable "ssh_public_key" {
-    default = <<SPK
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCztxYxgAYrXzSrfu2SDM58Ahca801YVhQ14HCDCRRzeziz6R/zVZATnfrCCUU5N3Fas7foZuzjXfwalD1xRbCABDaQayTSOHEJqsqnjJ2DZadRZJRKsHoEDoXf92963KHPz8BnNmPMTqhc+u115Q4HW3LyHlcIphuHtNcnKnbb4GVfSpOXYUw8b/Z31ujgKMUcyJpITQDDUrjti5+sWdmHOkcaSHS0IZMrLhaw43uCwwXlNxUacKORweTSUhna6HtehnTbgIWnVVJ9KekmV0TffNLbyXrYPluvqVUjs+WkOywvVPyMWxzXmqUU3caD6bXuhyjU8VuKGqXfhu/otvyr
-SPK
-}
+variable "ssh_public_key" {}
+variable "bastion_ami_id" {}
