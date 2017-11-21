@@ -13,6 +13,10 @@
 - hosts: bootstrap
   become: yes
   vars:
+    security: disabled
+    registry: true
+    superuser_username: deepcortex
+    enterprise_dcos: true
     resolvers:
       - provider_dns_via_user_data
       - 8.8.4.4
