@@ -13,6 +13,10 @@ if [ ${#} -ne 2 ]; then
   usage
 fi
 
+if [ -z "$2" ];then
+  usage
+fi
+
 if [ -z "$AWS_PROFILE" ];then
   echo "AWS_PROFILE is not set"
   usage

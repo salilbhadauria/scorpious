@@ -45,12 +45,6 @@
             "BuildAuthor": "{{user `build_author`}}",
             "BuildUUID": "{{user `build_uuid`}}",
             "GitCommit": "{{user `git_commit`}}"
-        },
-        "run_tags": {
-            "Name": "packer-{{ build_name }}"
-        },
-        "run_volume_tags": {
-            "Name": "volume-{{ build_name }}"
         }
     }],
     "provisioners": [{
