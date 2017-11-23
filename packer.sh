@@ -13,27 +13,38 @@ if [ ${#} -ne 2 ]; then
   usage
 fi
 
-if [ -z "$2" ];then
-  usage
-fi
-
 if [ -z "$AWS_PROFILE" ];then
   echo "AWS_PROFILE is not set"
   usage
 fi
 
 if [ -z "$CUSTOMER_KEY" ] && [ $1 = "bootstrap" ];then
-  echo "Warning: CUSTOMER_KEY is not set"
+  echo "Error: CUSTOMER_KEY is not set"
   usage
 fi
 
 if [ -z "$SUPERUSER_PASSWORD_HASH" ] && [ $1 = "bootstrap" ];then
-  echo "Warning: SUPERUSER_PASSWORD_HASH is not set"
+  echo "Error: SUPERUSER_PASSWORD_HASH is not set"
   usage
 fi
 
 if [ -z "$DOCKER_REGISTRY_AUTH_TOKEN" ] && [ $1 = "bootstrap" ];then
-  echo "Warning: DOCKER_REGISTRY_AUTH_TOKEN is not set"
+  echo "Error: DOCKER_REGISTRY_AUTH_TOKEN is not set"
+  usage
+fi
+
+if [ -z "$CUSTOMER_KEY" ] && [ $1 = "bootstrap" ];then
+  echo "Error: CUSTOMER_KEY is not set"
+  usage
+fi
+
+if [ -z "$SUPERUSER_PASSWORD_HASH" ] && [ $1 = "bootstrap" ];then
+  echo "Error: SUPERUSER_PASSWORD_HASH is not set"
+  usage
+fi
+
+if [ -z "$DOCKER_REGISTRY_AUTH_TOKEN" ] && [ $1 = "bootstrap" ];then
+  echo "Error: DOCKER_REGISTRY_AUTH_TOKEN is not set"
   usage
 fi
 
