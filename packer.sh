@@ -33,6 +33,21 @@ if [ -z "$DOCKER_REGISTRY_AUTH_TOKEN" ] && [ $1 = "bootstrap" ];then
   usage
 fi
 
+if [ -z "$CUSTOMER_KEY" ] && [ $1 = "bootstrap" ];then
+  echo "Warning: CUSTOMER_KEY is not set"
+  usage
+fi
+
+if [ -z "$SUPERUSER_PASSWORD_HASH" ] && [ $1 = "bootstrap" ];then
+  echo "Warning: SUPERUSER_PASSWORD_HASH is not set"
+  usage
+fi
+
+if [ -z "$DOCKER_REGISTRY_AUTH_TOKEN" ] && [ $1 = "bootstrap" ];then
+  echo "Warning: DOCKER_REGISTRY_AUTH_TOKEN is not set"
+  usage
+fi
+
 export IMAGE=$1
 export CONFIG=$2
 export AMI=$(awk -F\" '/packer_base_ami/{print $2}'  "environments/$CONFIG.tfvars")
