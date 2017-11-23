@@ -56,6 +56,7 @@
         "playbook_file": "packer/playbook.yml",
         "inventory_groups": "{{ user `image_name` }}",
         "playbook_dir": "./ansible/",
+        "galaxy_file": "./ansible/requirements.yml",
         "extra_arguments": [
          "--extra-vars \"customer_key={{ user `customer_key`}} \"",
           "-e \"docker_registry_auth_token={{ user `docker_registry_auth_token`}}\"",
