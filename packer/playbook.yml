@@ -75,3 +75,8 @@
 
 - hosts: slave
   become: yes
+
+- hosts: captain
+  become: yes
+  roles:
+    - captain

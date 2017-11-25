@@ -40,6 +40,10 @@ public_slave_asg_desired_capacity  = "3"
 public_slave_asg_min_size          = "1"
 public_slave_asg_max_size          = "3"
 
+captain_asg_desired_capacity  = "1"
+captain_asg_min_size          = "1"
+captain_asg_max_size          = "1"
+
 # Redshift
 redshift_family = "redshift-1.0"
 redshift_database_name = "redshift_db"

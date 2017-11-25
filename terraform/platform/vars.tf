@@ -34,6 +34,12 @@ variable "public_slave_asg_desired_capacity" {}
 variable "public_slave_asg_min_size" {}
 variable "public_slave_asg_max_size" {}
 
+# Captain vars
+
+variable "captain_asg_desired_capacity" {}
+variable "captain_asg_min_size" {}
+variable "captain_asg_max_size" {}
+
 variable "tag_owner" {}
 variable "tag_usage" {}
 

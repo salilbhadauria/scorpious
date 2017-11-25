@@ -1,0 +1,22 @@
+---
+- name: Install ansible dependencies for docker_login
+  pip:
+    name: docker-py
+
+- name: Start docker
+  service:
+    name: docker
+    state: started
+
+# - name: Login to dockerhub
+#   docker_login:
+#     registry: index.docker.io
+#     email: "{{ email }}"
+#     username: "{{ username }}"
+#     password: "{{ docker_registry_auth_token }}"
+
+- name: Download dcos cli
+  get_url:
+    url: https://downloads.dcos.io/binaries/cli/linux/x86-64/dcos-1.8/dcos
+    dest: /usr/local/bin/dcos
+    mode: 0755

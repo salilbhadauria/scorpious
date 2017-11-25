@@ -571,3 +571,66 @@ module "public_slave_asg" {
 
     tags_asg = "${local.tags_asg}"
 }
+
+#########################################################
+# Captain
+module "captain_sg" {
+    source = "../../terraform/modules/security_group"
+
+    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+
+    sg_name = "captain"
+    sg_description = "some description"
+
+    ingress_rules_cidr = [
+        {
+            protocol    = "tcp"
+            from_port   = "22"
+            to_port     = "22"
+            cidr_blocks = "0.0.0.0/0"
+        },
+    ]
+
+    egress_rules_cidr = [
+        {
+            protocol    = "all"
+            from_port   = "0"
+            to_port     = "0"
+            cidr_blocks = "0.0.0.0/0"
+        },
+    ]
+    tags = "${local.tags}"
+}
+
+data "template_file" "captain_userdata" {
+  template = "${file("../../terraform/templates/captain_userdata.tpl")}"
+
+  vars {
+    dcos_master_url = "${module.master_elb_internal.elb_dns_name}"
+  }
+
+  depends_on = [
+    "module.master_elb_internal"
+  ]
+}
+
+module "captain_asg" {
+    source = "../../terraform/modules/autoscaling_group"
+
+    ami_name                = "captain*"
+    lc_name_prefix          = "${var.environment}-captain-"
+    lc_instance_type        = "t2.medium"
+    lc_ebs_optimized        = "false"
+    lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
+    lc_security_groups      = [ "${module.captain_sg.id}", "${module.dcos_stack_sg.id}" ]
+    lc_user_data            = "${data.template_file.captain_userdata.rendered}"
+    lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
+
+    asg_name                = "${var.environment}-captain-asg"
+    asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
+    asg_desired_capacity    = "${var.captain_asg_desired_capacity}"
+    asg_min_size            = "${var.captain_asg_min_size}"
+    asg_max_size            = "${var.captain_asg_max_size}"
+
+    tags_asg = "${local.tags_asg}"
+}
