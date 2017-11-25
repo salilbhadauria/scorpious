@@ -12,7 +12,10 @@
         "ssh_username": "{{env `SSH_USER`}}",
         "git_commit": "",
         "build_author": "{{env `USER`}}",
-        "build_uuid": ""
+        "build_uuid": "",
+        "docker_registry_auth_token": "{{ env `DOCKER_REGISTRY_AUTH_TOKEN`}}",
+        "customer_key": "{{ env `CUSTOMER_KEY`}}",
+        "superuser_password_hash": "{{ env `SUPERUSER_PASSWORD_HASH`}}"
     },
     "builders": [{
         "type": "amazon-ebs",
@@ -42,12 +45,6 @@
             "BuildAuthor": "{{user `build_author`}}",
             "BuildUUID": "{{user `build_uuid`}}",
             "GitCommit": "{{user `git_commit`}}"
-        },
-        "run_tags": {
-            "Name": "packer-{{ build_name }}"
-        },
-        "run_volume_tags": {
-            "Name": "volume-{{ build_name }}"
         }
     }],
     "provisioners": [{
@@ -58,7 +55,13 @@
         "type": "ansible-local",
         "playbook_file": "packer/playbook.yml",
         "inventory_groups": "{{ user `image_name` }}",
-        "playbook_dir": "./ansible/"
+        "playbook_dir": "./ansible/",
+        "galaxy_file": "./ansible/requirements.yml",
+        "extra_arguments": [
+         "--extra-vars \"customer_key={{ user `customer_key`}} \"",
+          "-e \"docker_registry_auth_token={{ user `docker_registry_auth_token`}}\"",
+          "-e 'superuser_password_hash={{ user `superuser_password_hash`}}'"
+        ]
     },
     {
         "type": "ansible-local",
