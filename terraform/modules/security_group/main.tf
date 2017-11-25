@@ -45,7 +45,7 @@ resource "aws_security_group_rule" "ingress_rule_cidr" {
     from_port         = "${lookup(var.ingress_rules_cidr[count.index], "from_port")}"
     to_port           = "${lookup(var.ingress_rules_cidr[count.index], "to_port")}"
     protocol          = "${lookup(var.ingress_rules_cidr[count.index], "protocol")}"
-    cidr_blocks       = [ "${split(", ", lookup(var.ingress_rules_cidr[count.index], "cidr_blocks"))}" ]
+    cidr_blocks       = [ "${split(",", lookup(var.ingress_rules_cidr[count.index], "cidr_blocks"))}" ]
     description       = "${lookup(var.ingress_rules_cidr[count.index], "description", "_")}"
 }
 
@@ -122,7 +122,7 @@ resource "aws_security_group_rule" "egress_rule_cidr" {
     from_port         = "${lookup(var.egress_rules_cidr[count.index], "from_port")}"
     to_port           = "${lookup(var.egress_rules_cidr[count.index], "to_port")}"
     protocol          = "${lookup(var.egress_rules_cidr[count.index], "protocol")}"
-    cidr_blocks       = [ "${split(", ", lookup(var.egress_rules_cidr[count.index], "cidr_blocks"))}" ]
+    cidr_blocks       = [ "${split(",", lookup(var.egress_rules_cidr[count.index], "cidr_blocks"))}" ]
     description       = "${lookup(var.egress_rules_cidr[count.index], "description", "_")}"
 }
 
