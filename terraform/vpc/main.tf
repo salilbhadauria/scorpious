@@ -180,8 +180,16 @@ module "sg_nat" {
             sg_id       = "${module.sg_private_egress_subnet.id}"
             description = "Allow all traffic from Private egress subnet"
         },
+    ]
 
-
+    ingress_rules_cidr = [
+        {
+            protocol    = "all"
+            from_port   = "0"
+            to_port     = "65536"
+            cidr_blocks = "${join(",", var.private_subnets_egress)}"
+            description = "Allow all traffic from Private egress subnet"
+        },
     ]
 
     egress_rules_cidr = [
