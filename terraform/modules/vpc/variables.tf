@@ -62,6 +62,6 @@ variable "tags" {
 
 variable "nat_gateway" {
     description = "Boolean to enable / disable creation of AWS NAT Gateways"
-    default     = "true"
+    default     = "false"
 }
 
