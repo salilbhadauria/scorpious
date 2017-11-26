@@ -2,7 +2,9 @@
 
 variable "aws_region" {}
 variable "environment" {}
+
 variable "bucket" {}
+
 variable "vpc_cidr" {}
 variable "azs" {
     description = "Array AVZs. Must match number of public and or private subnets"
@@ -60,5 +62,6 @@ locals {
 
 variable "ssh_public_key" {}
 variable "bastion_ami_id" {}
+
 variable "nat_ami_id" { default = "ami-15e9c770" }
 
