@@ -57,17 +57,17 @@ Running terraform:
 
 We've built a terraform.sh script (wrapper) to handle configuration files and all the terraform code. Run the following commands in the presented order to build the environment.
 
-Building VPC:
-
-./terraform.sh init CONFIG vpc (initializes the state file)
-./terraform.sh plan CONFIG vpc (check the code will run and generates output file)
-./terraform.sh apply CONFIG vpc (applies output file generated in the previous command)
-
 Building IAM:
 
 ./terraform.sh init CONFIG iam (initializes the state file)
 ./terraform.sh plan CONFIG iam (check the code will run and generates output file)
 ./terraform.sh apply CONFIG iam (applies output file generated in the previous command)
+
+Building VPC:
+
+./terraform.sh init CONFIG vpc (initializes the state file)
+./terraform.sh plan CONFIG vpc (check the code will run and generates output file)
+./terraform.sh apply CONFIG vpc (applies output file generated in the previous command)
 
 Building Platform (DC/OS):
 

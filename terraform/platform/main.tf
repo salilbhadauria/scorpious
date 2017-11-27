@@ -43,7 +43,7 @@ module "dcos_stack_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "docker_stack"
+    sg_name = "dcos_stack"
     sg_description = "some description"
 
     ingress_rules_self = [
