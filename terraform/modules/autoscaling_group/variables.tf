@@ -117,3 +117,8 @@ variable "tags_asg" {
     type    = "list"
     default = []
 }
+
+variable "name_tag" {
+    description   = "Name for autoscaling group instances"
+    default = ""
+}
