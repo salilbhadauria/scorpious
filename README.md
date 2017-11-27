@@ -25,6 +25,14 @@ In the environments/CONFIG.tfvars file for your environment/region/cloud you wil
 
 Running packer:
 
+Bootstrap instance requires the following env variables exported:
+  - CUSTOMER_KEY
+  - SUPERUSER_PASSWORD_HASH
+    (make sure this one is well set, i.e.:
+    export SUPERUSER_PASSWORD_HASH='$6$rounds=656000$8CXbMqwuglDt3Yai$ZkLEj8zS.GmPGWt.dhwAv0.XsjYXwVHuS9aHh3DMcfGaz45OpGxC5oQPXUUpFLMkqlXCfhXMloIzE0Xh8VwHJ.'
+    using single quotes)
+  - DOCKER_REGISTRY_AUTH_TOKEN
+
 ./packer.sh bootstrap CONFIG
 ./packer.sh master CONFIG
 ./packer.sh slave CONFIG
@@ -41,7 +49,9 @@ On environments/CONFIG.tfvars file for your environment/region/cloud you will ne
 
 Creating the bucket and updating the terraform code will be done by running the terraform_init_backend.sh script.
 
-Update environments/CONFIG.tfvars file for your environment/region/cloud using environments/integration.tfvars as example.
+IMPORTANT: Update environments/CONFIG.tfvars file for your environment/region/cloud using environments/integration.tfvars as example.
+
+SSH key MUST be provided via configuration file, we cannot retrieve AWS generated keys.
 
 Running terraform:
 
