@@ -17,6 +17,6 @@
 
 - name: Download dcos cli
   get_url:
-    url: https://downloads.dcos.io/binaries/cli/linux/x86-64/dcos-1.8/dcos
+    url: https://downloads.dcos.io/binaries/cli/linux/x86-64/dcos-1.10/dcos
     dest: /usr/local/bin/dcos
     mode: 0755
