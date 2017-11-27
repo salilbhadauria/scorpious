@@ -1,5 +1,6 @@
 #cloud-config
 environment:
+  environment: ${environment}
   dcos_master_url: ${dcos_master_url}
 manage_resolv_conf: false
 preserve_hostname: true

@@ -139,6 +139,7 @@ data "template_file" "bootstrap_userdata" {
   template = "${file("../../terraform/templates/bootstrap_userdata.tpl")}"
 
   vars {
+    environment = "${var.environment}"
     cluster_name = "${var.cluster_name}"
     s3_bucket = "${aws_s3_bucket.dcos_stack_bucket.id}"
     s3_prefix = "${var.environment}-${var.s3_prefix}"
@@ -359,6 +360,7 @@ data "template_file" "master_userdata" {
   template = "${file("../../terraform/templates/master_userdata.tpl")}"
 
   vars {
+    environment = "${var.environment}"
     bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
   }
 
@@ -462,6 +464,7 @@ data "template_file" "slave_userdata" {
   template = "${file("../../terraform/templates/private_slave_userdata.tpl")}"
 
   vars {
+    environment = "${var.environment}"
     bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
   }
 
@@ -543,6 +546,7 @@ data "template_file" "public_slave_userdata" {
   template = "${file("../../terraform/templates/public_slave_userdata.tpl")}"
 
   vars {
+    environment = "${var.environment}"
     bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
   }
 
@@ -606,6 +610,7 @@ data "template_file" "captain_userdata" {
   template = "${file("../../terraform/templates/captain_userdata.tpl")}"
 
   vars {
+    environment = "${var.environment}"
     dcos_master_url = "${module.master_elb_internal.elb_dns_name}"
   }
 
