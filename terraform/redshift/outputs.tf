@@ -6,3 +6,6 @@ output "redshift_master_username" {
 output "redshift_master_password" {
   value = "${random_string.redshift_password.result}"
 }
+output "redshift_url" {
+  value = "${aws_redshift_cluster.redshift-clstr.endpoint}"
+}
