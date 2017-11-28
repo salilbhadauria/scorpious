@@ -65,5 +65,8 @@ resource "aws_autoscaling_group" "asg" {
     load_balancers            = [ "${var.asg_load_balancers}" ]
     #target_group_arns         = [ "${var.asg_target_groups}" ]
 
-    tags = "${var.tags_asg}"
+
+    tags = ["${concat(
+        list(map("key", "Name", "value", var.name_tag, "propagate_at_launch", true),),var.tags_asg)
+    }"]
 }
