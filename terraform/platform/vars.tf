@@ -2,7 +2,7 @@
 
 variable "aws_region" {}
 variable "environment" {}
-variable "bucket" {}
+variable "tf_bucket" {}
 variable "account" {}
 variable "private_domain" {}
 
@@ -14,6 +14,7 @@ variable "bootstrap_asg_max_size" {}
 variable "bootstrap_elb_dns_name" {}
 variable "s3_prefix" {}
 variable "cluster_name" {}
+variable "dcos_stack_bucket" {}
 
 # Master vars
 

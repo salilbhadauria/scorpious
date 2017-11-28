@@ -2,6 +2,16 @@
 environment:
   environment: ${environment}
   dcos_master_url: ${dcos_master_url}
+  aws_s3_bucket: ${dcos_apps_bucket}
+  job_master_s3_region: ${aws_region}
+  job_master_s3_bucket: ${dcos_apps_bucket}
+  dcos_master: ${dcos_master_url}
+  baile_lb_url: "baile_lb_url"
+  redshift_host: ${redshift_host}
+  redshift_user: ${redshift_user}
+  redshift_password: ${redshift_password}
+  mongodb_hosts: "mongo_hosts"
+  um_service_url: "um_service_url"
 manage_resolv_conf: false
 preserve_hostname: true
 runcmd:

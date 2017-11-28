@@ -2,9 +2,12 @@
 packer_base_ami                 = "ami-0d7c5868"
 packer_ssh_user                 = "ec2-user"
 
+# Ansible
+dcos_apps_bucket                = "deepcortex-dcos-apps"
+
 # Terraform
 # VPC
-bucket                          = "deepcortex-terraform-state"
+tf_bucket                       = "deepcortex-terraform-state"
 aws_region                      = "us-east-2"
 environment                     = "integration"
 account                         = "068078214683"
@@ -17,6 +20,7 @@ bastion_ami_id                  = "ami-c5062ba0"
 ssh_public_key                  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCztxYxgAYrXzSrfu2SDM58Ahca801YVhQ14HCDCRRzeziz6R/zVZATnfrCCUU5N3Fas7foZuzjXfwalD1xRbCABDaQayTSOHEJqsqnjJ2DZadRZJRKsHoEDoXf92963KHPz8BnNmPMTqhc+u115Q4HW3LyHlcIphuHtNcnKnbb4GVfSpOXYUw8b/Z31ujgKMUcyJpITQDDUrjti5+sWdmHOkcaSHS0IZMrLhaw43uCwwXlNxUacKORweTSUhna6HtehnTbgIWnVVJ9KekmV0TffNLbyXrYPluvqVUjs+WkOywvVPyMWxzXmqUU3caD6bXuhyjU8VuKGqXfhu/otvyr"
 tag_owner                       = "n911"
 tag_usage                       = "test"
+dcos_stack_bucket               = "deepcortex-dcos-backend"
 
 # Platform
 private_domain                  = "private.devops.deepcortex.ai"

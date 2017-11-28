@@ -10,7 +10,7 @@ terraform {
 data "terraform_remote_state" "vpc" {
   backend = "s3"
   config {
-    bucket = "${var.bucket}"
+    bucket = "${var.tf_bucket}"
     key    = "${var.aws_region}/${var.environment}/vpc/terraform.tfstate"
     region = "${var.aws_region}"
   }
@@ -20,16 +20,37 @@ data "terraform_remote_state" "vpc" {
 data "terraform_remote_state" "iam" {
   backend = "s3"
   config {
-    bucket = "${var.bucket}"
+    bucket = "${var.tf_bucket}"
     key    = "${var.aws_region}/${var.environment}/iam/terraform.tfstate"
     region = "${var.aws_region}"
   }
 }
 
+# Retrieve Redshift data
+data "terraform_remote_state" "redshift" {
+  backend = "s3"
+  config {
+    bucket = "${var.tf_bucket}"
+    key    = "${var.aws_region}/${var.environment}/redshift/terraform.tfstate"
+    region = "${var.aws_region}"
+  }
+}
+
+# Buckets
+
 resource "aws_s3_bucket" "dcos_stack_bucket" {
-  bucket = "deepcortex-dcos-backend"
+  bucket = "${var.dcos_stack_bucket}"
   acl    = "private"
-  tags   = "${merge(local.tags, map("name", "deepcortex-dcos-backend"))}"
+  tags   = "${merge(local.tags, map("name", "${var.dcos_stack_bucket}"))}"
+  lifecycle {
+      prevent_destroy = false
+  }
+}
+
+resource "aws_s3_bucket" "dcos_apps_bucket" {
+  bucket = "${var.dcos_apps_bucket}"
+  acl    = "private"
+  tags   = "${merge(local.tags, map("name", "${var.dcos_apps_bucket}"))}"
   lifecycle {
       prevent_destroy = false
   }
@@ -612,6 +633,11 @@ data "template_file" "captain_userdata" {
   vars {
     environment = "${var.environment}"
     dcos_master_url = "${module.master_elb_internal.elb_dns_name}"
+    dcos_apps_bucket = "${aws_s3_bucket.dcos_apps_bucket.id}"
+    aws_region = "${var.aws_region}"
+    redshift_user = "${data.terraform_remote_state.redshift.redshift_master_username}"
+    redshift_password = "${data.terraform_remote_state.redshift.redshift_master_password}"
+    redshift_host = "${data.terraform_remote_state.redshift.redshift_url}"
   }
 
   depends_on = [
