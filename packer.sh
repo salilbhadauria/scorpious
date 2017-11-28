@@ -27,36 +27,26 @@ if [ -z "$CUSTOMER_KEY" ] && [ $1 = "bootstrap" ];then
   usage
 fi
 
-if [ -z "$SUPERUSER_PASSWORD_HASH" ] && [ $1 = "bootstrap" ];then
-  echo "Error: SUPERUSER_PASSWORD_HASH is not set"
+if [ -z "$DCOS_USERNAME" ] && ([ $1 = "bootstrap" ] || [ $1 = "captain" ]);then
+  echo "Error: DCOS_USERNAME is not set"
   usage
 fi
 
-if [ -z "$DOCKER_REGISTRY_AUTH_TOKEN" ] && [ $1 = "bootstrap" ];then
-  echo "Error: DOCKER_REGISTRY_AUTH_TOKEN is not set"
+if [ -z "$DCOS_PASSWORD" ] && ([ $1 = "bootstrap" ] || [ $1 = "captain" ]);then
+  echo "Error: DCOS_PASSWORD is not set"
   usage
 fi
 
-if [ -z "$CUSTOMER_KEY" ] && [ $1 = "bootstrap" ];then
-  echo "Error: CUSTOMER_KEY is not set"
-  usage
-fi
-
-if [ -z "$SUPERUSER_PASSWORD_HASH" ] && [ $1 = "bootstrap" ];then
-  echo "Error: SUPERUSER_PASSWORD_HASH is not set"
-  usage
-fi
-
-if [ -z "$DOCKER_REGISTRY_AUTH_TOKEN" ] && [ $1 = "bootstrap" ];then
+if [ -z "$DOCKER_REGISTRY_AUTH_TOKEN" ] && ([ $1 = "bootstrap" ] || [ $1 = "captain" ]);then
   echo "Error: DOCKER_REGISTRY_AUTH_TOKEN is not set"
   usage
 fi
 
 export IMAGE=$1
 export CONFIG=$2
-export AMI=$(awk -F\" '/packer_base_ami/{print $2}'  "environments/$CONFIG.tfvars")
-export REGION=$(awk -F\" '/aws_region/{print $2}'  "environments/$CONFIG.tfvars")
-export SSH_USER=$(awk -F\" '/packer_ssh_user/{print $2}'  "environments/$CONFIG.tfvars")
+export AMI=$(awk -F\" '/^packer_base_ami/{print $2}'  "environments/$CONFIG.tfvars")
+export REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$CONFIG.tfvars")
+export SSH_USER=$(awk -F\" '/^packer_ssh_user/{print $2}'  "environments/$CONFIG.tfvars")
 shift 2
 
 export AWS_REGION="${AWS_REGION:-us-east-2}"

@@ -12,7 +12,7 @@
 #   docker_login:
 #     registry: index.docker.io
 #     email: "{{ email }}"
-#     username: "{{ username }}"
+#     username: "{{ docker_login_username }}"
 #     password: "{{ docker_registry_auth_token }}"
 
 - name: Download dcos cli
@@ -20,3 +20,16 @@
     url: https://downloads.dcos.io/binaries/cli/linux/x86-64/dcos-1.10/dcos
     dest: /usr/local/bin/dcos
     mode: 0755
+
+- name: Create a unique passwords
+  shell: date | md5 | head -c17
+  register: "{{item}}"
+  with_items:
+    - rabbit_password
+    - aries_http_search_user_password
+    - aries_http_command_user_password
+    - cortex_http_search_user_password
+    - http_search_user_password
+
+- name: Generate /etc/environment file
+  template: src=environment.j2 dest=/etc/environment mode=0644
