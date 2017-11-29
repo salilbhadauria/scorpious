@@ -44,8 +44,9 @@ public_slave_asg_max_size          = "3"
 
 # Redshift
 redshift_family = "redshift-1.0"
-redshift_database_name = "redshift_db"
-redshift_master_username = "redshift_user"
+redshift_cluster_name = "deepcortex-redshift"
+redshift_database_name = "dev"
+redshift_master_username = "deepcortex"
 redshift_node_type = "dc1.large"
 redshift_cluster_type = "multi-node"
 redshift_number_of_nodes = 2
