@@ -406,7 +406,7 @@ module "master_elb_internal" {
   source              = "../../terraform/modules/elb_internal_masters"
   elb_name            = "master-elb-internal"
   elb_security_group  = "${module.master_elb_internal_sg.id}"
-  subnets             = [ "${data.terraform_remote_state.vpc.private_egress_subnet_ids}" ]
+  subnets             = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
   health_check_target = "TCP:5050"
 
   tags                = "${local.tags}"
@@ -425,7 +425,7 @@ module "master_asg" {
     lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
 
     asg_name                = "${var.environment}-master-asg"
-    asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
+    asg_subnet_ids          = "${data.terraform_remote_state.vpc.public_subnet_ids}"
     asg_desired_capacity    = "${var.master_asg_desired_capacity}"
     asg_min_size            = "${var.master_asg_min_size}"
     asg_max_size            = "${var.master_asg_max_size}"
