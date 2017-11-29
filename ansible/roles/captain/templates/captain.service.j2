@@ -7,8 +7,10 @@ Requires=etc-environment.target
 EnvironmentFile=/etc/environment
 
 TimeoutStartSec=0
-Restart=always
+Type=oneshot
 ExecStart=/bin/bash /opt/dcos_services/deploy_all_services.sh
+RemainAfterExit=yes
+TimeoutSec=0
 
 [Install]
 WantedBy=multi-user.target

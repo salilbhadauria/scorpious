@@ -84,3 +84,10 @@
     dest: "/etc/systemd/system/{{ item }}.service"
   with_items:
     - captain
+
+- name: Enable services
+  service:
+    name: "{{ item }}"
+    enabled: yes
+  with_items:
+    - captain
