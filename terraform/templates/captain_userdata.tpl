@@ -27,3 +27,5 @@ runcmd:
   - hostnamectl set-hostname $newhostn
   - service rsyslog restart
   - service ntpd restart
+  - until $(curl --output /dev/null --silent --head --fail http://${dcos_master_url}/); do sleep 5; done
+  - cd /opt/dcos_services; bash deploy_all_services.sh
