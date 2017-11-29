@@ -69,6 +69,12 @@ Building VPC:
 ./terraform.sh plan CONFIG vpc (check the code will run and generates output file)
 ./terraform.sh apply CONFIG vpc (applies output file generated in the previous command)
 
+Building Redshift:
+
+./terraform.sh init CONFIG redshift (initializes the state file)
+./terraform.sh plan CONFIG redshift (check the code will run and generates output file)
+./terraform.sh apply CONFIG redshift (applies output file generated in the previous command)
+
 Building Platform (DC/OS):
 
 ./terraform.sh init CONFIG platform (initializes the state file)
@@ -76,12 +82,6 @@ Building Platform (DC/OS):
 ./terraform.sh apply CONFIG platform (applies output file generated in the previous command)
 
 Apply will return master_elb_url which currently is public for testing purposes, you will be able to access to the DC/OS dashboard vía https://master_elb_url
-
-Building Redshift:
-
-./terraform.sh init CONFIG redshift (initializes the state file)
-./terraform.sh plan CONFIG redshift (check the code will run and generates output file)
-./terraform.sh apply CONFIG redshift (applies output file generated in the previous command)
 
 Destroying everything(run backwards):
 

@@ -15,6 +15,8 @@ variable "bootstrap_elb_dns_name" {}
 variable "s3_prefix" {}
 variable "cluster_name" {}
 variable "dcos_stack_bucket" {}
+variable "dcos_apps_bucket" {}
+variable "dcos_password" {}
 
 # Master vars
 

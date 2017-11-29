@@ -169,6 +169,7 @@ data "template_file" "bootstrap_userdata" {
     masters_elb = "${module.master_elb_internal.elb_dns_name}"
     aws_region = "${var.aws_region}"
     dns_ip = "${cidrhost(data.terraform_remote_state.vpc.vpc_cidr, 2)}"
+    dcos_password = "${var.dcos_password}"
   }
 
   depends_on = [

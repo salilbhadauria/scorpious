@@ -22,6 +22,6 @@ runcmd:
   - sed -i "s/masters_elb_dns_via_user_data/${masters_elb}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
   - sed -i "s/bootstrap_dns_via_user_data/${bootstrap_dns}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
   - sed -i "s/aws_region_via_user_data/${aws_region}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
-  - cd /var/lib/dcos-bootstrap; bash dcos_generate_config.sh
+  - cd /var/lib/dcos-bootstrap; bash dcos_generate_config.sh --hash-password ${dcos_password}
   - docker pull nginx
   - docker run --name dcos_nginx -p 8080:80 -v /var/lib/dcos-bootstrap/genconf/serve:/usr/share/nginx/html:ro nginx
