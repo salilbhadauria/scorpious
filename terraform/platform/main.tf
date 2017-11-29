@@ -218,6 +218,7 @@ module "bootstrap_asg" {
     asg_load_balancers      = [ "${module.bootstrap_elb.elb_id}" ]
 
     tags_asg = "${local.tags_asg}"
+    name_tag = "dcos-bootstrap"
 }
 
 #########################################################
@@ -432,6 +433,7 @@ module "master_asg" {
     asg_load_balancers      = [ "${module.master_elb.elb_id}", "${module.master_elb_internal.elb_id}" ]
 
     tags_asg = "${local.tags_asg}"
+    name_tag = "dcos-master"
 }
 
 #########################################################
@@ -514,6 +516,7 @@ module "slave_asg" {
     asg_max_size            = "${var.slave_asg_max_size}"
 
     tags_asg = "${local.tags_asg}"
+    name_tag = "dcos-slave"
 }
 
 #########################################################
@@ -596,6 +599,7 @@ module "public_slave_asg" {
     asg_max_size            = "${var.public_slave_asg_max_size}"
 
     tags_asg = "${local.tags_asg}"
+    name_tag = "dcos-public-slave"
 }
 
 #########################################################
