@@ -17,6 +17,7 @@ bastion_ami_id                  = "ami-c5062ba0"
 ssh_public_key                  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCztxYxgAYrXzSrfu2SDM58Ahca801YVhQ14HCDCRRzeziz6R/zVZATnfrCCUU5N3Fas7foZuzjXfwalD1xRbCABDaQayTSOHEJqsqnjJ2DZadRZJRKsHoEDoXf92963KHPz8BnNmPMTqhc+u115Q4HW3LyHlcIphuHtNcnKnbb4GVfSpOXYUw8b/Z31ujgKMUcyJpITQDDUrjti5+sWdmHOkcaSHS0IZMrLhaw43uCwwXlNxUacKORweTSUhna6HtehnTbgIWnVVJ9KekmV0TffNLbyXrYPluvqVUjs+WkOywvVPyMWxzXmqUU3caD6bXuhyjU8VuKGqXfhu/otvyr"
 tag_owner                       = "n911"
 tag_usage                       = "test"
+access_cidr                     = "0.0.0.0/0"
 
 # Platform
 private_domain                  = "private.devops.deepcortex.ai"
@@ -27,21 +28,22 @@ bootstrap_elb_dns_name          = "bootstrap"
 s3_prefix                       = "deepcortex"
 cluster_name                    = "deepcortex"
 
-master_asg_desired_capacity     = "3"
+master_asg_desired_capacity     = "1"
 master_asg_min_size             = "1"
-master_asg_max_size             = "3"
+master_asg_max_size             = "1"
 master_elb_dns_name             = "master"
 
 slave_asg_desired_capacity     = "3"
 slave_asg_min_size             = "1"
 slave_asg_max_size             = "3"
 
-public_slave_asg_desired_capacity  = "3"
+public_slave_asg_desired_capacity  = "1"
 public_slave_asg_min_size          = "1"
-public_slave_asg_max_size          = "3"
+public_slave_asg_max_size          = "1"
 
 # Redshift
 redshift_family = "redshift-1.0"
+redshift_cluster_name = "redshift-clstr"
 redshift_database_name = "redshift_db"
 redshift_master_username = "redshift_user"
 redshift_node_type = "dc2.large"

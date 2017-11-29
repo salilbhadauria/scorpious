@@ -180,7 +180,7 @@ module "bootstrap_asg" {
 
     ami_name                = "bootstrap*"
     lc_name_prefix          = "${var.environment}-bootstrap-"
-    lc_instance_type        = "t2.medium"
+    lc_instance_type        = "m4.xlarge"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.bootstrap_sg.id}", "${module.dcos_stack_sg.id}" ]
@@ -394,7 +394,7 @@ module "master_asg" {
 
     ami_name                = "master*"
     lc_name_prefix          = "${var.environment}-master-"
-    lc_instance_type        = "t2.medium"
+    lc_instance_type        = "m4.2xlarge"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.master_sg.id}", "${module.dcos_stack_sg.id}" ]
@@ -402,7 +402,7 @@ module "master_asg" {
     lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
 
     asg_name                = "${var.environment}-master-asg"
-    asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
+    asg_subnet_ids          = "${data.terraform_remote_state.vpc.public_subnet_ids}"
     asg_desired_capacity    = "${var.master_asg_desired_capacity}"
     asg_min_size            = "${var.master_asg_min_size}"
     asg_max_size            = "${var.master_asg_max_size}"
@@ -477,7 +477,7 @@ module "slave_asg" {
 
     ami_name                = "slave*"
     lc_name_prefix          = "${var.environment}-slave-"
-    lc_instance_type        = "t2.large"
+    lc_instance_type        = "m4.4xlarge"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}" ]
@@ -559,7 +559,7 @@ module "public_slave_asg" {
 
     ami_name                = "slave*"
     lc_name_prefix          = "${var.environment}-public-slave-"
-    lc_instance_type        = "t2.large"
+    lc_instance_type        = "m4.xlarge"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.public_slave_sg.id}", "${module.dcos_stack_sg.id}" ]
