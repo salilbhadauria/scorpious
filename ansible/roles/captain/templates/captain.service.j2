@@ -1,0 +1,14 @@
+[Unit]
+Description=Captain Service
+After=etc-environment.target
+Requires=etc-environment.target
+
+[Service]
+EnvironmentFile=/etc/environment
+
+TimeoutStartSec=0
+Restart=always
+ExecStart=/bin/bash /opt/dcos_services/deploy_all_services.sh
+
+[Install]
+WantedBy=multi-user.target
