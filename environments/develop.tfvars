@@ -17,6 +17,7 @@ bastion_ami_id                  = ""
 ssh_public_key                  = ""
 tag_owner                       = "owner"
 tag_usage                       = "usage"
+access_cidr                     = "0.0.0.0/0"
 
 # Platform
 private_domain                  = "private.devops.deepcortex.ai"

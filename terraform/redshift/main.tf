@@ -30,7 +30,13 @@ module "redshift-clstr-sg" {
             protocol    = "tcp"
             from_port   = "5439"
             to_port     = "5439"
-            cidr_blocks = "0.0.0.0/0"
+            cidr_blocks = "${access_cidr}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "5439"
+            to_port     = "5439"
+            cidr_blocks = "${data.terraform_remote_state.vpc.sg_private_egress_subnet.id}"
         },
     ]
 

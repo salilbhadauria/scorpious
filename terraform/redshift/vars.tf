@@ -27,3 +27,4 @@ variable "redshift_cluster_type" {}
 variable "redshift_number_of_nodes" {}
 variable "redshift_encrypted" {}
 variable "redshift_skip_final_snapshot" {}
+variable "access_cidr" {}
