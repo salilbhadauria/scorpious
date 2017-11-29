@@ -62,7 +62,7 @@
     dcos_download: https://downloads.mesosphere.com/dcos-enterprise/stable/dcos_generate_config.ee.sh
     security: disabled
     registry: true
-    superuser_username: {{dcos_username}}
+    superuser_username: "{{dcos_username}}"
     enterprise_dcos: true
     resolvers:
       - provider_dns_via_user_data
