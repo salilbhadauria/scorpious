@@ -12,6 +12,8 @@ environment:
   redshift_password: ${redshift_password}
   mongodb_hosts: "mongo_hosts"
   um_service_url: "um_service_url"
+  zookeeper_url: "${dcos_master_url}:2181"
+  marathon_client_marathon_endpoint: "http://${dcos_master_url}:8080"
 manage_resolv_conf: false
 preserve_hostname: true
 runcmd:
