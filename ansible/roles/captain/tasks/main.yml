@@ -22,8 +22,8 @@
     mode: 0755
 
 - name: Create a unique passwords
-  shell: date | md5 | head -c17
-  register: "{{item}}"
+  shell: head /dev/urandom | tr -dc A-Za-z0-9 | head -c 17
+  register: pwd
   with_items:
     - rabbit_password
     - aries_http_search_user_password
@@ -31,5 +31,27 @@
     - cortex_http_search_user_password
     - http_search_user_password
 
+- name: Populate passwords
+  set_fact:
+    passwords: "{{ passwords|default({}) | combine( {item.item: item.stdout} ) }}"
+  with_items: "{{ pwd.results }}"
+
 - name: Generate /etc/environment file
-  template: src=environment.j2 dest=/etc/environment mode=0644
+  template:
+    src: etc/environment.j2
+    dest: /etc/environment
+    mode: 0644
+
+- name: Print password
+  debug:
+    var: passwords
+
+- name: Print passwords
+  debug:
+    msg: "Value of {{ item }}: {{ passwords[item] }}"
+  with_items:
+    - rabbit_password
+    - aries_http_search_user_password
+    - aries_http_command_user_password
+    - cortex_http_search_user_password
+    - http_search_user_password
