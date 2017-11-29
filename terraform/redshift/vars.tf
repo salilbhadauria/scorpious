@@ -20,6 +20,7 @@ locals {
 }
 
 variable "redshift_family" {}
+variable "redshift_cluster_name" {}
 variable "redshift_database_name" {}
 variable "redshift_master_username" {}
 variable "redshift_node_type" {}
@@ -27,3 +28,4 @@ variable "redshift_cluster_type" {}
 variable "redshift_number_of_nodes" {}
 variable "redshift_encrypted" {}
 variable "redshift_skip_final_snapshot" {}
+variable "access_cidr" {}

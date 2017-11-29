@@ -22,7 +22,7 @@ module "redshift-clstr-sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "redshift-sg"
+    sg_name = "redshift"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -30,7 +30,17 @@ module "redshift-clstr-sg" {
             protocol    = "tcp"
             from_port   = "5439"
             to_port     = "5439"
-            cidr_blocks = "0.0.0.0/0"
+            cidr_blocks = "${var.access_cidr}"
+        },
+    ]
+
+    ingress_rules_sgid_count = 1
+    ingress_rules_sgid = [
+        {
+            protocol    = "tcp"
+            from_port   = "5439"
+            to_port     = "5439"
+            sg_id       = "${data.terraform_remote_state.vpc.sg_private_egress_subnet_id}"
         },
     ]
 
@@ -63,7 +73,7 @@ resource "random_string" "redshift_password" {
 }
 
 resource "aws_redshift_cluster" "redshift-clstr" {
-  cluster_identifier           = "redshift-clstr"
+  cluster_identifier           = "${var.redshift_cluster_name}"
   database_name                = "${var.redshift_database_name}"
   master_username              = "${var.redshift_master_username}"
   master_password              = "${random_string.redshift_password.result}"
