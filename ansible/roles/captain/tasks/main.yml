@@ -21,6 +21,20 @@
     dest: /usr/local/bin/dcos
     mode: 0755
 
+- name: Copy services configuration files
+  copy:
+   dest: /opt/dcos_services.zip
+   src: dcos_services.zip
+   owner: root
+   group: root
+   mode: 0644
+
+- name: Unarchive services configuration files
+  unarchive:
+    src: /opt/dcos_services.zip
+    dest: /opt/
+    remote_src: yes
+
 - name: Create a unique passwords
   shell: head /dev/urandom | tr -dc A-Za-z0-9 | head -c 17
   register: pwd
