@@ -27,18 +27,18 @@ bootstrap_elb_dns_name          = "bootstrap"
 s3_prefix                       = "deepcortex"
 cluster_name                    = "deepcortex"
 
-master_asg_desired_capacity     = "3"
+master_asg_desired_capacity     = "1"
 master_asg_min_size             = "1"
-master_asg_max_size             = "3"
+master_asg_max_size             = "1"
 master_elb_dns_name             = "master"
 
 slave_asg_desired_capacity     = "3"
 slave_asg_min_size             = "1"
 slave_asg_max_size             = "3"
 
-public_slave_asg_desired_capacity  = "3"
+public_slave_asg_desired_capacity  = "1"
 public_slave_asg_min_size          = "1"
-public_slave_asg_max_size          = "3"
+public_slave_asg_max_size          = "1"
 
 # Redshift
 redshift_family = "redshift-1.0"
