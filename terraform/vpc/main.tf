@@ -237,6 +237,8 @@ module "asg_nat" {
     asg_max_size         = "${length(var.azs)}"
 
     tags_asg = "${local.tags_asg}"
+    name_tag = "NAT"
+
 }
 
 module "asg_bastion" {
@@ -256,4 +258,5 @@ module "asg_bastion" {
     asg_max_size         = 1
 
     tags_asg = "${local.tags_asg}"
+    name_tag = "bastion"
 }
