@@ -8,12 +8,14 @@
     name: docker
     state: started
 
-- name: Login to dockerhub
-  docker_login:
-    registry: index.docker.io
-    email: "{{ email }}"
-    username: "{{ docker_login_username }}"
-    password: "{{ docker_registry_auth_token }}"
+# Only needed if we want to run docker containers on captain
+# Needs to be fixed.
+# - name: Login to dockerhub
+#   docker_login:
+#     registry: index.docker.io/v1/
+#     email: "{{ email }}"
+#     username: "{{ docker_login_username }}"
+#     password: "{{ docker_registry_auth_token }}"
 
 - name: Download dcos cli
   get_url:
