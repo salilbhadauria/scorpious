@@ -23,3 +23,7 @@ output "private_egress_subnet_ids" {
 output "devops_key_name" {
   value = "${module.devops_key.name}"
 }
+
+output "sg_private_egress_subnet_id" {
+  value = "${module.sg_private_egress_subnet.id}"  
+}

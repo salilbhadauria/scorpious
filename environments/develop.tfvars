@@ -17,6 +17,7 @@ bastion_ami_id                  = ""
 ssh_public_key                  = ""
 tag_owner                       = "owner"
 tag_usage                       = "usage"
+access_cidr                     = "0.0.0.0/0"
 
 # Platform
 private_domain                  = "private.devops.deepcortex.ai"
@@ -42,6 +43,7 @@ public_slave_asg_max_size          = "3"
 
 # Redshift
 redshift_family = "redshift-1.0"
+redshift_cluster_name = "redshift-clstr"
 redshift_database_name = "redshift_db"
 redshift_master_username = "redshift_user"
 redshift_node_type = "dc2.large"
