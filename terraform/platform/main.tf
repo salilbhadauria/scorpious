@@ -218,7 +218,9 @@ module "bootstrap_asg" {
     asg_load_balancers      = [ "${module.bootstrap_elb.elb_id}" ]
 
     tags_asg = "${local.tags_asg}"
-    name_tag = "${var.environment}-bootstrap-asg"
+    asg_name_tag = "${var.environment}-bootstrap-asg"
+    instance_name_tag = "${var.environment}-bootstrap"
+    instance_role_tag = "bootstrap"
 }
 
 #########################################################
@@ -433,7 +435,9 @@ module "master_asg" {
     asg_load_balancers      = [ "${module.master_elb.elb_id}", "${module.master_elb_internal.elb_id}" ]
 
     tags_asg = "${local.tags_asg}"
-    name_tag = "${var.environment}-master-asg"
+    asg_name_tag = "${var.environment}-master-asg"
+    instance_name_tag = "${var.environment}-master"
+    instance_role_tag = "master"
 }
 
 #########################################################
@@ -516,7 +520,9 @@ module "slave_asg" {
     asg_max_size            = "${var.slave_asg_max_size}"
 
     tags_asg = "${local.tags_asg}"
-    name_tag = "${var.environment}-slave-asg"
+    asg_name_tag = "${var.environment}-slave-asg"
+    instance_name_tag = "${var.environment}-slave"
+    instance_role_tag = "slave"
 }
 
 #########################################################
@@ -690,7 +696,9 @@ module "public_slave_asg" {
     asg_load_balancers      = [ "${module.baile_elb.elb_id}", "${module.um_elb.elb_id}" ]
 
     tags_asg = "${local.tags_asg}"
-    name_tag = "${var.environment}-public-slave-asg"
+    asg_name_tag = "${var.environment}-public-slave-asg"
+    instance_name_tag = "${var.environment}-public-slave"
+    instance_role_tag = "public-slave"
 }
 
 #########################################################
@@ -763,4 +771,7 @@ module "captain_asg" {
     asg_max_size            = "${var.captain_asg_max_size}"
 
     tags_asg = "${local.tags_asg}"
+    asg_name_tag = "${var.environment}-captain-asg"
+    instance_name_tag = "${var.environment}-captain"
+    instance_role_tag = "captain"
 }

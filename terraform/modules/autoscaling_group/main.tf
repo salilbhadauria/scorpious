@@ -67,6 +67,9 @@ resource "aws_autoscaling_group" "asg" {
 
 
     tags = ["${concat(
-        list(map("key", "Name", "value", var.name_tag, "propagate_at_launch", true),),var.tags_asg)
+        list(map("key", "Name", "value", var.asg_name_tag, "propagate_at_launch", false),),
+        list(map("key", "Name", "value", var.instance_name_tag, "propagate_at_launch", true),),
+        list(map("key", "Role", "value", var.instance_role_tag, "propagate_at_launch", true),),
+        var.tags_asg)
     }"]
 }
