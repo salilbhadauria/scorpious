@@ -2,10 +2,14 @@
 
 cd /opt/dcos_services/
 
+# Wait for master node to become online
 until $(curl --output /dev/null --silent --head --fail http://$DCOS_MASTER:/); do sleep 5; done
 
 # Configure the DC/OS cli
 source setup_dcos_cli.sh
+
+# Wait for all nodes to become online
+until [[ $(dcos node | grep agent | wc -l) == $DCOS_NODES ]]; do sleep 5; done
 
 # Deploy frameworks from DC/OS universe
 dcos package install marathon-lb --yes

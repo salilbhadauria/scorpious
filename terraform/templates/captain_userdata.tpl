@@ -1,6 +1,7 @@
 #cloud-config
 environment:
   environment: ${environment}
+  dcos_nodes: ${dcos_nodes}
   dcos_master_url: ${dcos_master_url}
   aws_s3_bucket: ${dcos_apps_bucket}
   job_master_s3_region: ${aws_region}

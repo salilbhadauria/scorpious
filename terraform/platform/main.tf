@@ -736,6 +736,7 @@ data "template_file" "captain_userdata" {
     redshift_host = "${data.terraform_remote_state.redshift.redshift_url}"
     baile_lb_url = "${module.baile_elb.elb_dns_name}"
     um_service_url = "${module.um_elb.elb_dns_name}"
+    dcos_nodes = "${var.slave_asg_max_size + var.public_slave_asg_max_size}"
   }
 
   depends_on = [
