@@ -1,0 +1,51 @@
+{
+  "id": "baile",
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "deepcortex/baile:${DOCKER_IMAGE_VERSION}",
+      "network": "BRIDGE",
+      "portMappings": [
+        { "hostPort": 0,
+          "containerPort": 9000,
+          "labels": {
+            "VIP_0": "/baile:9000"
+          }
+        }
+      ],
+      "parameters": [
+        { "key": "env", "value": "AWS_S3_BUCKET=${AWS_S3_BUCKET}" },
+        { "key": "env", "value": "REDSHIFT_HOST=${REDSHIFT_HOST}" },
+        { "key": "env", "value": "REDSHIFT_USER=${REDSHIFT_USER}" },
+        { "key": "env", "value": "REDSHIFT_PASSWORD=${REDSHIFT_PASSWORD}" },
+        { "key": "env", "value": "MONGODB_HOSTS=${MONGODB_HOSTS}" },
+        { "key": "env", "value": "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" },
+        { "key": "env", "value": "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" },
+        { "key": "env", "value": "UM_SERVICE_URL=h${UM_SERVICE_URL}" },
+        { "key": "env", "value": "CORTEX_SEARCH_USER=${CORTEX_SEARCH_USER}" },
+        { "key": "env", "value": "CORTEX_SEARCH_PASSWORD=${CORTEX_SEARCH_PASSWORD}" },
+        { "key": "env", "value": "ARIES_SEARCH_USER=${ARIES_SEARCH_USER}" },
+        { "key": "env", "value": "ARIES_SEARCH_PASSWORD=${ARIES_SEARCH_PASSWORD}" }
+      ],
+      "forcePullImage": true
+    }
+  },
+  "instances": ${SRV_INSTANCES},
+  "cpus": ${SRV_CPUS},
+  "mem": ${SRV_MEM},
+  "constraints": [
+      [
+        "hostname",
+        "UNIQUE"
+      ]
+    ],
+  "healthChecks": [{
+    "protocol": "HTTP",
+    "path": "/api/insilico/v1.4/healthCheck",
+    "portIndex": 0,
+    "timeoutSeconds": 10,
+    "gracePeriodSeconds": 10,
+    "intervalSeconds": 2,
+    "maxConsecutiveFailures": 10
+  }]
+}

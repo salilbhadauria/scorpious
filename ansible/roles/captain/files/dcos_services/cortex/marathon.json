@@ -1,0 +1,50 @@
+{
+  "id": "cortex-api-rest",
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "deepcortex/cortex-api-rest:${DOCKER_IMAGE_VERSION}",
+      "network": "BRIDGE",
+      "portMappings": [
+        { "hostPort": 0,
+          "containerPort": 9000,
+          "labels": {
+            "VIP_0": "/cortex-api-rest:9000"
+          }
+        }
+      ],
+      "parameters": [
+        { "key": "env", "value": "HTTP_SEARCH_USER_NAME=${HTTP_SEARCH_USER_NAME}" },
+        { "key": "env", "value": "HTTP_SEARCH_USER_PASSWORD=${HTTP_SEARCH_USER_PASSWORD}" },
+        { "key": "env", "value": "RABBIT_HOSTS=${RABBIT_HOSTS}" },
+        { "key": "env", "value": "RABBIT_USERNAME=${RABBIT_USERNAME}" },
+        { "key": "env", "value": "RABBIT_PASSWORD=${RABBIT_PASSWORD}" },
+        { "key": "env", "value": "ARIES_REST_URL=${ARIES_REST_URL}" },
+        { "key": "env", "value": "ARIES_REST_VERSION=${ARIES_REST_VERSION}" },
+        { "key": "env", "value": "ARIES_SEARCH_USER_NAME=${ARIES_SEARCH_USER_NAME}" },
+        { "key": "env", "value": "ARIES_SEARCH_USER_PASSWORD=${ARIES_SEARCH_USER_PASSWORD}" },
+        { "key": "env", "value": "ARIES_COMMAND_USER_NAME=${ARIES_COMMAND_USER_NAME}" },
+        { "key": "env", "value": "ARIES_COMMAND_USER_PASSWORD=${ARIES_COMMAND_USER_PASSWORD}" }
+      ],
+      "forcePullImage": true
+    }
+  },
+  "instances": ${SRV_INSTANCES},
+  "cpus": ${SRV_CPUS},
+  "mem": ${SRV_MEM},
+  "constraints": [
+      [
+        "hostname",
+        "UNIQUE"
+      ]
+    ],
+  "healthChecks": [{
+    "protocol": "HTTP",
+    "path": "/v1/health",
+    "portIndex": 0,
+    "timeoutSeconds": 10,
+    "gracePeriodSeconds": 10,
+    "intervalSeconds": 2,
+    "maxConsecutiveFailures": 10
+  }]
+}
