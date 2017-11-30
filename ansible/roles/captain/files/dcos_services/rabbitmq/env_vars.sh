@@ -1,3 +1,4 @@
+#!/bin/bash
 export RMQ_DOCKER_IMAGE_VERSION="v1.0"
 export USER=${RABBIT_USERNAME}
 export PASSWORD=${RABBIT_PASSWORD}
