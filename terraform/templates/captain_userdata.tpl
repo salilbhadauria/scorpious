@@ -4,6 +4,7 @@ environment:
   dcos_nodes: ${dcos_nodes}
   dcos_master_url: ${dcos_master_url}
   aws_s3_bucket: ${dcos_apps_bucket}
+  aws_default_region: ${aws_region}
   job_master_s3_region: ${aws_region}
   job_master_s3_bucket: ${dcos_apps_bucket}
   dcos_master: ${dcos_master_url}
