@@ -11,6 +11,9 @@ source setup_dcos_cli.sh
 # Wait for all nodes to become online
 until [[ $(dcos node | grep agent | wc -l) == $DCOS_NODES ]]; do sleep 5; done
 
+# Retrieve slave node IPs
+export MONGODB_HOSTS=$(aws ec2 describe-instances --filters "Name=tag:Role,Values=slave" --query Reservations[].Instances[].PrivateIpAddress --output text | sed -e 's/\s/,/g')
+
 # Deploy frameworks from DC/OS universe
 dcos package install marathon-lb --yes
 dcos package install mongodb-replicaset --yes
