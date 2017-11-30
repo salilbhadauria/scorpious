@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-import os
-import boto3
 import yaml
 
 env_vars = {}
