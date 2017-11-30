@@ -415,6 +415,11 @@ module "master_elb_internal" {
   tags                = "${local.tags}"
 }
 
+resource "aws_iam_instance_profile" "master_instance_profile" {
+  name  = "master_instance_profile"
+  role = "${data.terraform_remote_state.iam.master_iam_role_name}"
+}
+
 module "master_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
@@ -425,7 +430,7 @@ module "master_asg" {
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.master_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.master_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
+    lc_iam_instance_profile = "${aws_iam_instance_profile.master_instance_profile.id}"
 
     asg_name                = "${var.environment}-master-asg"
     asg_subnet_ids          = "${data.terraform_remote_state.vpc.public_subnet_ids}"
@@ -501,6 +506,11 @@ data "template_file" "slave_userdata" {
   ]
 }
 
+resource "aws_iam_instance_profile" "slave_instance_profile" {
+  name  = "slave_instance_profile"
+  role = "${data.terraform_remote_state.iam.slave_iam_role_name}"
+}
+
 module "slave_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
@@ -511,7 +521,7 @@ module "slave_asg" {
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.slave_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
+    lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
 
     asg_name                = "${var.environment}-slave-asg"
     asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
@@ -686,7 +696,7 @@ module "public_slave_asg" {
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.public_slave_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.public_slave_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
+    lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
 
     asg_name                = "${var.environment}-public-slave-asg"
     asg_subnet_ids          = "${data.terraform_remote_state.vpc.public_subnet_ids}"
@@ -752,6 +762,11 @@ data "template_file" "captain_userdata" {
   ]
 }
 
+resource "aws_iam_instance_profile" "captain_instance_profile" {
+  name  = "captain_instance_profile"
+  role = "${data.terraform_remote_state.iam.captain_iam_role_name}"
+}
+
 module "captain_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
@@ -762,7 +777,7 @@ module "captain_asg" {
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.captain_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.captain_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
+    lc_iam_instance_profile = "${aws_iam_instance_profile.captain_instance_profile.id}"
 
     asg_name                = "${var.environment}-captain-asg"
     asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
