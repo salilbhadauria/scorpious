@@ -11,7 +11,7 @@ terraform {
 data "terraform_remote_state" "iam" {
   backend = "s3"
   config {
-    bucket = "${var.bucket}"
+    bucket = "${var.tf_bucket}"
     key    = "${var.aws_region}/${var.environment}/iam/terraform.tfstate"
     region = "${var.aws_region}"
   }
@@ -237,7 +237,9 @@ module "asg_nat" {
     asg_max_size         = "${length(var.azs)}"
 
     tags_asg = "${local.tags_asg}"
-    name_tag = "NAT"
+    asg_name_tag = "${var.environment}-nat-asg"
+    instance_name_tag = "${var.environment}-nat"
+    instance_role_tag = "nat"
 
 }
 
@@ -258,5 +260,7 @@ module "asg_bastion" {
     asg_max_size         = 1
 
     tags_asg = "${local.tags_asg}"
-    name_tag = "bastion"
+    asg_name_tag = "${var.environment}-bastion-asg"
+    instance_name_tag = "${var.environment}-bastion"
+    instance_role_tag = "bastion"
 }
