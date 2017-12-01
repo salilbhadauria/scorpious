@@ -30,7 +30,7 @@ security: {{ security }}
 {% if registry == true %}
 cluster_docker_credentials:
   auths:
-    "{{ registry_url }}":
+    '{{ registry_url }}':
        auth: {{ docker_registry_auth_token }}
        email: {{ email }}
   cluster_docker_credentials_dcos_owned: true
