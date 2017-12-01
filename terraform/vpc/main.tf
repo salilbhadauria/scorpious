@@ -230,7 +230,7 @@ module "asg_nat" {
     lc_user_data       = "${data.template_file.nat_instance_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.nat_instance_profile.id}"
 
-    asg_name             = "nat-instance-asg"
+    asg_name             = "${var.environment}-nat-asg"
     asg_subnet_ids       = "${module.vpc.public_subnet_ids}"
     asg_desired_capacity = "${length(var.azs)}"
     asg_min_size         = "${length(var.azs)}"
@@ -253,7 +253,7 @@ module "asg_bastion" {
     lc_key_name        = "${module.devops_key.name}"
     lc_security_groups = [ "${module.sg_bastion.id}" ]
 
-    asg_name             = "bastion-asg"
+    asg_name             = "${var.environment}-bastion-asg"
     asg_subnet_ids       = "${module.vpc.public_subnet_ids}"
     asg_desired_capacity = 1
     asg_min_size         = 1
