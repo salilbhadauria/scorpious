@@ -66,7 +66,7 @@ run_packer() {
       -var "git_commit=$GIT_COMMIT" \
       -var "build_uuid=$UUID" \
       -var "image_name=$IMAGE" \
-      "$@" packer/aws.json
+      "$@" packer/$IMAGE.json
   set +x
 }
 
