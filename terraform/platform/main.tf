@@ -185,7 +185,7 @@ resource "aws_iam_instance_profile" "bootstrap_instance_profile" {
 
 module "bootstrap_elb" {
   source              = "../../terraform/modules/elb"
-  elb_name            = "bootstrap-elb"
+  elb_name            = "${var.environment}-bootstrap-elb"
   elb_is_internal     = "true"
   elb_security_group  = "${module.bootstrap_elb_sg.id}"
   subnets             = [ "${data.terraform_remote_state.vpc.private_egress_subnet_ids}" ]
@@ -396,7 +396,7 @@ data "template_file" "master_userdata" {
 
 module "master_elb" {
   source              = "../../terraform/modules/elb_external_masters"
-  elb_name            = "master-elb"
+  elb_name            = "${var.environment}-master-elb"
   elb_is_internal     = "false"
   elb_security_group  = "${module.master_elb_sg.id}"
   subnets             = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
@@ -407,7 +407,7 @@ module "master_elb" {
 
 module "master_elb_internal" {
   source              = "../../terraform/modules/elb_internal_masters"
-  elb_name            = "master-elb-internal"
+  elb_name            = "${var.environment}-master-elb-internal"
   elb_security_group  = "${module.master_elb_internal_sg.id}"
   subnets             = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
   health_check_target = "TCP:5050"
@@ -567,7 +567,7 @@ module "baile_elb_sg" {
 
 module "baile_elb" {
   source              = "../../terraform/modules/elb"
-  elb_name            = "baile-elb"
+  elb_name            = "${var.environment}-baile-elb"
   elb_is_internal     = "false"
   elb_security_group  = "${module.baile_elb_sg.id}"
   subnets             = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
@@ -612,7 +612,7 @@ module "um_elb_sg" {
 
 module "um_elb" {
   source              = "../../terraform/modules/elb"
-  elb_name            = "um-elb"
+  elb_name            = "${var.environment}-um-elb"
   elb_is_internal     = "false"
   elb_security_group  = "${module.um_elb_sg.id}"
   subnets             = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
