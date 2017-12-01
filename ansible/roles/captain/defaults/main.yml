@@ -24,7 +24,7 @@ aries_srv_mem: 1024
 
 # Baile
 baile_docker_image_version: "testv6"
-baile_srv_instances:
+baile_srv_instances: 1
 baile_srv_cpus: 1
 baile_srv_mem: 4096
 
@@ -50,9 +50,8 @@ logstash_srv_cpus: 0.1
 logstash_srv_mem: 1024
 
 # Orion
-docker_image_version: "0.0.0-a23457121b6926ad1aa0a8163306ae4c50255b9"
-http_search_user_name: "orion-search-user"
-http_search_user_password: "password"
+orion_docker_image_version: "0.0.0-a23457121b6926ad1aa0a8163306ae4c50255b9"
+orion_http_search_user_name: "orion-search-user"
 job_master_start_timeout: "5minutes"
 job_master_heartbeat_timeout: "5minutes"
 job_master_docker_image: "deepcortex/cortex-job-master:0.9.3-4-g3a424df"
