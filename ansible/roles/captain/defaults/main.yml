@@ -8,7 +8,6 @@ dcos_username: "user"
 dcos_password: "pass"
 apps_aws_access_key: "aws_access_key"
 apps_aws_secret_key: "aws_secret_key"
-rmq_docker_image_version: "latest"
 rabbit_hosts: "rabbitmq.marathon.l4lb.thisdcos.directory"
 rabbit_user: "rabbit_user"
 
