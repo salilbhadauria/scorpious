@@ -1,0 +1,33 @@
+{
+  "id": "baile-nginx",
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "deepcortex/baile-nginx:${DOCKER_IMAGE_VERSION}",
+      "network": "BRIDGE",
+      "portMappings": [
+        { "hostPort": 0, "containerPort": 80, "servicePort": 10000 }
+      ],
+      "parameters": [
+        { "key": "env", "value": "S3_BUCKET=${S3_BUCKET}" }
+      ],
+      "forcePullImage":true
+    }
+  },
+  "instances": ${SRV_INSTANCES},
+  "cpus": ${SRV_CPUS},
+  "mem": ${SRV_MEM},
+  "healthChecks": [{
+    "protocol": "HTTP",
+    "path": "/",
+    "portIndex": 0,
+    "timeoutSeconds": 10,
+    "gracePeriodSeconds": 10,
+    "intervalSeconds": 2,
+    "maxConsecutiveFailures": 10
+  }],
+  "labels":{
+    "HAPROXY_GROUP":"external",
+    "HAPROXY_0_VHOST":"${BAILE_LB_URL}"
+  }
+}

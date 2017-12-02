@@ -3,7 +3,7 @@
 variable "aws_region" {}
 variable "environment" {}
 
-variable "bucket" {}
+variable "tf_bucket" {}
 
 variable "vpc_cidr" {}
 variable "azs" {
@@ -65,4 +65,3 @@ variable "bastion_ami_id" {}
 
 variable "nat_ami_id" { default = "ami-15e9c770" }
 variable "access_cidr" {}
-

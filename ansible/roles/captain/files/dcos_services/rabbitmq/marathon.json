@@ -1,0 +1,71 @@
+{
+  "id": "rabbitmq",
+  "instances": ${SRV_INSTANCES},
+  "cpus": ${SRV_CPUS},
+  "mem": ${SRV_MEM},
+  "constraints": [
+    [
+      "hostname",
+      "UNIQUE"
+    ]
+  ],
+  "env": {
+    "RABBITMQ_DEFAULT_USER": "${USER}",
+    "RABBITMQ_DEFAULT_PASS": "${PASSWORD}",
+    "RABBITMQ_ERLANG_COOKIE": "random_erlang_c00kie"
+  },
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "deepcortex/dcos-rabbitmq:${DOCKER_IMAGE_VERSION}",
+      "forcePullImage": true,
+      "network": "USER",
+      "portMappings": [
+        {
+          "name": "amqp-0-9-x",
+          "protocol": "tcp",
+          "containerPort": 5672,
+          "hostPort": 0,
+          "labels": {
+            "VIP_0": "/rabbitmq:5672"
+          }
+        },
+        {
+          "name": "rabbitmq-management",
+          "protocol": "tcp",
+          "containerPort": 15672,
+          "hostPort": 0,
+          "labels": {
+            "VIP_0": "/rabbitmq:15672"
+          }
+        }
+      ]
+    },
+    "volumes": [
+      {
+        "containerPath": "/var/lib/rabbitmq",
+        "hostPath": "/var/lib/rabbitmq",
+        "mode": "RW"
+      }
+    ]
+  },
+  "ipAddress": {
+      "networkName": "dcos"
+  },
+  "upgradeStrategy": {
+    "minimumHealthCapacity": 0,
+    "maximumOverCapacity": 0
+  },
+  "healthChecks": [
+    {
+      "protocol": "COMMAND",
+      "command": {
+        "value": "rabbitmqctl status"
+      },
+      "gracePeriodSeconds": 300,
+      "intervalSeconds": 60,
+      "timeoutSeconds": 20,
+      "maxConsecutiveFailures": 3
+    }
+  ]
+}

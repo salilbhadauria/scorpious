@@ -21,6 +21,11 @@ if [ -z "$AWS_PROFILE" ];then
   usage
 fi
 
+if [ -z "$TF_VAR_dcos_password" ];then
+  echo "TF_VAR_dcos_password is not set - please run export TF_VAR_dcos_password=YOUR_PASSWORD"
+  usage
+fi
+
 export ACTION=$1
 export CONFIG=$2
 export STACK=$3
@@ -31,7 +36,7 @@ function set_backend_variables {
   REGION=$(awk -F\" '/region/{print $2}'  "environments/$CONFIG.tfvars")
   ACCOUNT=$(awk -F\" '/account/{print $2}'  "environments/$CONFIG.tfvars")
   ENVIRONMENT=$(awk -F\" '/environment /{print $2}'  "environments/$CONFIG.tfvars" | tr -d '\n')
-  BUCKET="$(awk -F\" '/bucket/{print $2}'  "environments/$CONFIG.tfvars")"
+  BUCKET="$(awk -F\" '/^tf_bucket/{print $2}'  "environments/$CONFIG.tfvars")"
   echo "Using bucket [$BUCKET] for account [$ACCOUNT]"
 }
 

@@ -1,0 +1,14 @@
+{
+  "service": {
+    "name": "elastic"
+  },
+  "master_nodes": {
+    "placement": "hostname:unique"
+  },
+  "data_nodes": {
+    "count": 3,
+    "disk": 100000,
+    "disk_type": "MOUNT",
+    "placement": "hostname:unique"
+  }
+}

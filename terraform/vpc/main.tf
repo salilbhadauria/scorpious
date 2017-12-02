@@ -11,7 +11,7 @@ terraform {
 data "terraform_remote_state" "iam" {
   backend = "s3"
   config {
-    bucket = "${var.bucket}"
+    bucket = "${var.tf_bucket}"
     key    = "${var.aws_region}/${var.environment}/iam/terraform.tfstate"
     region = "${var.aws_region}"
   }
@@ -230,14 +230,16 @@ module "asg_nat" {
     lc_user_data       = "${data.template_file.nat_instance_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.nat_instance_profile.id}"
 
-    asg_name             = "nat-instance-asg"
+    asg_name             = "${var.environment}-nat-asg"
     asg_subnet_ids       = "${module.vpc.public_subnet_ids}"
     asg_desired_capacity = "${length(var.azs)}"
     asg_min_size         = "${length(var.azs)}"
     asg_max_size         = "${length(var.azs)}"
 
     tags_asg = "${local.tags_asg}"
-    name_tag = "NAT"
+    asg_name_tag = "${var.environment}-nat-asg"
+    instance_name_tag = "${var.environment}-nat"
+    instance_role_tag = "nat"
 
 }
 
@@ -251,12 +253,14 @@ module "asg_bastion" {
     lc_key_name        = "${module.devops_key.name}"
     lc_security_groups = [ "${module.sg_bastion.id}" ]
 
-    asg_name             = "bastion-asg"
+    asg_name             = "${var.environment}-bastion-asg"
     asg_subnet_ids       = "${module.vpc.public_subnet_ids}"
     asg_desired_capacity = 1
     asg_min_size         = 1
     asg_max_size         = 1
 
     tags_asg = "${local.tags_asg}"
-    name_tag = "bastion"
+    asg_name_tag = "${var.environment}-bastion-asg"
+    instance_name_tag = "${var.environment}-bastion"
+    instance_role_tag = "bastion"
 }

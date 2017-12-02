@@ -1,0 +1,42 @@
+{
+  "id": "logstash",
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "deepcortex/logstash-rmq:${DOCKER_IMAGE_VERSION}",
+      "network": "HOST",
+      "portMappings": [],
+      "parameters": [
+        { "key": "env", "value": "RABBITMQ_USER=${RABBITMQ_USER}" },
+        { "key": "env", "value": "RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}" }
+      ],
+      "forcePullImage":true
+    }
+  },
+  "instances": ${SRV_INSTANCES},
+  "cpus": ${SRV_CPUS},
+  "mem": ${SRV_MEM},
+  "portDefinitions": [
+    {
+      "port": 5044,
+      "protocol": "tcp"
+    },
+    {
+      "port": 9600,
+      "protocol": "tcp"
+    }
+  ],
+  "healthChecks": [
+    {
+      "gracePeriodSeconds": 300,
+      "intervalSeconds": 60,
+      "timeoutSeconds": 20,
+      "maxConsecutiveFailures": 3,
+      "delaySeconds": 15,
+      "command": {
+        "value": "pgrep java && exit 0 || exit 1"
+      },
+      "protocol": "COMMAND"
+    }
+  ]
+}
