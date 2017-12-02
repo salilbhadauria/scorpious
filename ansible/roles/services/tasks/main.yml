@@ -1,0 +1,8 @@
+---
+
+- import_tasks: master.yml
+  when: "'master' in group_names"
+  tags: services_master
+- import_tasks: slave.yml
+  when: "'slave' in group_names"
+  tags: services_slave
