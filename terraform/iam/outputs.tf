@@ -7,3 +7,12 @@ output "nat_instance_iam_role_name" {
 output "bootstrap_iam_role_name" {
     value = "${aws_iam_role.bootstrap_role.name}"
 }
+output "master_iam_role_name" {
+    value = "${aws_iam_role.master_role.name}"
+}
+output "slave_iam_role_name" {
+    value = "${aws_iam_role.slave_role.name}"
+}
+output "captain_iam_role_name" {
+    value = "${aws_iam_role.captain_role.name}"
+}

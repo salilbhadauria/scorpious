@@ -2,7 +2,7 @@
 
 variable "aws_region" {}
 variable "environment" {}
-variable "bucket" {}
+variable "tf_bucket" {}
 variable "account" {}
 variable "private_domain" {}
 
@@ -14,6 +14,9 @@ variable "bootstrap_asg_max_size" {}
 variable "bootstrap_elb_dns_name" {}
 variable "s3_prefix" {}
 variable "cluster_name" {}
+variable "dcos_stack_bucket" {}
+variable "dcos_apps_bucket" {}
+variable "dcos_password" {}
 
 # Master vars
 
@@ -33,6 +36,12 @@ variable "slave_asg_max_size" {}
 variable "public_slave_asg_desired_capacity" {}
 variable "public_slave_asg_min_size" {}
 variable "public_slave_asg_max_size" {}
+
+# Captain vars
+
+variable "captain_asg_desired_capacity" {}
+variable "captain_asg_min_size" {}
+variable "captain_asg_max_size" {}
 
 variable "tag_owner" {}
 variable "tag_usage" {}

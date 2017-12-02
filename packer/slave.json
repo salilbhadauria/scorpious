@@ -15,7 +15,8 @@
         "build_uuid": "",
         "docker_registry_auth_token": "{{ env `DOCKER_REGISTRY_AUTH_TOKEN`}}",
         "customer_key": "{{ env `CUSTOMER_KEY`}}",
-        "superuser_password_hash": "{{ env `SUPERUSER_PASSWORD_HASH`}}"
+        "dcos_username": "{{ env `DCOS_USERNAME`}}",
+        "dcos_password": "{{ env `DCOS_PASSWORD`}}"
     },
     "builders": [{
         "type": "amazon-ebs",
@@ -32,7 +33,7 @@
         "launch_block_device_mappings": [
           {
             "device_name": "/dev/sda1",
-            "volume_size": 8,
+            "volume_size": 64,
             "volume_type": "gp2",
             "delete_on_termination": true
           }
@@ -60,7 +61,8 @@
         "extra_arguments": [
          "--extra-vars \"customer_key={{ user `customer_key`}} \"",
           "-e \"docker_registry_auth_token={{ user `docker_registry_auth_token`}}\"",
-          "-e 'superuser_password_hash={{ user `superuser_password_hash`}}'"
+          "-e \"dcos_username={{ user `dcos_username`}}\"",
+          "-e \"dcos_password={{ user `dcos_password`}}\""
         ]
     },
     {

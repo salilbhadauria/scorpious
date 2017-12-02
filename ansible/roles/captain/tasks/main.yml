@@ -1,0 +1,87 @@
+---
+- name: Install ansible dependencies for docker_login
+  pip:
+    name: docker-py
+
+- name: Start docker
+  service:
+    name: docker
+    state: started
+
+# Only needed if we want to run docker containers on captain
+# Needs to be fixed.
+# - name: Login to dockerhub
+#   docker_login:
+#     registry: index.docker.io/v1/
+#     email: "{{ email }}"
+#     username: "{{ docker_login_username }}"
+#     password: "{{ docker_registry_auth_token }}"
+
+- name: Download dcos cli
+  get_url:
+    url: https://downloads.dcos.io/binaries/cli/linux/x86-64/dcos-1.10/dcos
+    dest: /usr/local/bin/dcos
+    mode: 0755
+
+- name: Symlink /usr/local/bin/dcos to /usr/bin/dcos
+  file:
+    src: /usr/local/bin/dcos
+    dest: /usr/bin/dcos
+    state: link
+
+- name: Copy services configuration files
+  copy:
+   dest: /opt/
+   src: dcos_services
+   owner: root
+   group: root
+   mode: 0644
+
+- name: Create a unique passwords
+  shell: head /dev/urandom | tr -dc A-Za-z0-9 | head -c 17
+  register: pwd
+  with_items:
+    - rabbit_password
+    - aries_http_search_user_password
+    - aries_http_command_user_password
+    - cortex_http_search_user_password
+    - orion_http_search_user_password
+
+- name: Populate passwords
+  set_fact:
+    passwords: "{{ passwords|default({}) | combine( {item.item: item.stdout} ) }}"
+  with_items: "{{ pwd.results }}"
+
+- name: Generate /etc/environment file
+  template:
+    src: etc/environment.j2
+    dest: /etc/environment
+    mode: 0644
+
+- name: Print password
+  debug:
+    var: passwords
+
+- name: Print passwords
+  debug:
+    msg: "Value of {{ item }}: {{ passwords[item] }}"
+  with_items:
+    - rabbit_password
+    - aries_http_search_user_password
+    - aries_http_command_user_password
+    - cortex_http_search_user_password
+    - orion_http_search_user_password
+
+- name: Install services
+  template:
+    src: "{{ item }}.service.j2"
+    dest: "/etc/systemd/system/{{ item }}.service"
+  with_items:
+    - captain
+
+- name: Enable services
+  service:
+    name: "{{ item }}"
+    enabled: yes
+  with_items:
+    - captain

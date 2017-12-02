@@ -1,4 +1,6 @@
 #cloud-config
+environment:
+  environment: ${environment}
 manage_resolv_conf: false
 preserve_hostname: true
 runcmd:

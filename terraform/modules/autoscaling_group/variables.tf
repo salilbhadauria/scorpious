@@ -118,7 +118,15 @@ variable "tags_asg" {
     default = []
 }
 
-variable "name_tag" {
+variable "asg_name_tag" {
+    description   = "Name for autoscaling group"
+    default = ""
+}
+variable "instance_name_tag" {
     description   = "Name for autoscaling group instances"
+    default = ""
+}
+variable "instance_role_tag" {
+    description   = "Role for autoscaling group instances"
     default = ""
 }
