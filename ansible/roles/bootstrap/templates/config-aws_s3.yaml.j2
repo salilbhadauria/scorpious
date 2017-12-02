@@ -33,6 +33,6 @@ cluster_docker_credentials:
     '{{ registry_url }}':
        auth: {{ docker_registry_auth_token }}
        email: {{ email }}
-  cluster_docker_credentials_dcos_owned: true
-  cluster_docker_credentials_enabled: true
+cluster_docker_credentials_dcos_owned: true
+cluster_docker_credentials_enabled: true
 {% endif %}
