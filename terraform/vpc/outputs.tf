@@ -25,5 +25,8 @@ output "devops_key_name" {
 }
 
 output "sg_private_egress_subnet_id" {
-  value = "${module.sg_private_egress_subnet.id}"  
+  value = "${module.sg_private_egress_subnet.id}"
+}
+output "sg_bastion_id" {
+  value = "${module.sg_bastion.id}"
 }
