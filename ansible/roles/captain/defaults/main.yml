@@ -50,7 +50,7 @@ logstash_srv_cpus: 0.1
 logstash_srv_mem: 1024
 
 # Orion
-orion_docker_image_version: "0.0.0-a23457121b6926ad1aa0a8163306ae4c50255b9"
+orion_docker_image_version: "0.0.0-c12e95e9784037e5ab452183c5bf900ab61cf6dd"
 orion_http_search_user_name: "orion-search-user"
 job_master_start_timeout: "5minutes"
 job_master_heartbeat_timeout: "5minutes"

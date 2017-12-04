@@ -3,7 +3,7 @@
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "${DOCKER_IMAGE_VERSION}",
+      "image": "deepcortex/orion-api-rest:${DOCKER_IMAGE_VERSION}",
       "network": "BRIDGE",
       "portMappings": [
         {
