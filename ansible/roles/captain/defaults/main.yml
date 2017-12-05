@@ -17,7 +17,7 @@ aries_http_search_user_name: "aries-search-user"
 aries_http_command_user_name: "aries-command-user"
 elastic_host: "coordinator.elastic.l4lb.thisdcos.directory"
 elastic_port: 9200
-elastic_ssl: false
+elastic_ssl: 'false'
 aries_srv_instances: 3
 aries_srv_cpus: 1
 aries_srv_mem: 1024

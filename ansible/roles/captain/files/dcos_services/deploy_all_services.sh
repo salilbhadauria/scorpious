@@ -2,6 +2,12 @@
 
 cd /opt/dcos_services/
 
+# Upload front end files to S3
+aws s3 ls "s3://${AWS_S3_BUCKET}/static-content/dev/"
+if [[ $? -ne 0 ]]; then
+  aws s3 sync front-end "s3://${AWS_S3_BUCKET}/static-content/dev/"
+fi
+
 # Wait for master node to become online
 until $(curl --output /dev/null --silent --head --fail http://$DCOS_MASTER:/); do sleep 5; done
 
