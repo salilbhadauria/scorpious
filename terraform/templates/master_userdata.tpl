@@ -19,3 +19,4 @@ runcmd:
   - until $(curl --output /dev/null --silent --head --fail http://${bootstrap_dns}:8080/dcos_install.sh); do sleep 5; done
   - curl http://${bootstrap_dns}:8080/dcos_install.sh -o /tmp/dcos_install.sh -s
   - cd /tmp; bash dcos_install.sh master
+  - service ntpd restart

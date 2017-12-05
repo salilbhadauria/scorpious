@@ -2,9 +2,12 @@
 packer_base_ami                 = "ami-6f61e60e"
 packer_ssh_user                 = "ec2-user"
 
+# Ansible
+dcos_apps_bucket                = "deepcortex-dcos-apps"
+
 # Terraform
 # VPC
-bucket                          = "deepcortex-gov-terraform"
+tf_bucket                          = "deepcortex-gov-terraform"
 aws_region                      = "us-gov-west-1"
 environment                     = "govcloud"
 account                         = "475276989310"
@@ -21,6 +24,7 @@ tag_usage                       = "test"
 access_cidr                     = "205.251.75.6/32"
 
 # Platform
+dcos_stack_bucket               = "deepcortex-dcos-backend"
 private_domain                  = "private.devops.deepcortex.ai"
 bootstrap_asg_desired_capacity  = "1"
 bootstrap_asg_min_size          = "1"
@@ -41,6 +45,10 @@ slave_asg_max_size             = "3"
 public_slave_asg_desired_capacity  = "1"
 public_slave_asg_min_size          = "1"
 public_slave_asg_max_size          = "1"
+
+captain_asg_desired_capacity  = "1"
+captain_asg_min_size          = "1"
+captain_asg_max_size          = "1"
 
 # Redshift
 redshift_family = "redshift-1.0"
