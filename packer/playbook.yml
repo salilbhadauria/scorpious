@@ -73,9 +73,13 @@
 
 - hosts: master
   become: yes
+  roles:
+    - services
 
 - hosts: slave
   become: yes
+  roles:
+    - services
 
 - hosts: captain
   become: yes
