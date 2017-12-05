@@ -117,18 +117,19 @@ module "bootstrap_sg" {
     sg_name = "bootstrap"
     sg_description = "some description"
 
-    ingress_rules_cidr = [
+    ingress_rules_sgid_count = 2
+    ingress_rules_sgid = [
         {
             protocol    = "tcp"
             from_port   = "22"
             to_port     = "22"
-            cidr_blocks = "0.0.0.0/0"
+            sg_id = "${data.terraform_remote_state.vpc.sg_bastion_id}"
         },
         {
             protocol    = "tcp"
             from_port   = "8080"
             to_port     = "8080"
-            cidr_blocks = "0.0.0.0/0"
+            sg_id = "${module.bootstrap_elb_sg.id}"
         },
     ]
 
@@ -156,13 +157,7 @@ module "bootstrap_elb_sg" {
             protocol    = "tcp"
             from_port   = "8080"
             to_port     = "8080"
-            cidr_blocks = "0.0.0.0/0"
-        },
-        {
-            protocol    = "all"
-            from_port   = "0"
-            to_port     = "0"
-            cidr_blocks = "0.0.0.0/0"
+            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
         },
     ]
 
@@ -254,48 +249,85 @@ module "master_sg" {
     sg_name = "master"
     sg_description = "some description"
 
-    ingress_rules_cidr = [
+    ingress_rules_sgid_count = 13
+    ingress_rules_sgid = [
         {
             protocol    = "tcp"
             from_port   = "22"
             to_port     = "22"
-            cidr_blocks = "0.0.0.0/0"
+            sg_id = "${data.terraform_remote_state.vpc.sg_bastion_id}"
         },
         {
             protocol    = "tcp"
             from_port   = "80"
             to_port     = "80"
-            cidr_blocks = "0.0.0.0/0"
+            sg_id = "${module.master_elb_sg.id}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "80"
+            to_port     = "80"
+            sg_id = "${module.master_elb_internal_sg.id}"
         },
         {
             protocol    = "tcp"
             from_port   = "443"
             to_port     = "443"
-            cidr_blocks = "0.0.0.0/0"
+            sg_id = "${module.master_elb_sg.id}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "443"
+            to_port     = "443"
+            sg_id = "${module.master_elb_internal_sg.id}"
         },
         {
             protocol    = "tcp"
             from_port   = "5050"
             to_port     = "5050"
-            cidr_blocks = "0.0.0.0/0"
+            sg_id = "${module.master_elb_sg.id}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "5050"
+            to_port     = "5050"
+            sg_id = "${module.master_elb_internal_sg.id}"
         },
         {
             protocol    = "tcp"
             from_port   = "2181"
             to_port     = "2181"
-            cidr_blocks = "0.0.0.0/0"
+            sg_id = "${module.master_elb_sg.id}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "2181"
+            to_port     = "2181"
+            sg_id = "${module.master_elb_internal_sg.id}"
         },
         {
             protocol    = "tcp"
             from_port   = "8080"
             to_port     = "8080"
-            cidr_blocks = "0.0.0.0/0"
+            sg_id = "${module.master_elb_sg.id}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "8080"
+            to_port     = "8080"
+            sg_id = "${module.master_elb_internal_sg.id}"
         },
         {
             protocol    = "tcp"
             from_port   = "8181"
             to_port     = "8181"
-            cidr_blocks = "0.0.0.0/0"
+            sg_id = "${module.master_elb_sg.id}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "8181"
+            to_port     = "8181"
+            sg_id = "${module.master_elb_internal_sg.id}"
         },
     ]
 
@@ -323,13 +355,19 @@ module "master_elb_sg" {
             protocol    = "tcp"
             from_port   = "80"
             to_port     = "80"
-            cidr_blocks = "0.0.0.0/0"
+            cidr_blocks = "${var.access_cidr}"
         },
         {
             protocol    = "tcp"
             from_port   = "443"
             to_port     = "443"
-            cidr_blocks = "0.0.0.0/0"
+            cidr_blocks = "${var.access_cidr}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "8181"
+            to_port     = "8181"
+            cidr_blocks = "${var.access_cidr}"
         },
     ]
 
@@ -357,37 +395,37 @@ module "master_elb_internal_sg" {
             protocol    = "tcp"
             from_port   = "80"
             to_port     = "80"
-            cidr_blocks = "0.0.0.0/0"
+            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
         },
         {
             protocol    = "tcp"
             from_port   = "443"
             to_port     = "443"
-            cidr_blocks = "0.0.0.0/0"
+            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
         },
         {
             protocol    = "tcp"
             from_port   = "5050"
             to_port     = "5050"
-            cidr_blocks = "0.0.0.0/0"
+            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
         },
         {
             protocol    = "tcp"
             from_port   = "2181"
             to_port     = "2181"
-            cidr_blocks = "0.0.0.0/0"
+            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
         },
         {
             protocol    = "tcp"
             from_port   = "8080"
             to_port     = "8080"
-            cidr_blocks = "0.0.0.0/0"
+            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
         },
         {
             protocol    = "tcp"
             from_port   = "8181"
             to_port     = "8181"
-            cidr_blocks = "0.0.0.0/0"
+            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
         },
     ]
 
@@ -476,30 +514,19 @@ module "slave_sg" {
     sg_name = "slave"
     sg_description = "some description"
 
-    ingress_rules_cidr = [
+    ingress_rules_sgid_count = 2
+    ingress_rules_sgid = [
         {
             protocol    = "tcp"
             from_port   = "22"
             to_port     = "22"
-            cidr_blocks = "0.0.0.0/0"
+            sg_id = "${data.terraform_remote_state.vpc.sg_bastion_id}"
         },
         {
             protocol    = "tcp"
-            from_port   = "80"
-            to_port     = "80"
-            cidr_blocks = "0.0.0.0/0"
-        },
-        {
-            protocol    = "tcp"
-            from_port   = "443"
-            to_port     = "443"
-            cidr_blocks = "0.0.0.0/0"
-        },
-        {
-            protocol    = "tcp"
-            from_port   = "5050"
-            to_port     = "5050"
-            cidr_blocks = "0.0.0.0/0"
+            from_port   = "22"
+            to_port     = "22"
+            sg_id = "${module.captain_sg.id}"
         },
     ]
 
@@ -571,7 +598,13 @@ module "baile_elb_sg" {
             protocol    = "tcp"
             from_port   = "80"
             to_port     = "80"
-            cidr_blocks = "0.0.0.0/0"
+            cidr_blocks = "${var.access_cidr}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "80"
+            to_port     = "80"
+            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
         },
     ]
 
@@ -616,7 +649,13 @@ module "um_elb_sg" {
             protocol    = "tcp"
             from_port   = "80"
             to_port     = "80"
-            cidr_blocks = "0.0.0.0/0"
+            cidr_blocks = "${var.access_cidr}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "80"
+            to_port     = "80"
+            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
         },
     ]
 
@@ -656,30 +695,31 @@ module "public_slave_sg" {
     sg_name = "public-slave"
     sg_description = "some description"
 
-    ingress_rules_cidr = [
+    ingress_rules_sgid_count = 4
+    ingress_rules_sgid = [
         {
             protocol    = "tcp"
             from_port   = "22"
             to_port     = "22"
-            cidr_blocks = "0.0.0.0/0"
+            sg_id = "${data.terraform_remote_state.vpc.sg_bastion_id}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "22"
+            to_port     = "22"
+            sg_id = "${module.captain_sg.id}"
         },
         {
             protocol    = "tcp"
             from_port   = "80"
             to_port     = "80"
-            cidr_blocks = "0.0.0.0/0"
+            sg_id = "${module.um_elb_sg.id}"
         },
         {
             protocol    = "tcp"
-            from_port   = "443"
-            to_port     = "443"
-            cidr_blocks = "0.0.0.0/0"
-        },
-        {
-            protocol    = "tcp"
-            from_port   = "5050"
-            to_port     = "5050"
-            cidr_blocks = "0.0.0.0/0"
+            from_port   = "80"
+            to_port     = "80"
+            sg_id = "${module.baile_elb_sg.id}"
         },
     ]
 
@@ -742,12 +782,13 @@ module "captain_sg" {
     sg_name = "captain"
     sg_description = "some description"
 
-    ingress_rules_cidr = [
+    ingress_rules_sgid_count = 1
+    ingress_rules_sgid = [
         {
             protocol    = "tcp"
             from_port   = "22"
             to_port     = "22"
-            cidr_blocks = "0.0.0.0/0"
+            sg_id = "${data.terraform_remote_state.vpc.sg_bastion_id}"
         },
     ]
 
