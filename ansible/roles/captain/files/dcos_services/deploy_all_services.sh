@@ -5,6 +5,7 @@ cd /opt/dcos_services/
 # Upload front end files to S3
 aws s3 ls "s3://${AWS_S3_BUCKET}/static-content/dev/"
 if [[ $? -ne 0 ]]; then
+  tar -xvf front-end.tar.gz  
   aws s3 sync front-end "s3://${AWS_S3_BUCKET}/static-content/dev/"
 fi
 

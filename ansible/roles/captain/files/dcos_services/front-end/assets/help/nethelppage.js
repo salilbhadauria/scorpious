@@ -1,1 +1,0 @@
-nethelpRedirect('index.html');
