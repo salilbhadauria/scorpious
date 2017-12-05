@@ -56,6 +56,27 @@ resource "aws_s3_bucket" "dcos_apps_bucket" {
   }
 }
 
+data "template_file" "dcos_apps_bucket_policy" {
+  template = "${file("../../terraform/templates/dcos_apps_bucket_policy.tpl")}"
+
+  vars {
+    dcos_apps_bucket_arn = "${aws_s3_bucket.dcos_apps_bucket.arn}"
+  }
+
+  depends_on = [
+    "aws_s3_bucket.dcos_apps_bucket"
+  ]
+}
+
+resource "aws_s3_bucket_policy" "dcos_apps_bucket_policy" {
+  bucket = "${aws_s3_bucket.dcos_apps_bucket.id}"
+  policy = "${data.template_file.dcos_apps_bucket_policy.rendered}"
+
+  depends_on = [
+    "aws_s3_bucket.dcos_apps_bucket"
+  ]
+}
+
 #########################################################
 # Security Groups
 
@@ -748,6 +769,7 @@ data "template_file" "captain_userdata" {
     environment = "${var.environment}"
     dcos_master_url = "${module.master_elb_internal.elb_dns_name}"
     dcos_apps_bucket = "${aws_s3_bucket.dcos_apps_bucket.id}"
+    dcos_apps_bucket_domain = "${aws_s3_bucket.dcos_apps_bucket.id}.s3-${aws_s3_bucket.dcos_apps_bucket.region}.amazonaws.com"
     aws_region = "${var.aws_region}"
     redshift_user = "${data.terraform_remote_state.redshift.redshift_master_username}"
     redshift_password = "${data.terraform_remote_state.redshift.redshift_master_password}"
