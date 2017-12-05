@@ -47,6 +47,16 @@ shift 2
 
 export AWS_REGION="${AWS_REGION:-us-east-2}"
 
+PWD=$(pwd)
+FILE="$PWD/ansible/roles/deployer/files/id_rsa"
+if [ -f "$FILE" ]
+then
+	echo "SSH Key already created"
+else
+  echo "Creating ssh key for deployer user"
+	ssh-keygen -t rsa -N "" -f $FILE
+fi
+
 get_git_describe_with_dirty() {
   # produces abbrev'ed SHA1 of HEAD with possible -dirty suffix
 
