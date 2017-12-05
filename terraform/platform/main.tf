@@ -528,6 +528,12 @@ module "slave_sg" {
             to_port     = "22"
             sg_id = "${module.captain_sg.id}"
         },
+        {
+            protocol    = "tcp"
+            from_port   = "27017"
+            to_port     = "27017"
+            sg_id = "${module.captain_sg.id}"
+        },
     ]
 
     egress_rules_cidr = [
