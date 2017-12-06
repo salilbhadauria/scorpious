@@ -219,7 +219,7 @@ module "bootstrap_asg" {
 
     ami_name                = "bootstrap*"
     lc_name_prefix          = "${var.environment}-bootstrap-"
-    lc_instance_type        = "m4.xlarge"
+    lc_instance_type        = "m5.xlarge"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.bootstrap_sg.id}", "${module.dcos_stack_sg.id}" ]
@@ -234,8 +234,8 @@ module "bootstrap_asg" {
     asg_load_balancers      = [ "${module.bootstrap_elb.elb_id}" ]
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "${var.environment}-bootstrap-asg"
-    instance_name_tag = "${var.environment}-bootstrap"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-bootstrap-asg"
+    instance_name_tag = "${var.tag_owner}-${var.environment}-bootstrap"
     instance_role_tag = "bootstrap"
 }
 
@@ -484,7 +484,7 @@ module "master_asg" {
 
     ami_name                = "master*"
     lc_name_prefix          = "${var.environment}-master-"
-    lc_instance_type        = "m4.2xlarge"
+    lc_instance_type        = "m5.2xlarge"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.master_sg.id}", "${module.dcos_stack_sg.id}" ]
@@ -499,8 +499,8 @@ module "master_asg" {
     asg_load_balancers      = [ "${module.master_elb.elb_id}", "${module.master_elb_internal.elb_id}" ]
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "${var.environment}-master-asg"
-    instance_name_tag = "${var.environment}-master"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-master-asg"
+    instance_name_tag = "${var.tag_owner}-${var.environment}-master"
     instance_role_tag = "master"
 }
 
@@ -564,7 +564,7 @@ module "slave_asg" {
 
     ami_name                = "slave*"
     lc_name_prefix          = "${var.environment}-slave-"
-    lc_instance_type        = "m4.4xlarge"
+    lc_instance_type        = "m5.4xlarge"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}" ]
@@ -578,8 +578,8 @@ module "slave_asg" {
     asg_max_size            = "${var.slave_asg_max_size}"
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "${var.environment}-slave-asg"
-    instance_name_tag = "${var.environment}-slave"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-slave-asg"
+    instance_name_tag = "${var.tag_owner}-${var.environment}-slave"
     instance_role_tag = "slave"
 }
 
@@ -752,7 +752,7 @@ module "public_slave_asg" {
 
     ami_name                = "slave*"
     lc_name_prefix          = "${var.environment}-public-slave-"
-    lc_instance_type        = "m4.xlarge"
+    lc_instance_type        = "m5.xlarge"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.public_slave_sg.id}", "${module.dcos_stack_sg.id}" ]
@@ -767,8 +767,8 @@ module "public_slave_asg" {
     asg_load_balancers      = [ "${module.baile_elb.elb_id}", "${module.um_elb.elb_id}" ]
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "${var.environment}-public-slave-asg"
-    instance_name_tag = "${var.environment}-public-slave"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-public-slave-asg"
+    instance_name_tag = "${var.tag_owner}-${var.environment}-public-slave"
     instance_role_tag = "public-slave"
 }
 
@@ -818,6 +818,7 @@ data "template_file" "captain_userdata" {
     baile_lb_url = "${module.baile_elb.elb_dns_name}"
     um_service_url = "${module.um_elb.elb_dns_name}"
     dcos_nodes = "${var.slave_asg_max_size + var.public_slave_asg_max_size}"
+    master_instance_name = "${var.tag_owner}-${var.environment}-master"
   }
 
   depends_on = [
@@ -849,7 +850,7 @@ module "captain_asg" {
     asg_max_size            = "${var.captain_asg_max_size}"
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "${var.environment}-captain-asg"
-    instance_name_tag = "${var.environment}-captain"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-captain-asg"
+    instance_name_tag = "${var.tag_owner}-${var.environment}-captain"
     instance_role_tag = "captain"
 }

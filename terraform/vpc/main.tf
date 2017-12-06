@@ -237,8 +237,8 @@ module "asg_nat" {
     asg_max_size         = "${length(var.azs)}"
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "${var.environment}-nat-asg"
-    instance_name_tag = "${var.environment}-nat"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-nat-asg"
+    instance_name_tag = "${var.tag_owner}-${var.environment}-nat"
     instance_role_tag = "nat"
 
 }
