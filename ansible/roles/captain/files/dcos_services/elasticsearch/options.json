@@ -1,0 +1,12 @@
+{
+  "service": {
+    "name": "elastic"
+  },
+  "master_nodes": {
+    "placement": "hostname:unique"
+  },
+  "data_nodes": {
+    "count": 3,
+    "placement": "hostname:unique"
+  }
+}

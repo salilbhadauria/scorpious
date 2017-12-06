@@ -1,0 +1,24 @@
+---
+common_default_packages:
+  - python-pip
+  - htop
+  - sysstat
+  - curl
+  - git
+  - iotop
+  - jq
+  - tar
+  - xz
+  - zip
+  - unzip
+  - ipset
+  - ntp
+  - firewalld
+  - cloud-init
+
+common_pip_packages:
+  - boto3
+  - awscli
+
+common_removed_packages:
+  - chrony

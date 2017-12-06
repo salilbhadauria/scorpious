@@ -1,0 +1,13 @@
+*.swa
+*.swp
+*.swo
+
+.terraform
+.backend
+*.backup
+*.iml
+*.retry
+*.pyc
+*.bak
+
+workspace

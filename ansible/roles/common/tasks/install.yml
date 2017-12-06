@@ -1,0 +1,17 @@
+---
+
+  - name: Install base packages
+    yum:
+      name: "{{ item }}"
+      state: latest
+    with_items: "{{ common_default_packages }}"
+
+  - name: Install pip based packages
+    command: pip install -U "{{ item }}"
+    with_items: "{{ common_pip_packages }}"
+
+  - name: Remove packages
+    yum:
+      name: "{{ item }}"
+      state: absent
+    with_items: "{{ common_removed_packages }}"

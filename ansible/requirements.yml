@@ -1,0 +1,9 @@
+---
+#
+# Requirements file
+#  ansible-galaxy install -r requirements.yml -p ./roles-galaxy/ -i -f
+#
+
+- src:  torian.filebeat
+  name: filebeat
+  version: 3.0.2
