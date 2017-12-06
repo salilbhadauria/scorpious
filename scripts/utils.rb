@@ -1,7 +1,11 @@
 #!/usr/bin/env ruby
 
 def dockers
-  %w[ docker-deployment ]
+  %w[ dockers/deployment ]
+end
+
+def filter_pattern
+  /dockers\/[\w-]*/
 end
 
 def changes
@@ -12,7 +16,9 @@ def changes
 end
 
 def all_folders 
-  changes.map { |f| f.gsub(/dockers\//, 'docker-')[/[\w-]*/] }.uniq
+  changes
+    .select { |f| f[filter_pattern] }
+    .map { |f| f[filter_pattern] }.uniq
 end
 
 def dockers_to_build  

@@ -16,3 +16,5 @@ LABEL maintainer="sergey.semichev@sentrana.com" \
       org.label-schema.schema-version="1.0" \
       org.label-schema.docker.cmd="docker run --rm -it deepcortex/scorpius-deployment /bin/bash"
 
+
+
