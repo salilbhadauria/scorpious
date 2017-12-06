@@ -18,8 +18,8 @@ export DCOS_USERNAME=$4
 export DCOS_PASSWORD=$5
 export DOCKER_REGISTRY_AUTH_TOKEN=$6
 export TF_VAR_dcos_password=$DCOS_PASSWORD
-export APP_AWS_ACCESS_KEY_ID=$(cat ~/.aws/credentials | grep -A3 -n "\[$AWS_PROFILE\]" | awk -F\= '/aws_access_key_id/{print $2}')
-export APP_AWS_SECRET_ACCESS_KEY=$(cat ~/.aws/credentials | grep -A3 -n "\[$AWS_PROFILE\]" | awk -F\= '/aws_secret_access_key/{print $2}')
+export APP_AWS_ACCESS_KEY_ID=$(grep -A3 -n "\[$AWS_PROFILE\]" ~/.aws/credentials | awk -F\= '/aws_access_key_id/{print $2}')
+export APP_AWS_SECRET_ACCESS_KEY=$(grep -A3 -n "\[$AWS_PROFILE\]" ~/.aws/credentials | awk -F\= '/aws_secret_access_key/{print $2}')
 
 shift 6
 
