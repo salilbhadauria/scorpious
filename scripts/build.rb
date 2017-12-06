@@ -3,7 +3,7 @@
 require_relative 'utils.rb'
 
 print_env
-puts "exclusion: #{exclusion}"
+puts "dockers: #{dockers}"
 puts "changes: #{changes}"
 puts "all_folders: #{all_folders}"
 puts "dockers_to_build: #{dockers_to_build}"
