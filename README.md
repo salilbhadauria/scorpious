@@ -4,7 +4,7 @@ Automated deployment for DeepCortex platform
 Dependencies:
 
   Terraform >=0.10.7 https://releases.hashicorp.com/terraform/0.10.7/
-  Packer >=1.0.4 https://releases.hashicorp.com/packer/?_ga=2.152781114.2069873712.1510704531-228023890.1505205072
+  Packer =1.0.4 https://releases.hashicorp.com/packer/?_ga=2.152781114.2069873712.1510704531-228023890.1505205072
   AWS Cli https://aws.amazon.com/cli/
 
 Create your ~/.aws/config and ~/.aws/credentials

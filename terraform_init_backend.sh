@@ -12,7 +12,7 @@ if [ -z "$1" ];then
 fi
 
 export CONFIG=$1
-export BUCKET=$(awk -F\" '/bucket/{print $2}'  "environments/$CONFIG.tfvars")
+export BUCKET=$(awk -F\" '/tf_bucket/{print $2}'  "environments/$CONFIG.tfvars")
 
 shift 1
 
