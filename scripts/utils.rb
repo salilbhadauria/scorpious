@@ -12,7 +12,7 @@ def changes
 end
 
 def all_folders 
-  changes.map { |f| f.gsub('/dockers\//', 'docker-') }.uniq
+  changes.map { |f| f.gsub(/dockers\//, 'docker-')[/[\w-]*/] }.uniq
 end
 
 def dockers_to_build  
