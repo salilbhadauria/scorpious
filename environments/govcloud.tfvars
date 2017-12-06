@@ -7,7 +7,7 @@ dcos_apps_bucket                = "deepcortex-dcos-apps"
 
 # Terraform
 # VPC
-tf_bucket                          = "deepcortex-gov-terraform"
+tf_bucket                       = "deepcortex-gov-terraform"
 aws_region                      = "us-gov-west-1"
 environment                     = "govcloud"
 account                         = "475276989310"
@@ -19,7 +19,7 @@ private_subnets_egress          = [ "10.0.21.0/24", "10.0.22.0/24" ]
 bastion_ami_id                  = "ami-b2d056d3"
 nat_ami_id                      = "ami-fe991b9f"
 ssh_public_key                  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzAIMbSVnZohF71QmHYBwZ8049zJgDlQ7/7V/C05sDBd5gUeSqdloLG22YkuooIh6uWtnUtBCZc2Sqlyqveh+ly0BV2K+euBSb58idzldn7Cz/bvJKHjjxN5qe4uiaskJxT6V187GZ3WwJ7vBNkE5NQ1NRz9oZGv7B1mjy1+eUZIMXovv5vAIvorHeOQsussPlTbxpidHb3Nxt7Nq0DyFAtEq0Bkny5bWZJ33hwHc2u4IZTZWR0GVEXdneas7nSbAhyUA/XSQNN9uJTHJjm75oC9UM7rpgpIGgnUVWTz+syCM1uImxwZATaFXYfL6XjwiJFJwkoY0H8uaT8SX/FpgR"
-tag_owner                       = "govcloud"
+tag_owner                       = "deepcortex"
 tag_usage                       = "test"
 access_cidr                     = "205.251.75.6/32"
 

@@ -40,6 +40,8 @@ source deploy_service.sh um-service/marathon.json um-service/env_vars.sh
 # Initialization and migration
 DCOS_MASTER_PRIVATE_IP=$(aws ec2 describe-instances --filter Name=tag-key,Values=Name Name=tag-value,Values=$MASTER_INSTANCE_NAME --query "Reservations[*].Instances[*].PrivateIpAddress" --output=text)
 
+while $(dcos marathon deployment list | grep -q scale); do sleep 5; done
+
 source elasticsearch/scripts/elasticsearch_init.sh
 source mongodb/mongo_init.sh
 source rabbitmq/rabbitmq_init.sh

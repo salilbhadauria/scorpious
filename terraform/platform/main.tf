@@ -219,7 +219,7 @@ module "bootstrap_asg" {
 
     ami_name                = "bootstrap*"
     lc_name_prefix          = "${var.environment}-bootstrap-"
-    lc_instance_type        = "m5.xlarge"
+    lc_instance_type        = "m4.xlarge"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.bootstrap_sg.id}", "${module.dcos_stack_sg.id}" ]
@@ -484,7 +484,7 @@ module "master_asg" {
 
     ami_name                = "master*"
     lc_name_prefix          = "${var.environment}-master-"
-    lc_instance_type        = "m5.2xlarge"
+    lc_instance_type        = "m4.2xlarge"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.master_sg.id}", "${module.dcos_stack_sg.id}" ]
@@ -564,7 +564,7 @@ module "slave_asg" {
 
     ami_name                = "slave*"
     lc_name_prefix          = "${var.environment}-slave-"
-    lc_instance_type        = "m5.4xlarge"
+    lc_instance_type        = "m4.4xlarge"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}" ]
@@ -752,7 +752,7 @@ module "public_slave_asg" {
 
     ami_name                = "slave*"
     lc_name_prefix          = "${var.environment}-public-slave-"
-    lc_instance_type        = "m5.xlarge"
+    lc_instance_type        = "m4.xlarge"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.public_slave_sg.id}", "${module.dcos_stack_sg.id}" ]
