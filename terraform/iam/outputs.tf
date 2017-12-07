@@ -16,3 +16,9 @@ output "slave_iam_role_name" {
 output "captain_iam_role_name" {
     value = "${aws_iam_role.captain_role.name}"
 }
+output "app_access_key" {
+    value = "${aws_iam_access_key.app.id}"
+}
+output "app_secret_key" {
+    value = "${aws_iam_access_key.app.secret}"
+}
