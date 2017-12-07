@@ -38,6 +38,15 @@ export CONFIG=$2
 export AMI=$(awk -F\" '/^packer_base_ami/{print $2}'  "environments/$CONFIG.tfvars")
 export REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$CONFIG.tfvars")
 export SSH_USER=$(awk -F\" '/^packer_ssh_user/{print $2}'  "environments/$CONFIG.tfvars")
+export MASTER_XVDE_SIZE=$(awk -F\" '/^master_xvde_size/{print $2}'  "environments/$CONFIG.tfvars")
+export MASTER_XVDF_SIZE=$(awk -F\" '/^master_xvdf_size/{print $2}'  "environments/$CONFIG.tfvars")
+export MASTER_XVDG_SIZE=$(awk -F\" '/^master_xvdg_size/{print $2}'  "environments/$CONFIG.tfvars")
+export MASTER_XVDH_SIZE=$(awk -F\" '/^master_xvdh_size/{print $2}'  "environments/$CONFIG.tfvars")
+
+export SLAVE_XVDE_SIZE=$(awk -F\" '/^slave_xvde_size/{print $2}'  "environments/$CONFIG.tfvars")
+export SLAVE_XVDF_SIZE=$(awk -F\" '/^slave_xvdf_size/{print $2}'  "environments/$CONFIG.tfvars")
+export SLAVE_XVDG_SIZE=$(awk -F\" '/^slave_xvdg_size/{print $2}'  "environments/$CONFIG.tfvars")
+export SLAVE_XVDH_SIZE=$(awk -F\" '/^slave_xvdh_size/{print $2}'  "environments/$CONFIG.tfvars")
 shift 2
 
 export AWS_REGION="${AWS_REGION:-us-east-2}"
