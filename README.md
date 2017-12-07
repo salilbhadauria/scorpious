@@ -33,6 +33,7 @@ Bootstrap instance requires the following env variables exported:
     using single quotes)
   - DOCKER_REGISTRY_AUTH_TOKEN
 
+./packer.sh captain CONFIG
 ./packer.sh bootstrap CONFIG
 ./packer.sh master CONFIG
 ./packer.sh slave CONFIG
