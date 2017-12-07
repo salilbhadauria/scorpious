@@ -5,9 +5,13 @@ environment:
   dcos_master_url: ${dcos_master_url}
   aws_s3_bucket: ${dcos_apps_bucket}
   aws_s3_bucket_domain: ${dcos_apps_bucket_domain}
+  app_aws_access_key_id: ${apps_aws_access_key}
+  app_aws_secret_access_key: ${apps_aws_secret_key}
   aws_default_region: ${aws_region}
   job_master_s3_region: ${aws_region}
   job_master_s3_bucket: ${dcos_apps_bucket}
+  job_master_s3_access_key: ${apps_aws_access_key}
+  job_master_s3_secret_key: ${apps_aws_secret_key}
   dcos_master: ${dcos_master_url}
   baile_lb_url: ${baile_lb_url}
   redshift_host: ${redshift_host}
