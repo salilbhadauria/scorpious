@@ -818,6 +818,8 @@ data "template_file" "captain_userdata" {
     baile_lb_url = "${module.baile_elb.elb_dns_name}"
     um_service_url = "${module.um_elb.elb_dns_name}"
     dcos_nodes = "${var.slave_asg_max_size + var.public_slave_asg_max_size}"
+    apps_aws_access_key = "${data.terraform_remote_state.iam.app_access_key}"
+    apps_aws_secret_key = "${data.terraform_remote_state.iam.app_secret_key}"
   }
 
   depends_on = [
