@@ -22,3 +22,10 @@ common_pip_packages:
 
 common_removed_packages:
   - chrony
+
+common_disk:
+  xvdf:
+    filesystem:  ext4
+    fs_opts:     -L docker
+    mount_point: /var/lib/docker
+
