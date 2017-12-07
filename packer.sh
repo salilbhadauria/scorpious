@@ -33,11 +33,6 @@ if [ -z "$DCOS_PASSWORD" ] && ([ $1 = "bootstrap" ] || [ $1 = "captain" ]);then
   usage
 fi
 
-if [ -z "$DOCKER_REGISTRY_AUTH_TOKEN" ] && ([ $1 = "bootstrap" ] || [ $1 = "captain" ]);then
-  echo "Error: DOCKER_REGISTRY_AUTH_TOKEN is not set"
-  usage
-fi
-
 export IMAGE=$1
 export CONFIG=$2
 export AMI=$(awk -F\" '/^packer_base_ami/{print $2}'  "environments/$CONFIG.tfvars")
