@@ -17,7 +17,10 @@
         "customer_key": "{{ env `CUSTOMER_KEY`}}",
         "dcos_username": "{{ env `DCOS_USERNAME`}}",
         "dcos_password": "{{ env `DCOS_PASSWORD`}}",
-        "master_xvdf_size": "{{ env `MASTER_XVDF_SIZE`}}"
+        "master_xvde_size": "{{ env `MASTER_XVDE_SIZE`}}",
+        "master_xvdf_size": "{{ env `MASTER_XVDF_SIZE`}}",
+        "master_xvdg_size": "{{ env `MASTER_XVDG_SIZE`}}",
+        "master_xvdh_size": "{{ env `MASTER_XVDH_SIZE`}}"
     },
     "builders": [{
         "type": "amazon-ebs",
@@ -39,12 +42,29 @@
             "delete_on_termination": true
           },
           {
+            "device_name": "/dev/xvde",
+            "volume_size": 100,
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          },
+          {
             "device_name": "/dev/xvdf",
             "volume_size": 100,
             "volume_type": "gp2",
             "delete_on_termination": true
+          },
+          {
+            "device_name": "/dev/xvdg",
+            "volume_size": 100,
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          },
+          {
+            "device_name": "/dev/xvdh",
+            "volume_size": 100,
+            "volume_type": "gp2",
+            "delete_on_termination": true
           }
-
         ],
         "ssh_pty": "true",
         "tags": {
