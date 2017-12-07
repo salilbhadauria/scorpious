@@ -30,3 +30,4 @@ runcmd:
   - hostnamectl set-hostname $newhostn
   - service rsyslog restart
   - service ntpd restart
+  - service mongod stop

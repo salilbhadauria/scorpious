@@ -85,6 +85,8 @@
 - hosts: captain
   become: yes
   vars:
+    java_packages:
+        - java-1.8.0-openjdk
     nodejs_install_npm_user: root
     nodejs_npm_global_packages:
       - name: mongodb
@@ -98,3 +100,6 @@
     - deployer
     - mongodb
     - nodejs
+    - java
+
+

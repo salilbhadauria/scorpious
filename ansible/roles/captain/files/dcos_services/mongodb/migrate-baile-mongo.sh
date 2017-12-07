@@ -3,6 +3,6 @@
 # npm install mongodb -g
 # npm install east east-mongo -g
 
-DIR=$(dirname ${BASH_SOURCE[0]})
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-east --config "DIR/baile-mongodb.json" --dir "$DIR/baile-migrations migrate"
+east --config $DIR/baile-mongodb.json --dir $DIR/baile-migrations migrate
