@@ -11,3 +11,5 @@
 *.bak
 
 workspace
+
+id_rsa*
