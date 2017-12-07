@@ -17,9 +17,13 @@ alias_url=${protocol}${es_host}:${es_port}/_aliases
 echo
 is_index_exist=$(curl -I --head --write-out %{http_code} --silent --output /dev/null ${index_url})
 if [ ${is_index_exist} -eq 200 ]; then
-    echo "Deleting index $idx ..."
-    curl -XDELETE ${index_url}; echo
-    echo "Deleted"; echo
+    if [ $OVERWRITE_INDEX = "true" ]; then
+        echo "Deleting index $idx ..."
+        curl -XDELETE ${index_url}; echo
+        echo "Deleted"; echo
+    else
+        exit 0
+    fi        
 fi
 
 echo "Creating index $idx ..."
