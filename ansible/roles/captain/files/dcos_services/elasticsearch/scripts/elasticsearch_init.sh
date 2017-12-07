@@ -1,5 +1,7 @@
 #!/bin/bash
 
-sudo ssh -o StrictHostKeyChecking=no -f -L 9200:coordinator.elastic.l4lb.thisdcos.directory:9200 centos@"$DCOS_MASTER_PRIVATE_IP" sleep 10
-source build-index-jobs-dev.sh
-source build-index-job-heartbeats-dev.sh
+DIR=$(dirname ${BASH_SOURCE[0]})
+
+sudo ssh -i /opt/private_key -o StrictHostKeyChecking=no -f -L 9200:coordinator.elastic.l4lb.thisdcos.directory:9200 deployer@"$DCOS_MASTER_PRIVATE_IP" sleep 10
+source "$DIR/build-index-jobs-dev.sh"
+source "$DIR/build-index-job-heartbeats-dev.sh"

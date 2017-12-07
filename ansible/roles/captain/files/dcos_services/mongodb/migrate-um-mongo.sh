@@ -3,4 +3,6 @@
 # npm install mongodb -g
 # npm install east east-mongo -g
 
-east --config um-mongodb.json --dir um-migrations migrate
+DIR=$(dirname ${BASH_SOURCE[0]})
+
+east --config "$DIR/um-mongodb.json" --dir "$DIR/um-migrations migrate"

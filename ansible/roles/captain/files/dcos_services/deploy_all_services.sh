@@ -20,6 +20,7 @@ until [[ $(dcos node | grep agent | wc -l) == $DCOS_NODES ]]; do sleep 5; done
 
 # Retrieve slave node IPs
 export MONGODB_HOSTS=$(aws ec2 describe-instances --filters "Name=tag:Role,Values=slave" --query Reservations[].Instances[].PrivateIpAddress --output text | sed -e 's/\s/,/g')
+export DCOS_MASTER_PRIVATE_IP=$(aws ec2 describe-instances --filter Name=tag-key,Values=Name Name=tag-value,Values=$MASTER_INSTANCE_NAME --query "Reservations[*].Instances[*].PrivateIpAddress" --output=text)
 
 # Deploy frameworks from DC/OS universe
 dcos package install marathon-lb --yes
@@ -38,7 +39,6 @@ source deploy_service.sh rabbitmq/marathon.json rabbitmq/env_vars.sh
 source deploy_service.sh um-service/marathon.json um-service/env_vars.sh
 
 # Initialization and migration
-DCOS_MASTER_PRIVATE_IP=$(aws ec2 describe-instances --filter Name=tag-key,Values=Name Name=tag-value,Values=$MASTER_INSTANCE_NAME --query "Reservations[*].Instances[*].PrivateIpAddress" --output=text)
 
 while $(dcos marathon deployment list | grep -q scale); do sleep 5; done
 
