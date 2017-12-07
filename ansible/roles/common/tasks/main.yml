@@ -8,3 +8,5 @@
     tags: common_motd
   - import_tasks: environment.yml
     tags: common_environment
+  - import_tasks: disk.yml
+    tags: common_disk
