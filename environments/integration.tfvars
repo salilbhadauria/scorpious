@@ -36,10 +36,12 @@ master_asg_desired_capacity     = "1"
 master_asg_min_size             = "1"
 master_asg_max_size             = "1"
 master_elb_dns_name             = "master"
+master_xvdf_size                = "100"
 
 slave_asg_desired_capacity     = "3"
 slave_asg_min_size             = "1"
 slave_asg_max_size             = "3"
+slave_xvdf_size                = "100"
 
 public_slave_asg_desired_capacity  = "1"
 public_slave_asg_min_size          = "1"
