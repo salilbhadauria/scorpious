@@ -15,9 +15,7 @@
         "build_uuid": "",
         "customer_key": "{{ env `CUSTOMER_KEY`}}",
         "dcos_username": "{{ env `DCOS_USERNAME`}}",
-        "dcos_password": "{{ env `DCOS_PASSWORD`}}",
-        "app_aws_access_key": "{{ env `APP_AWS_ACCESS_KEY_ID`}}",
-        "app_aws_secret_key": "{{ env `APP_AWS_SECRET_ACCESS_KEY`}}"
+        "dcos_password": "{{ env `DCOS_PASSWORD`}}"
     },
     "builders": [{
         "type": "amazon-ebs",
