@@ -514,7 +514,7 @@ module "slave_sg" {
     sg_name = "slave"
     sg_description = "some description"
 
-    ingress_rules_sgid_count = 2
+    ingress_rules_sgid_count = 3
     ingress_rules_sgid = [
         {
             protocol    = "tcp"
@@ -526,6 +526,12 @@ module "slave_sg" {
             protocol    = "tcp"
             from_port   = "22"
             to_port     = "22"
+            sg_id = "${module.captain_sg.id}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "27017"
+            to_port     = "27017"
             sg_id = "${module.captain_sg.id}"
         },
     ]
