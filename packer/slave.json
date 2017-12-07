@@ -36,31 +36,31 @@
         "launch_block_device_mappings": [
           {
             "device_name": "/dev/sda1",
-            "volume_size": 64,
+            "volume_size": 16,
             "volume_type": "gp2",
             "delete_on_termination": true
           },
           {
             "device_name": "/dev/xvde",
-            "volume_size": 100,
+            "volume_size": "{{ user `slave_xvde_size`}}",
             "volume_type": "gp2",
             "delete_on_termination": true
           },
           {
             "device_name": "/dev/xvdf",
-            "volume_size": 100,
+            "volume_size": "{{ user `slave_xvdf_size`}}",
             "volume_type": "gp2",
             "delete_on_termination": true
           },
           {
             "device_name": "/dev/xvdg",
-            "volume_size": 100,
+            "volume_size": "{{ user `slave_xvdg_size`}}",
             "volume_type": "gp2",
             "delete_on_termination": true
           },
           {
             "device_name": "/dev/xvdh",
-            "volume_size": 100,
+            "volume_size": "{{ user `slave_xvdh_size`}}",
             "volume_type": "gp2",
             "delete_on_termination": true
           }

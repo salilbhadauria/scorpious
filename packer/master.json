@@ -42,25 +42,25 @@
           },
           {
             "device_name": "/dev/xvde",
-            "volume_size": 100,
+            "volume_size": "{{ user `master_xvde_size`}}",
             "volume_type": "gp2",
             "delete_on_termination": true
           },
           {
             "device_name": "/dev/xvdf",
-            "volume_size": 100,
+            "volume_size": "{{ user `master_xvdf_size`}}",
             "volume_type": "gp2",
             "delete_on_termination": true
           },
           {
             "device_name": "/dev/xvdg",
-            "volume_size": 100,
+            "volume_size": "{{ user `master_xvdg_size`}}",
             "volume_type": "gp2",
             "delete_on_termination": true
           },
           {
             "device_name": "/dev/xvdh",
-            "volume_size": 100,
+            "volume_size": "{{ user `master_xvdh_size`}}",
             "volume_type": "gp2",
             "delete_on_termination": true
           }
