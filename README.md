@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.com/deepcortex/scorpius.svg?token=pvwDNvw6P8fj9zJxpA1p&branch=master)](https://travis-ci.com/deepcortex/scorpius)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/159b57f655704fa58920eb425104697a)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=deepcortex/scorpius&amp;utm_campaign=Badge_Grade)
+
 # scorpius
 Automated deployment for DeepCortex platform
 
