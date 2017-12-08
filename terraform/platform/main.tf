@@ -826,6 +826,11 @@ data "template_file" "captain_userdata" {
     dcos_nodes = "${var.slave_asg_max_size + var.public_slave_asg_max_size}"
     apps_aws_access_key = "${data.terraform_remote_state.iam.app_access_key}"
     apps_aws_secret_key = "${data.terraform_remote_state.iam.app_secret_key}"
+    rabbit_password = "${random_string.rabbit_password.result}"
+    aries_http_search_user_password = "${random_string.aries_http_search_user_password.result}"
+    aries_http_command_user_password = "${random_string.aries_http_command_user_password.result}"
+    cortex_http_search_user_password = "${random_string.cortex_http_search_user_password.result}"
+    orion_http_search_user_password = "${random_string.orion_http_search_user_password.result}"
   }
 
   depends_on = [
