@@ -41,6 +41,6 @@
   }],
   "labels":{
     "HAPROXY_GROUP":"external",
-    "HAPROXY_0_VHOST":"${UM_SERVICE_LB_URL}"
+    "HAPROXY_0_VHOST":"${UM_SERVICE_URL}"
   }
 }

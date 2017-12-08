@@ -655,12 +655,6 @@ module "um_elb_sg" {
             protocol    = "tcp"
             from_port   = "80"
             to_port     = "80"
-            cidr_blocks = "${var.access_cidr}"
-        },
-        {
-            protocol    = "tcp"
-            from_port   = "80"
-            to_port     = "80"
             cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
         },
     ]
@@ -679,7 +673,7 @@ module "um_elb_sg" {
 module "um_elb" {
   source              = "../../terraform/modules/elb"
   elb_name            = "${var.environment}-um-elb"
-  elb_is_internal     = "false"
+  elb_is_internal     = "true"
   elb_security_group  = "${module.um_elb_sg.id}"
   subnets             = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
   frontend_port       = "80"

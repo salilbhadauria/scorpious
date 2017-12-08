@@ -70,7 +70,7 @@ rmq_srv_mem: 512
 # UM Service
 um_docker_image_version: "v1.0"
 um_mongodb_uri: "mongodb://mongodb.mongodb-replicaset.l4lb.thisdcos.directory:27017/um-service?replicaSet=rs"
-email_on: "email_on"
+email_on: 'false'
 um_srv_instances: 1
 um_srv_cpus: 1
 um_srv_mem: 1024
