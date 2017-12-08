@@ -13,7 +13,6 @@
         "git_commit": "",
         "build_author": "{{env `USER`}}",
         "build_uuid": "",
-        "docker_registry_auth_token": "{{ env `DOCKER_REGISTRY_AUTH_TOKEN`}}",
         "customer_key": "{{ env `CUSTOMER_KEY`}}",
         "dcos_username": "{{ env `DCOS_USERNAME`}}",
         "dcos_password": "{{ env `DCOS_PASSWORD`}}"
@@ -60,7 +59,6 @@
         "galaxy_file": "./ansible/requirements.yml",
         "extra_arguments": [
          "--extra-vars \"customer_key={{ user `customer_key`}} \"",
-          "-e \"docker_registry_auth_token={{ user `docker_registry_auth_token`}}\"",
           "-e \"dcos_username={{ user `dcos_username`}}\"",
           "-e \"dcos_password={{ user `dcos_password`}}\""
         ]

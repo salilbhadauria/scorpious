@@ -2,10 +2,13 @@
 
 cd /opt/dcos_services/
 
+# Stop mongo if running
+service mongod stop
+
 # Upload front end files to S3
 aws s3 ls "s3://${AWS_S3_BUCKET}/static-content/dev/"
 if [[ $? -ne 0 ]]; then
-  tar -xvf front-end.tar.gz  
+  tar -xvf front-end.tar.gz
   aws s3 sync front-end "s3://${AWS_S3_BUCKET}/static-content/dev/"
 fi
 
@@ -20,10 +23,11 @@ until [[ $(dcos node | grep agent | wc -l) == $DCOS_NODES ]]; do sleep 5; done
 
 # Retrieve slave node IPs
 export MONGODB_HOSTS=$(aws ec2 describe-instances --filters "Name=tag:Role,Values=slave" --query Reservations[].Instances[].PrivateIpAddress --output text | sed -e 's/\s/,/g')
+export DCOS_MASTER_PRIVATE_IP=$(aws ec2 describe-instances --filter Name=tag-key,Values=Name Name=tag-value,Values=$MASTER_INSTANCE_NAME --query "Reservations[*].Instances[*].PrivateIpAddress" --output=text)
 
 # Deploy frameworks from DC/OS universe
 dcos package install marathon-lb --yes
-dcos package install mongodb-replicaset --yes
+dcos package install mongodb-replicaset --options=mongodb/options.json --yes
 dcos package install elastic --options=elasticsearch/options.json --yes
 dcos package install kibana --yes
 
@@ -36,3 +40,14 @@ source deploy_service.sh logstash/marathon.json logstash/env_vars.sh
 source deploy_service.sh orion/marathon.json orion/env_vars.sh
 source deploy_service.sh rabbitmq/marathon.json rabbitmq/env_vars.sh
 source deploy_service.sh um-service/marathon.json um-service/env_vars.sh
+
+# Initialization and migration
+
+while $(dcos marathon deployment list | grep -q scale); do sleep 5; done
+
+export PATH="/usr/local/lib/npm/bin:$PATH"
+sleep 30
+
+source elasticsearch/scripts/elasticsearch_init.sh
+source rabbitmq/rabbitmq_init.sh
+source mongodb/mongo_init.sh

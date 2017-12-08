@@ -62,6 +62,7 @@
     dcos_download: https://downloads.mesosphere.com/dcos-enterprise/stable/dcos_generate_config.ee.sh
     security: disabled
     registry: true
+    docker_registry_auth_token: "ZGVlcGNvcnRleGRldjpTM250ckBuYTE3MjU="
     superuser_username: "{{dcos_username}}"
     enterprise_dcos: true
     resolvers:
@@ -75,6 +76,7 @@
   become: yes
   roles:
     - services
+    - deployer
 
 - hosts: slave
   become: yes
@@ -83,5 +85,20 @@
 
 - hosts: captain
   become: yes
+  vars:
+    java_packages:
+        - java-1.8.0-openjdk
+    nodejs_install_npm_user: root
+    nodejs_npm_global_packages:
+      - name: mongodb
+        version: 2.2.33
+      - name: east
+        version: 0.5.7
+      - name: east-mongo
+        version: 0.3.3
   roles:
     - captain
+    - deployer
+    - mongodb
+    - nodejs
+    - java

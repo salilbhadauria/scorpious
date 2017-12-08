@@ -33,19 +33,33 @@ if [ -z "$DCOS_PASSWORD" ] && ([ $1 = "bootstrap" ] || [ $1 = "captain" ]);then
   usage
 fi
 
-if [ -z "$DOCKER_REGISTRY_AUTH_TOKEN" ] && ([ $1 = "bootstrap" ] || [ $1 = "captain" ]);then
-  echo "Error: DOCKER_REGISTRY_AUTH_TOKEN is not set"
-  usage
-fi
-
 export IMAGE=$1
 export CONFIG=$2
 export AMI=$(awk -F\" '/^packer_base_ami/{print $2}'  "environments/$CONFIG.tfvars")
 export REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$CONFIG.tfvars")
 export SSH_USER=$(awk -F\" '/^packer_ssh_user/{print $2}'  "environments/$CONFIG.tfvars")
+export MASTER_XVDE_SIZE=$(awk -F\" '/^master_xvde_size/{print $2}'  "environments/$CONFIG.tfvars")
+export MASTER_XVDF_SIZE=$(awk -F\" '/^master_xvdf_size/{print $2}'  "environments/$CONFIG.tfvars")
+export MASTER_XVDG_SIZE=$(awk -F\" '/^master_xvdg_size/{print $2}'  "environments/$CONFIG.tfvars")
+export MASTER_XVDH_SIZE=$(awk -F\" '/^master_xvdh_size/{print $2}'  "environments/$CONFIG.tfvars")
+
+export SLAVE_XVDE_SIZE=$(awk -F\" '/^slave_xvde_size/{print $2}'  "environments/$CONFIG.tfvars")
+export SLAVE_XVDF_SIZE=$(awk -F\" '/^slave_xvdf_size/{print $2}'  "environments/$CONFIG.tfvars")
+export SLAVE_XVDG_SIZE=$(awk -F\" '/^slave_xvdg_size/{print $2}'  "environments/$CONFIG.tfvars")
+export SLAVE_XVDH_SIZE=$(awk -F\" '/^slave_xvdh_size/{print $2}'  "environments/$CONFIG.tfvars")
 shift 2
 
 export AWS_REGION="${AWS_REGION:-us-east-2}"
+
+PWD=$(pwd)
+FILE="$PWD/ansible/roles/deployer/files/id_rsa"
+if [ -f "$FILE" ]
+then
+	echo "SSH Key already created"
+else
+  echo "Creating ssh key for deployer user"
+	ssh-keygen -t rsa -N "" -f $FILE
+fi
 
 get_git_describe_with_dirty() {
   # produces abbrev'ed SHA1 of HEAD with possible -dirty suffix
