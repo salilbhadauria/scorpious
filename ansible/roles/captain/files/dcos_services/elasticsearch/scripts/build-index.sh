@@ -27,7 +27,8 @@ if [ ${is_index_exist} -eq 200 ]; then
 fi
 
 echo "Creating index $idx ..."
-FILE="$( cd -P "$( dirname "$0" )/.." && pwd )/${mapping_path}"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+FILE="$DIR/${mapping_path}"
 
 curl -XPUT ${index_url} -d @${FILE}; echo
 

@@ -27,7 +27,7 @@ export DCOS_MASTER_PRIVATE_IP=$(aws ec2 describe-instances --filter Name=tag-key
 
 # Deploy frameworks from DC/OS universe
 dcos package install marathon-lb --yes
-dcos package install mongodb-replicaset --yes
+dcos package install mongodb-replicaset --options=mongodb/options.json --yes
 dcos package install elastic --options=elasticsearch/options.json --yes
 dcos package install kibana --yes
 
@@ -46,7 +46,8 @@ source deploy_service.sh um-service/marathon.json um-service/env_vars.sh
 while $(dcos marathon deployment list | grep -q scale); do sleep 5; done
 
 export PATH="/usr/local/lib/npm/bin:$PATH"
+sleep 30
 
 source elasticsearch/scripts/elasticsearch_init.sh
-source mongodb/mongo_init.sh
 source rabbitmq/rabbitmq_init.sh
+source mongodb/mongo_init.sh

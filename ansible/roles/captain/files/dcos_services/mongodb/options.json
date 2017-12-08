@@ -1,0 +1,10 @@
+{
+  "service": {
+    "name": "mongodb-replicaset"
+  },
+  "mongodb": {
+    "disk": 50000,
+    "count": 3,
+    "constraint": "[['hostname', 'UNIQUE']]"
+  }
+}
