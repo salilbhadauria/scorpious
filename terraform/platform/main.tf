@@ -234,8 +234,8 @@ module "bootstrap_asg" {
     asg_load_balancers      = [ "${module.bootstrap_elb.elb_id}" ]
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "${var.environment}-bootstrap-asg"
-    instance_name_tag = "${var.environment}-bootstrap"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-bootstrap-asg"
+    instance_name_tag = "${var.tag_owner}-${var.environment}-bootstrap"
     instance_role_tag = "bootstrap"
 }
 
@@ -499,8 +499,8 @@ module "master_asg" {
     asg_load_balancers      = [ "${module.master_elb.elb_id}", "${module.master_elb_internal.elb_id}" ]
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "${var.environment}-master-asg"
-    instance_name_tag = "${var.environment}-master"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-master-asg"
+    instance_name_tag = "${var.tag_owner}-${var.environment}-master"
     instance_role_tag = "master"
 }
 
@@ -584,8 +584,8 @@ module "slave_asg" {
     asg_max_size            = "${var.slave_asg_max_size}"
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "${var.environment}-slave-asg"
-    instance_name_tag = "${var.environment}-slave"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-slave-asg"
+    instance_name_tag = "${var.tag_owner}-${var.environment}-slave"
     instance_role_tag = "slave"
 }
 
@@ -773,8 +773,8 @@ module "public_slave_asg" {
     asg_load_balancers      = [ "${module.baile_elb.elb_id}", "${module.um_elb.elb_id}" ]
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "${var.environment}-public-slave-asg"
-    instance_name_tag = "${var.environment}-public-slave"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-public-slave-asg"
+    instance_name_tag = "${var.tag_owner}-${var.environment}-public-slave"
     instance_role_tag = "public-slave"
 }
 
@@ -824,6 +824,7 @@ data "template_file" "captain_userdata" {
     baile_lb_url = "${module.baile_elb.elb_dns_name}"
     um_service_url = "${module.um_elb.elb_dns_name}"
     dcos_nodes = "${var.slave_asg_max_size + var.public_slave_asg_max_size}"
+    master_instance_name = "${var.tag_owner}-${var.environment}-master"
     apps_aws_access_key = "${data.terraform_remote_state.iam.app_access_key}"
     apps_aws_secret_key = "${data.terraform_remote_state.iam.app_secret_key}"
   }
@@ -857,7 +858,7 @@ module "captain_asg" {
     asg_max_size            = "${var.captain_asg_max_size}"
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "${var.environment}-captain-asg"
-    instance_name_tag = "${var.environment}-captain"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-captain-asg"
+    instance_name_tag = "${var.tag_owner}-${var.environment}-captain"
     instance_role_tag = "captain"
 }
