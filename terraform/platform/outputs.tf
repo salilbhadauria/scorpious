@@ -8,6 +8,3 @@ output "baile_elb_url" {
   value = "${module.baile_elb.elb_dns_name}"
 }
 
-output "um_elb_url" {
-  value = "${module.um_elb.elb_dns_name}"
-}
