@@ -650,7 +650,7 @@ module "public_slave_sg" {
     sg_name = "public-slave"
     sg_description = "some description"
 
-    ingress_rules_sgid_count = 4
+    ingress_rules_sgid_count = 3
     ingress_rules_sgid = [
         {
             protocol    = "tcp"

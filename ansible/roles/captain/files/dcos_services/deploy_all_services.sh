@@ -37,7 +37,7 @@ source deploy_service.sh rabbitmq/marathon.json rabbitmq/env_vars.sh
 while $(dcos marathon deployment list | grep -q scale); do sleep 5; done
 
 export PATH="/usr/local/lib/npm/bin:$PATH"
-sleep 30
+sleep 60
 source elasticsearch/scripts/elasticsearch_init.sh
 source rabbitmq/rabbitmq_init.sh
 source mongodb/mongo_init.sh
