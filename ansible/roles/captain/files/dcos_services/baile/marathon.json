@@ -22,7 +22,7 @@
         { "key": "env", "value": "MONGODB_HOSTS=${MONGODB_HOSTS}" },
         { "key": "env", "value": "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" },
         { "key": "env", "value": "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" },
-        { "key": "env", "value": "UM_SERVICE_URL=http://${UM_SERVICE_URL}" },
+        { "key": "env", "value": "UM_SERVICE_URL=${UM_SERVICE_URL}" },
         { "key": "env", "value": "CORTEX_SEARCH_USER=${CORTEX_SEARCH_USER}" },
         { "key": "env", "value": "CORTEX_SEARCH_PASSWORD=${CORTEX_SEARCH_PASSWORD}" },
         { "key": "env", "value": "ARIES_SEARCH_USER=${ARIES_SEARCH_USER}" },

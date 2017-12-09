@@ -641,51 +641,6 @@ module "baile_elb" {
 }
 
 #########################################################
-# UM ELB
-module "um_elb_sg" {
-    source = "../../terraform/modules/security_group"
-
-    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
-
-    sg_name = "um-elb"
-    sg_description = "some description"
-
-    ingress_rules_cidr = [
-        {
-            protocol    = "tcp"
-            from_port   = "80"
-            to_port     = "80"
-            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
-        },
-    ]
-
-    egress_rules_cidr = [
-        {
-            protocol    = "all"
-            from_port   = "0"
-            to_port     = "0"
-            cidr_blocks = "0.0.0.0/0"
-        },
-    ]
-    tags = "${local.tags}"
-}
-
-module "um_elb" {
-  source              = "../../terraform/modules/elb"
-  elb_name            = "${var.environment}-um-elb"
-  elb_is_internal     = "true"
-  elb_security_group  = "${module.um_elb_sg.id}"
-  subnets             = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
-  frontend_port       = "80"
-  frontend_protocol   = "http"
-  backend_port        = "80"
-  backend_protocol    = "http"
-  health_check_target = "TCP:80"
-
-  tags                = "${local.tags}"
-}
-
-#########################################################
 # Public slaves
 module "public_slave_sg" {
     source = "../../terraform/modules/security_group"
@@ -708,12 +663,6 @@ module "public_slave_sg" {
             from_port   = "22"
             to_port     = "22"
             sg_id = "${module.captain_sg.id}"
-        },
-        {
-            protocol    = "tcp"
-            from_port   = "80"
-            to_port     = "80"
-            sg_id = "${module.um_elb_sg.id}"
         },
         {
             protocol    = "tcp"
@@ -764,7 +713,7 @@ module "public_slave_asg" {
     asg_desired_capacity    = "${var.public_slave_asg_desired_capacity}"
     asg_min_size            = "${var.public_slave_asg_min_size}"
     asg_max_size            = "${var.public_slave_asg_max_size}"
-    asg_load_balancers      = [ "${module.baile_elb.elb_id}", "${module.um_elb.elb_id}" ]
+    asg_load_balancers      = [ "${module.baile_elb.elb_id}" ]
 
     tags_asg = "${local.tags_asg}"
     asg_name_tag = "${var.tag_owner}-${var.environment}-public-slave-asg"
@@ -816,7 +765,6 @@ data "template_file" "captain_userdata" {
     redshift_password = "${data.terraform_remote_state.redshift.redshift_master_password}"
     redshift_host = "${data.terraform_remote_state.redshift.redshift_url}"
     baile_lb_url = "${module.baile_elb.elb_dns_name}"
-    um_service_url = "${module.um_elb.elb_dns_name}"
     dcos_nodes = "${var.slave_asg_max_size + var.public_slave_asg_max_size}"
     master_instance_name = "${var.tag_owner}-${var.environment}-master"
     apps_aws_access_key = "${data.terraform_remote_state.iam.app_access_key}"

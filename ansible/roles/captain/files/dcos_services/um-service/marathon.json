@@ -10,7 +10,7 @@
           "containerPort": 9000,
           "servicePort": 10000,
           "labels": {
-            "VIP_0": "/um-service:9000"
+            "VIP_0": "/um-service:80"
           }
         }
       ],
@@ -38,9 +38,5 @@
     "gracePeriodSeconds": 10,
     "intervalSeconds": 2,
     "maxConsecutiveFailures": 10
-  }],
-  "labels":{
-    "HAPROXY_GROUP":"external",
-    "HAPROXY_0_VHOST":"${UM_SERVICE_URL}"
-  }
+  }]
 }

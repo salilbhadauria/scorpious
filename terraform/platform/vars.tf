@@ -4,7 +4,6 @@ variable "aws_region" {}
 variable "environment" {}
 variable "tf_bucket" {}
 variable "account" {}
-variable "private_domain" {}
 variable "access_cidr" {}
 
 # Bootstrap vars
