@@ -25,7 +25,6 @@ access_cidr                     = "205.251.75.6/32"
 
 # Platform
 dcos_stack_bucket               = "deepcortex-dcos-backend"
-private_domain                  = "private.devops.deepcortex.ai"
 bootstrap_asg_desired_capacity  = "1"
 bootstrap_asg_min_size          = "1"
 bootstrap_asg_max_size          = "1"

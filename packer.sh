@@ -14,7 +14,7 @@ if [ ${#} -ne 2 ]; then
 fi
 
 if [ -z "$AWS_PROFILE" ];then
-  if [ -z "$AWS_ACCESS_KEY_ID" || -z "$AWS_SECRET_ACCESS_KEY"];then
+  if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ];then
     echo "AWS_PROFILE or access keys (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) are not set"
     usage
   fi  
@@ -53,7 +53,7 @@ export SLAVE_XVDG_SIZE=$(awk -F\" '/^slave_xvdg_size/{print $2}'  "environments/
 export SLAVE_XVDH_SIZE=$(awk -F\" '/^slave_xvdh_size/{print $2}'  "environments/$CONFIG.tfvars")
 shift 2
 
-export AWS_REGION="${AWS_REGION:-us-east-2}"
+export AWS_REGION="${REGION:-us-east-1}"
 
 PWD=$(pwd)
 FILE="$PWD/ansible/roles/deployer/files/id_rsa"
@@ -74,12 +74,12 @@ get_git_describe_with_dirty() {
 }
 
 : ${BUILD_UUID:=$(uuidgen)}
-GIT_COMMIT=$(get_git_describe_with_dirty)
+GIT_COMMIT=${TRAVIS_BUILD_NUMBER:-1}
 
 run_packer() {
   set -x
   local UUID=$1 GIT_COMMIT=$2; shift 2
-  (( $# >= 1 ))
+  #(( $# >= 1 ))
   packer build \
       -var "git_commit=$GIT_COMMIT" \
       -var "build_uuid=$UUID" \

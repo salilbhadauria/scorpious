@@ -17,8 +17,10 @@ if [ ${#} -ne 3 ]; then
 fi
 
 if [ -z "$AWS_PROFILE" ];then
-  echo "AWS_PROFILE is not set"
-  usage
+  if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ];then
+    echo "AWS_PROFILE or access keys (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) are not set"
+    usage
+  fi  
 fi
 
 if [ -z "$TF_VAR_dcos_password" ];then
@@ -32,7 +34,7 @@ export STACK=$3
 
 shift 3
 
-function set_backend_variables {
+set_backend_variables() {
   REGION=$(awk -F\" '/region/{print $2}'  "environments/$CONFIG.tfvars")
   ACCOUNT=$(awk -F\" '/account/{print $2}'  "environments/$CONFIG.tfvars")
   ENVIRONMENT=$(awk -F\" '/environment /{print $2}'  "environments/$CONFIG.tfvars" | tr -d '\n')
