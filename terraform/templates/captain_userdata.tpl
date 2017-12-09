@@ -20,6 +20,11 @@ environment:
   um_service_url: ${um_service_url}
   zookeeper_url: "${dcos_master_url}:2181"
   marathon_client_marathon_endpoint: "http://${dcos_master_url}:8080"
+  rabbit_password: ${rabbit_password}
+  aries_http_search_user_password: ${aries_http_search_user_password}
+  aries_http_command_user_password: ${aries_http_command_user_password}
+  cortex_http_search_user_password: ${cortex_http_search_user_password}
+  orion_http_search_user_password: ${orion_http_search_user_password}
   master_instance_name: ${master_instance_name}
 manage_resolv_conf: false
 preserve_hostname: true
