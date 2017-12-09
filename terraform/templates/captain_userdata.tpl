@@ -25,6 +25,7 @@ environment:
   aries_http_command_user_password: ${aries_http_command_user_password}
   cortex_http_search_user_password: ${cortex_http_search_user_password}
   orion_http_search_user_password: ${orion_http_search_user_password}
+  master_instance_name: ${master_instance_name}
 manage_resolv_conf: false
 preserve_hostname: true
 runcmd:
@@ -38,3 +39,4 @@ runcmd:
   - hostnamectl set-hostname $newhostn
   - service rsyslog restart
   - service ntpd restart
+  - service mongod stop
