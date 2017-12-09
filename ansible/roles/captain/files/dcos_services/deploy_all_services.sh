@@ -25,11 +25,22 @@ until [[ $(dcos node | grep agent | wc -l) == $DCOS_NODES ]]; do sleep 5; done
 export MONGODB_HOSTS=$(aws ec2 describe-instances --filters "Name=tag:Role,Values=slave" --query Reservations[].Instances[].PrivateIpAddress --output text | sed -e 's/\s/,/g')
 export DCOS_MASTER_PRIVATE_IP=$(aws ec2 describe-instances --filter Name=tag-key,Values=Name Name=tag-value,Values=$MASTER_INSTANCE_NAME --query "Reservations[*].Instances[*].PrivateIpAddress" --output=text)
 
-# Deploy frameworks from DC/OS universe
+# Deploy frameworks from DC/OS universe + rabbitMQ
 dcos package install marathon-lb --yes
 dcos package install mongodb-replicaset --options=mongodb/options.json --yes
 dcos package install elastic --options=elasticsearch/options.json --yes
 dcos package install kibana --yes
+source deploy_service.sh rabbitmq/marathon.json rabbitmq/env_vars.sh
+
+# Initialization and migration
+
+while $(dcos marathon deployment list | grep -q scale); do sleep 5; done
+
+export PATH="/usr/local/lib/npm/bin:$PATH"
+sleep 60
+source elasticsearch/scripts/elasticsearch_init.sh
+source rabbitmq/rabbitmq_init.sh
+source mongodb/mongo_init.sh
 
 # Deploy custom services and frameworkds
 source deploy_service.sh aries/marathon.json aries/env_vars.sh
@@ -38,16 +49,4 @@ source deploy_service.sh baile-nginx/marathon.json baile-nginx/env_vars.sh
 source deploy_service.sh cortex/marathon.json cortex/env_vars.sh
 source deploy_service.sh logstash/marathon.json logstash/env_vars.sh
 source deploy_service.sh orion/marathon.json orion/env_vars.sh
-source deploy_service.sh rabbitmq/marathon.json rabbitmq/env_vars.sh
 source deploy_service.sh um-service/marathon.json um-service/env_vars.sh
-
-# Initialization and migration
-
-while $(dcos marathon deployment list | grep -q scale); do sleep 5; done
-
-export PATH="/usr/local/lib/npm/bin:$PATH"
-sleep 30
-
-source elasticsearch/scripts/elasticsearch_init.sh
-source rabbitmq/rabbitmq_init.sh
-source mongodb/mongo_init.sh

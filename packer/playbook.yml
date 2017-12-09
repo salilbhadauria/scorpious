@@ -62,7 +62,7 @@
     dcos_download: https://downloads.mesosphere.com/dcos-enterprise/stable/dcos_generate_config.ee.sh
     security: disabled
     registry: true
-    docker_registry_auth_token: "ZGVlcGNvcnRleGRldjpTM250ckBuYTE3MjU="
+    docker_registry_auth_token: "ZGVlcGNvcnRleHJlYWQ6bnkyUDJwUlVMWHcyY1Vydg=="
     superuser_username: "{{dcos_username}}"
     enterprise_dcos: true
     resolvers:

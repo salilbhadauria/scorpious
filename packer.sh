@@ -4,8 +4,8 @@ set -e
 usage() {
   echo "Usage: $0 <image> <config_file> [args...]"
   echo " e.g.: $0 bootstrap integration"
-  echo "All images requires environment variable AWS_PROFILE to be set"
-  echo "Bootstrap image requires environment variable CUSTOMER_KEY, SUPERUSER_PASSWORD_HASH and DOCKER_REGISTRY_AUTH_TOKEN to be set"
+  echo "All images require environment variable AWS_PROFILE or access keys (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) to be set"
+  echo "Bootstrap image requires environment variables CUSTOMER_KEY, DCOS_USERNAME, and DCOS_PASSWORD to be set"
   exit 1
 }
 
@@ -14,8 +14,10 @@ if [ ${#} -ne 2 ]; then
 fi
 
 if [ -z "$AWS_PROFILE" ];then
-  echo "AWS_PROFILE is not set"
-  usage
+  if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ];then
+    echo "AWS_PROFILE or access keys (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) are not set"
+    usage
+  fi  
 fi
 
 if [ -z "$CUSTOMER_KEY" ] && [ $1 = "bootstrap" ];then
@@ -38,6 +40,8 @@ export CONFIG=$2
 export AMI=$(awk -F\" '/^packer_base_ami/{print $2}'  "environments/$CONFIG.tfvars")
 export REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$CONFIG.tfvars")
 export SSH_USER=$(awk -F\" '/^packer_ssh_user/{print $2}'  "environments/$CONFIG.tfvars")
+export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$CONFIG.tfvars")
+
 export MASTER_XVDE_SIZE=$(awk -F\" '/^master_xvde_size/{print $2}'  "environments/$CONFIG.tfvars")
 export MASTER_XVDF_SIZE=$(awk -F\" '/^master_xvdf_size/{print $2}'  "environments/$CONFIG.tfvars")
 export MASTER_XVDG_SIZE=$(awk -F\" '/^master_xvdg_size/{print $2}'  "environments/$CONFIG.tfvars")
@@ -49,7 +53,7 @@ export SLAVE_XVDG_SIZE=$(awk -F\" '/^slave_xvdg_size/{print $2}'  "environments/
 export SLAVE_XVDH_SIZE=$(awk -F\" '/^slave_xvdh_size/{print $2}'  "environments/$CONFIG.tfvars")
 shift 2
 
-export AWS_REGION="${AWS_REGION:-us-east-2}"
+export AWS_REGION="${REGION:-us-east-1}"
 
 PWD=$(pwd)
 FILE="$PWD/ansible/roles/deployer/files/id_rsa"
@@ -70,12 +74,12 @@ get_git_describe_with_dirty() {
 }
 
 : ${BUILD_UUID:=$(uuidgen)}
-GIT_COMMIT=$(get_git_describe_with_dirty)
+GIT_COMMIT=${TRAVIS_BUILD_NUMBER:-1}
 
 run_packer() {
   set -x
   local UUID=$1 GIT_COMMIT=$2; shift 2
-  (( $# >= 1 ))
+  #(( $# >= 1 ))
   packer build \
       -var "git_commit=$GIT_COMMIT" \
       -var "build_uuid=$UUID" \

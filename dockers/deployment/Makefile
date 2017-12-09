@@ -24,11 +24,13 @@ lint:
 	docker run -it --rm -v "$(PWD)/Dockerfile:/Dockerfile:ro" redcoolbeans/dockerlint
 
 build:
+	cd ../../; \
 	docker build \
 		--build-arg VCS_REF=$(VCS_REF) \
 		--build-arg IMAGE_VERSION=$(IMAGE_VERSION) \
 		--build-arg BUILD_DATE=$(BUILD_DATE) \
-		-t $(GIT_TAG) .
+		-t $(GIT_TAG) \
+		-f dockers/deployment/Dockerfile .
 
 tag:
 	docker tag $(GIT_TAG) $(BUILD_TAG)
