@@ -7,7 +7,7 @@ usage() {
   exit 1
 }
 
-if [ ${#} -ne 6 ]; then
+if [ ${#} -ne 5 ]; then
   usage
 fi
 
@@ -19,7 +19,7 @@ export DCOS_USERNAME=$5
 export DCOS_PASSWORD=$6
 export TF_VAR_dcos_password=$DCOS_PASSWORD
 
-shift 7
+shift 6
 
 sh terraform_init_backend.sh $CONFIG
 
