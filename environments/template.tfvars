@@ -1,22 +1,34 @@
 
-# You must fill in the following varibles before executing the deployment.
+### You must fill in the following varibles before executing the deployment.
 # Remove the <> symbols before deploying.
 
+# the account ID of the AWS account you will deploy to
 account                         = <"YOUR_AWS_ACCOUNT_ID">
+
+# the public ssh key for the key you would like to use to access the DC/OS machines used for DeepCortex
 ssh_public_key                  = <"YOUR_SSH_PUBLIC_KEY">
+
+# the CIDR for a VPN or machine IP that should be able to access DeepCortex
 access_cidr                     = <"YOUR_ACCESS_CIDR">
 
-# You may change any of the below names if you choose, otherwise the defaults we be used.
 
+### You may change any of the below names if you choose, otherwise the defaults we be used.
+
+# the name of the S3 buckets used for storing terraform artifacts, storing DeepCortex data, and storing DC/OS data
 tf_bucket                       = "deepcortex-falcon-dev-terraform"
+dcos_apps_bucket                = "deepcortex-falcon-dev-dcos-apps"
+dcos_stack_bucket               = "deepcortex-falcon-dev-dcos-backend"
+
+# the tags that will be applied to the infrastructure (environment, owner, usage)
 environment                     = "dev"
 tag_owner                       = "deepcortex"
 tag_usage                       = "falcon"
-dcos_apps_bucket                = "deepcortex-falcon-dev-dcos-apps"
-dcos_stack_bucket               = "deepcortex-falcon-dev-dcos-backend"
+
+# the name of the redshfit cluster
 redshift_cluster_name           = "deepcortex-falcon-dev-redshift"
 
-# Do not change anything below this line.
+
+### DO NOT CHANGE ANYTHING BELOW THIS LINE
 
 # Packer
 packer_base_ami                 = "ami-6f61e60e"

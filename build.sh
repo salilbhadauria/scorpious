@@ -2,7 +2,7 @@
 set -e
 
 usage() {
-  echo "Usage: $0 <config> <aws_access_key_id> <aws_secret_access_key> <customer_key> <dcos_username> <dcos_password> [args...]"
+  echo "Usage: $0 <config> <aws_profile> or (<aws_access_key_id> and <aws_secret_access_key>) <customer_key> <dcos_username> <dcos_password> [args...]"
   echo " e.g.: $0 integration default XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX deepcortex password "
   exit 1
 }
