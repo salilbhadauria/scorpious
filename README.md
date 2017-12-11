@@ -14,6 +14,20 @@ Create your ~/.aws/config and ~/.aws/credentials
 
 Make sure you exported AWS_PROFILE
 
+# Docker command to deploy all:
+
+<config_file> <aws_access_key_id> <aws_secret_access_key> <dcos_customer_key> <dcos_username> <dcos_password>
+
+docker run \
+    -v ~/Desktop/auto-deployment/environments:/opt/deploy/environments \
+    -e CONFIG=${CONFIG_FILE} \
+    -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+    -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+    -e CUSTOMER_KEY=${CUSTOMER_KEY} \
+    -e DCOS_USERNAME=${DCOS_USERNAME} \
+    -e DCOS_PASSWORD=${DCOS_PASSWORD} \
+    deepcortex/scorpius-deployment:5e2cd05
+
 BUILDING NEW ENVIRONMENT
 
 Packer:

@@ -10,14 +10,11 @@ DCOS_USERNAME="{{dcos_username}}"
 DCOS_PASSWORD="{{dcos_password}}"
 RABBIT_HOSTS="{{rabbit_hosts}}"
 RABBIT_USERNAME="{{rabbit_user}}"
-RABBIT_PASSWORD="{{passwords['rabbit_password']}}"
 
 # Aries
 ARIES_DOCKER_IMAGE_VERSION="{{aries_docker_image_version}}"
 ARIES_HTTP_SEARCH_USER_NAME="{{aries_http_search_user_name}}"
-ARIES_HTTP_SEARCH_USER_PASSWORD="{{passwords['aries_http_search_user_password']}}"
 ARIES_HTTP_COMMAND_USER_NAME="{{aries_http_command_user_name}}"
-ARIES_HTTP_COMMAND_USER_PASSWORD="{{passwords['aries_http_command_user_password']}}"
 ELASTIC_HOST="{{elastic_host}}"
 ELASTIC_PORT={{elastic_port}}
 ELASTIC_SSL={{elastic_ssl}}
@@ -30,6 +27,7 @@ BAILE_DOCKER_IMAGE_VERSION="{{baile_docker_image_version}}"
 BAILE_SRV_INSTANCES={{baile_srv_instances}}
 BAILE_SRV_CPUS={{baile_srv_cpus}}
 BAILE_SRV_MEM={{baile_srv_mem}}
+UM_SERVICE_URL={{um_service_url}}
 
 # Baile Nginx
 BAILE_NGINX_DOCKER_IMAGE_VERSION="{{baile_nginx_docker_image_version}}"
@@ -40,7 +38,6 @@ BAILE_NGINX_SRV_MEM={{baile_nginx_srv_mem}}
 # Cortex
 CORTEX_DOCKER_IMAGE_VERSION="{{cortex_docker_image_version}}"
 CORTEX_HTTP_SEARCH_USER_NAME="{{cortex_http_search_user_name}}"
-CORTEX_HTTP_SEARCH_USER_PASSWORD="{{passwords['cortex_http_search_user_password']}}"
 ARIES_REST_URL="{{aries_rest_url}}"
 ARIES_REST_VERSION="{{aries_rest_version}}"
 CORTEX_SRV_INSTANCES={{cortex_srv_instances}}
@@ -56,7 +53,6 @@ LOGSTASH_SRV_MEM={{logstash_srv_mem}}
 # Orion
 ORION_DOCKER_IMAGE_VERSION="{{orion_docker_image_version}}"
 ORION_HTTP_SEARCH_USER_NAME="{{orion_http_search_user_name}}"
-ORION_HTTP_SEARCH_USER_PASSWORD="{{passwords['orion_http_search_user_password']}}"
 JOB_MASTER_START_TIMEOUT="{{job_master_start_timeout}}"
 JOB_MASTER_HEARTBEAT_TIMEOUT="{{job_master_heartbeat_timeout}}"
 JOB_MASTER_DOCKER_IMAGE="{{job_master_docker_image}}"

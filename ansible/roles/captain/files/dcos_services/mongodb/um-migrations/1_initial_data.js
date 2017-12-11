@@ -70,7 +70,7 @@ exports.migrate = function(client, done) {
     //Default deepcortex login/password: deepcortex/password
     //!!!CHANGE DEFAULT PASSWORD IN PROD IMMEDIATELY AFTER FITST DEPLOY!!!
     users.insertMany([{
-        "id": "users_deepcortex_root",
+        "id": "02b6451e-dc3c-11e7-9296-cec278b6b50a",
         "username": "root",
         "email" : "no_such_user@sentrana.com",
         "password" : "2710:cm9vdFNhbHQ=:+y1NlIknpwZJO787hByDw2bMlXnXurpd",
@@ -83,7 +83,7 @@ exports.migrate = function(client, done) {
         "created": "2016-05-06T00:00:00.000Z",
         "updated": "2016-05-06T00:00:00.000Z"
     }, {
-        "id": "users_deepcortex",
+        "id": "02b6478a-dc3c-11e7-9296-cec278b6b50a",
         "username": "deepcortex",
         "email" : "support@deepcortex.ai",
         "password" : "2710:cjJsbWRuM21pOTN1cGR0ZjNqcmU3MWww:3bYF4yDzPNLBJrfC6SUvWBm2YwFqElj2",

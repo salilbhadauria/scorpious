@@ -15,6 +15,7 @@
       ],
       "parameters": [
         { "key": "env", "value": "AWS_S3_BUCKET=${AWS_S3_BUCKET}" },
+        { "key": "env", "value": "AWS_REGION=us-gov-west-1" },
         { "key": "env", "value": "REDSHIFT_HOST=${REDSHIFT_HOST}" },
         { "key": "env", "value": "REDSHIFT_USER=${REDSHIFT_USER}" },
         { "key": "env", "value": "REDSHIFT_PASSWORD=${REDSHIFT_PASSWORD}" },
