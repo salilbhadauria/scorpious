@@ -10,7 +10,7 @@ terraform {
 ## Users and Policies
 
 resource "aws_iam_user" "app" {
-  name = "${var.environment}-app"
+  name = "${var.tag_owner}-${var.environment}-app"
   path = "/apps/"
 }
 
@@ -46,7 +46,7 @@ EOF
 ## Role and Policies
 
 resource "aws_iam_role" "nat_instance_role" {
-    name = "nat_instance_role"
+    name = "${var.tag_owner}-${var.environment}-nat_instance_role"
     path = "/"
     assume_role_policy = <<EOF
 {
@@ -65,7 +65,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "nat_instance_policy" {
-    name = "nat_instance_policy"
+    name = "${var.tag_owner}-${var.environment}-nat_instance_policy"
     role = "${aws_iam_role.nat_instance_role.id}"
     policy = <<EOF
 {
@@ -89,7 +89,7 @@ EOF
 }
 
 resource "aws_iam_role" "bootstrap_role" {
-  name = "bootstrap_role"
+  name = "${var.tag_owner}-${var.environment}-bootstrap_role"
   path = "/"
   assume_role_policy = <<EOF
 {
@@ -108,7 +108,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "bootstrap_policy" {
-  name = "bootstrap_policy"
+  name = "${var.tag_owner}-${var.environment}-bootstrap_policy"
   role = "${aws_iam_role.bootstrap_role.id}"
   policy = <<EOF
 {
@@ -127,7 +127,7 @@ EOF
 }
 
 resource "aws_iam_role" "master_role" {
-  name = "master_role"
+  name = "${var.tag_owner}-${var.environment}-master_role"
   path = "/"
   assume_role_policy = <<EOF
 {
@@ -146,7 +146,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "master_policy" {
-  name = "master_policy"
+  name = "${var.tag_owner}-${var.environment}-master_policy"
   role = "${aws_iam_role.master_role.id}"
   policy = <<EOF
 {
@@ -165,7 +165,7 @@ EOF
 }
 
 resource "aws_iam_role" "slave_role" {
-  name = "slave_role"
+  name = "${var.tag_owner}-${var.environment}-slave_role"
   path = "/"
   assume_role_policy = <<EOF
 {
@@ -184,7 +184,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "slave_policy" {
-  name = "slave_policy"
+  name = "${var.tag_owner}-${var.environment}-slave_policy"
   role = "${aws_iam_role.slave_role.id}"
   policy = <<EOF
 {
@@ -203,7 +203,7 @@ EOF
 }
 
 resource "aws_iam_role" "captain_role" {
-  name = "captain_role"
+  name = "${var.tag_owner}-${var.environment}-captain_role"
   path = "/"
   assume_role_policy = <<EOF
 {
@@ -222,7 +222,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "captain_policy" {
-  name = "captain_policy"
+  name = "${var.tag_owner}-${var.environment}-captain_policy"
   role = "${aws_iam_role.captain_role.id}"
   policy = <<EOF
 {
