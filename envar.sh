@@ -1,0 +1,6 @@
+CONFIG=deepcortex-setting
+AWS_ACCESS_KEY=<>
+AWS_SECRET_ACCESS_KEY=<>
+CUSTOMER_KEY=<>
+DCOS_USERNAME=<deepcortex>
+DCOS_PASSWORD=<>
