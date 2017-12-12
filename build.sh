@@ -17,12 +17,12 @@ sh terraform_init_backend.sh $CONFIG
 #  sh packer.sh $i $CONFIG;
 #done
 
-#STACKS=("iam" "vpc" "redshift" "platform")
-#for i in "${STACKS[@]}"; do
-#  sh terraform.sh init $CONFIG $i;
-#  sh terraform.sh plan $CONFIG $i;
-#  sh terraform.sh apply $CONFIG $i;
-#done
+STACKS=("iam" "vpc" "redshift" "platform")
+for i in "${STACKS[@]}"; do
+  sh terraform.sh init $CONFIG $i;
+  sh terraform.sh plan $CONFIG $i;
+  sh terraform.sh apply $CONFIG $i;
+done
 
 ENVIRONMENT=$(awk -F\" '/^environment/{print $2}'  "environments/$CONFIG.tfvars")
 OWNER=$(awk -F\" '/^tag_owner/{print $2}'  "environments/$CONFIG.tfvars")

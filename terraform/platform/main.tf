@@ -573,7 +573,8 @@ module "slave_asg" {
     lc_instance_type        = "m4.4xlarge"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
-    lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}" ]
+    lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}", 
+    "${data.terraform_remote_state.vpc.sg_private_egress_subnet_id}" ]
     lc_user_data            = "${data.template_file.slave_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
 
