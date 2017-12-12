@@ -55,9 +55,8 @@ while [ ${NEXT_WAIT_TIME} -lt ${MAX_WAIT_TIMES} ]; do
       echo "There are currenlty ${NODES} nodes connected. Waiting for $(( DCOS_NODES - NODES )) more node(s) to connect..."
     else
       echo "All nodes connected."
-      SERVICES=$(dcos marathon deployment list | grep -q scale)
       echo "Starting deployment and initialization of services..."
-      until $(dcos marathon deployment list | grep -q aries); do sleep 5; done
+      until $(dcos marathon app list | grep -q aries); do sleep 30; done
       if $(dcos marathon deployment list | grep -q scale); then
         echo "Waiting for all services to deploy and initialize..."   
       else 
