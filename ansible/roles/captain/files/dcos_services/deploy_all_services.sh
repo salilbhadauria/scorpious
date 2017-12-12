@@ -21,6 +21,8 @@ source setup_dcos_cli.sh
 # Wait for all nodes to become online
 until [[ $(dcos node | grep agent | wc -l) == $DCOS_NODES ]]; do sleep 5; done
 
+sleep 60
+
 # Retrieve slave node IPs
 export MONGODB_HOSTS=$(aws ec2 describe-instances --filters "Name=tag:Role,Values=slave" --query Reservations[].Instances[].PrivateIpAddress --output text | sed -e 's/\s/,/g')
 export DCOS_MASTER_PRIVATE_IP=$(aws ec2 describe-instances --filter Name=tag-key,Values=Name Name=tag-value,Values=$MASTER_INSTANCE_NAME --query "Reservations[*].Instances[*].PrivateIpAddress" --output=text)

@@ -66,29 +66,29 @@ exports.migrate = function(client, done) {
         "updated": "2016-05-06T00:00:00.000Z"
     }])
 
-    //Default admin login/password: root/root
-    //Default deepcortex login/password: deepcortex/password
+    //Default deepcortex_user1 login/password: deepcortex/password
+    //Default deepcortex_user2 login/password: deepcortex/password
     //!!!CHANGE DEFAULT PASSWORD IN PROD IMMEDIATELY AFTER FITST DEPLOY!!!
     users.insertMany([{
         "id": "02b6451e-dc3c-11e7-9296-cec278b6b50a",
-        "username": "root",
+        "username": "deepcortex_user1",
         "email" : "no_such_user@sentrana.com",
-        "password" : "2710:cm9vdFNhbHQ=:+y1NlIknpwZJO787hByDw2bMlXnXurpd",
+        "password" : "2710:cjJsbWRuM21pOTN1cGR0ZjNqcmU3MWww:3bYF4yDzPNLBJrfC6SUvWBm2YwFqElj2",
         "firstName" : "DeepCortex",
-        "lastName" : "Root",
+        "lastName" : "User1",
         "status" : "ACTIVE",
-        "groupIds": ["groups_superuser"],
+        "groupIds": ["groups_read_only_um"],
         "dataFilterInstances": [],
         "organizationId": "orgs_deepcortex",
         "created": "2016-05-06T00:00:00.000Z",
         "updated": "2016-05-06T00:00:00.000Z"
     }, {
         "id": "02b6478a-dc3c-11e7-9296-cec278b6b50a",
-        "username": "deepcortex",
+        "username": "deepcortex_user2",
         "email" : "support@deepcortex.ai",
         "password" : "2710:cjJsbWRuM21pOTN1cGR0ZjNqcmU3MWww:3bYF4yDzPNLBJrfC6SUvWBm2YwFqElj2",
         "firstName" : "DeepCortex",
-        "lastName" : "User",
+        "lastName" : "User2",
         "status" : "ACTIVE",
         "groupIds": ["groups_read_only_um"],
         "dataFilterInstances": [],
