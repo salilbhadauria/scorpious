@@ -85,7 +85,7 @@ module "dcos_stack_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "${var.tag_owner}-${var.environment}-dcos-stack"
+    sg_name = "dcos-stack"
     sg_description = "some description"
 
     ingress_rules_self = [
@@ -114,7 +114,7 @@ module "bootstrap_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "${var.tag_owner}-${var.environment}-bootstrap"
+    sg_name = "bootstrap"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 2
@@ -149,7 +149,7 @@ module "bootstrap_elb_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "${var.tag_owner}-${var.environment}-bootstrap-elb"
+    sg_name = "bootstrap-elb"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -246,7 +246,7 @@ module "master_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "${var.tag_owner}-${var.environment}-master"
+    sg_name = "master"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 13
@@ -347,7 +347,7 @@ module "master_elb_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "${var.tag_owner}-${var.environment}-master-elb"
+    sg_name = "master-elb"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -387,7 +387,7 @@ module "master_elb_internal_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "${var.tag_owner}-${var.environment}-master-elb-int"
+    sg_name = "master-elb-internal"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -511,7 +511,7 @@ module "slave_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "${var.tag_owner}-${var.environment}-slave"
+    sg_name = "slave"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 3
@@ -596,7 +596,7 @@ module "baile_elb_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "${var.tag_owner}-${var.environment}-baile-elb"
+    sg_name = "baile-elb"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -647,7 +647,7 @@ module "public_slave_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "${var.tag_owner}-${var.environment}-public-slave"
+    sg_name = "public-slave"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 3
@@ -728,7 +728,7 @@ module "captain_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "${var.tag_owner}-${var.environment}-captain"
+    sg_name = "captain"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 1

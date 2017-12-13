@@ -1,15 +1,14 @@
-
 ### You must fill in the following varibles before executing the deployment.
 # Remove the <> symbols before deploying.
 
 # the account ID of the AWS account you will deploy to
-account                         = <"YOUR_AWS_ACCOUNT_ID">
+account                         = "475276989310"
 
 # the public ssh key for the key you would like to use to access the DC/OS machines used for DeepCortex
-ssh_public_key                  = <"YOUR_SSH_PUBLIC_KEY">
+ssh_public_key                  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzAIMbSVnZohF71QmHYBwZ8049zJgDlQ7/7V/C05sDBd5gUeSqdloLG22YkuooIh6uWtnUtBCZc2Sqlyqveh+ly0BV2K+euBSb58idzldn7Cz/bvJKHjjxN5qe4uiaskJxT6V187GZ3WwJ7vBNkE5NQ1NRz9oZGv7B1mjy1+eUZIMXovv5vAIvorHeOQsussPlTbxpidHb3Nxt7Nq0DyFAtEq0Bkny5bWZJ33hwHc2u4IZTZWR0GVEXdneas7nSbAhyUA/XSQNN9uJTHJjm75oC9UM7rpgpIGgnUVWTz+syCM1uImxwZATaFXYfL6XjwiJFJwkoY0H8uaT8SX/FpgR"
 
 # the CIDR for a VPN or machine IP that should be able to access DeepCortex
-access_cidr                     = <"YOUR_ACCESS_CIDR">
+access_cidr                     = "205.251.75.6/32"
 
 
 ### You may change any of the below names if you choose, otherwise the defaults we be used.

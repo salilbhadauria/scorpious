@@ -22,7 +22,7 @@ module "redshift-clstr-sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "${var.tag_owner}-${var.environment}-redshift"
+    sg_name = "redshift"
     sg_description = "some description"
 
     ingress_rules_cidr = [
