@@ -369,6 +369,24 @@ module "master_elb_sg" {
             to_port     = "8181"
             cidr_blocks = "${var.access_cidr}"
         },
+        {
+            protocol    = "tcp"
+            from_port   = "80"
+            to_port     = "80"
+            cidr_blocks = "${var.deploy_cidr}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "443"
+            to_port     = "443"
+            cidr_blocks = "${var.deploy_cidr}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "8181"
+            to_port     = "8181"
+            cidr_blocks = "${var.deploy_cidr}"
+        },
     ]
 
     egress_rules_cidr = [
@@ -605,6 +623,12 @@ module "baile_elb_sg" {
             from_port   = "80"
             to_port     = "80"
             cidr_blocks = "${var.access_cidr}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "80"
+            to_port     = "80"
+            cidr_blocks = "${var.deploy_cidr}"
         },
         {
             protocol    = "tcp"

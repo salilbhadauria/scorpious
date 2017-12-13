@@ -22,6 +22,7 @@ ssh_public_key                  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzAIMbS
 tag_owner                       = "deepcortex"
 tag_usage                       = "gov"
 access_cidr                     = "205.251.75.6/32"
+deploy_cidr                     = "205.251.75.6/32"
 
 # Platform
 dcos_stack_bucket               = "deepcortex-gov-dev-dcos-backend"

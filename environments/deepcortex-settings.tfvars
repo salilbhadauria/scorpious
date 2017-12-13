@@ -9,6 +9,7 @@ ssh_public_key                  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzAIMbS
 
 # the CIDR for a VPN or machine IP that should be able to access DeepCortex
 access_cidr                     = "205.251.75.6/32"
+deploy_cidr                     = "205.251.75.6/32"
 
 
 ### You may change any of the below names if you choose, otherwise the defaults we be used.
