@@ -11,17 +11,18 @@ Automated deployment for DeepCortex platform
 3. Fill in the necessary variables in template.tfvars.
 4. Export the following variables in your terminal.
     * CONFIG - the name of the config file to use (should be template).
-    * AWS_ACCESS_KEY - the access key that should be used to deploy in AWS.
+    * AWS_ACCESS_KEY_ID - the access key that should be used to deploy in AWS.
     * AWS_SECRET_ACCESS_KEY - the secret key that should be used to deploy in AWS.
     * CUSTOMER_KEY - the DC/OS enterprise key 
     * DCOS_USERNAME - the username you'd like to use to login to the DC/OS cluster
     * DCOS_PASSWORD - the password you'd like to use to login to the DC/OS cluster
-5. Run the following docker command replacing /path/to/environments with the path to the environments directory you created in step 1 and TAG with the correct version of the docker image.
+5. Run "docker pull deepcortex/scorpius-deploymnet:TAG" repalcing tag with the correct image tag.
+6. Run the following docker command replacing /path/to/environments with the path to the environments directory you created in step 1 and TAG with the correct version of the docker image.
 
     ```bash
     docker run \
-      -v ~/Desktop/auto-deployment/environments:/path/to/environments \
-      -e CONFIG=${CONFIG_FILE} \
+      -v /path/to/environments:/opt/deploy/environments \
+      -e CONFIG=${CONFIG} \
       -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
       -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
       -e CUSTOMER_KEY=${CUSTOMER_KEY} \
@@ -29,6 +30,7 @@ Automated deployment for DeepCortex platform
       -e DCOS_PASSWORD=${DCOS_PASSWORD} \
       deepcortex/scorpius-deployment:TAG
     ```
+7. Once your terminal output states the deployment it complete you can access the DeepCortex UI.
 
 ### Manual deploying the scripts without docker.
 

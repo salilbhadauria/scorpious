@@ -195,13 +195,13 @@ data "template_file" "bootstrap_userdata" {
 }
 
 resource "aws_iam_instance_profile" "bootstrap_instance_profile" {
-  name  = "bootstrap_instance_profile"
+  name  = "${var.tag_owner}-${var.environment}-bootstrap_instance_profile"
   role = "${data.terraform_remote_state.iam.bootstrap_iam_role_name}"
 }
 
 module "bootstrap_elb" {
   source              = "../../terraform/modules/elb"
-  elb_name            = "${var.environment}-bootstrap-elb"
+  elb_name            = "${var.tag_owner}-${var.environment}-bootstrap-elb"
   elb_is_internal     = "true"
   elb_security_group  = "${module.bootstrap_elb_sg.id}"
   subnets             = [ "${data.terraform_remote_state.vpc.private_egress_subnet_ids}" ]
@@ -226,7 +226,7 @@ module "bootstrap_asg" {
     lc_user_data            = "${data.template_file.bootstrap_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
 
-    asg_name                = "${var.environment}-bootstrap-asg"
+    asg_name                = "${var.tag_owner}-${var.environment}-bootstrap-asg"
     asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
     asg_desired_capacity    = "${var.bootstrap_asg_desired_capacity}"
     asg_min_size            = "${var.bootstrap_asg_min_size}"
@@ -369,6 +369,24 @@ module "master_elb_sg" {
             to_port     = "8181"
             cidr_blocks = "${var.access_cidr}"
         },
+        {
+            protocol    = "tcp"
+            from_port   = "80"
+            to_port     = "80"
+            cidr_blocks = "${var.deploy_cidr}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "443"
+            to_port     = "443"
+            cidr_blocks = "${var.deploy_cidr}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "8181"
+            to_port     = "8181"
+            cidr_blocks = "${var.deploy_cidr}"
+        },
     ]
 
     egress_rules_cidr = [
@@ -455,7 +473,7 @@ data "template_file" "master_userdata" {
 
 module "master_elb" {
   source              = "../../terraform/modules/elb_external_masters"
-  elb_name            = "${var.environment}-master-elb"
+  elb_name            = "${var.tag_owner}-${var.environment}-master-elb"
   elb_is_internal     = "false"
   elb_security_group  = "${module.master_elb_sg.id}"
   subnets             = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
@@ -466,7 +484,7 @@ module "master_elb" {
 
 module "master_elb_internal" {
   source              = "../../terraform/modules/elb_internal_masters"
-  elb_name            = "${var.environment}-master-elb-internal"
+  elb_name            = "${var.tag_owner}-${var.environment}-master-elb-int"
   elb_security_group  = "${module.master_elb_internal_sg.id}"
   subnets             = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
   health_check_target = "TCP:5050"
@@ -475,7 +493,7 @@ module "master_elb_internal" {
 }
 
 resource "aws_iam_instance_profile" "master_instance_profile" {
-  name  = "master_instance_profile"
+  name  = "${var.tag_owner}-${var.environment}-master_instance_profile"
   role = "${data.terraform_remote_state.iam.master_iam_role_name}"
 }
 
@@ -491,7 +509,7 @@ module "master_asg" {
     lc_user_data            = "${data.template_file.master_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.master_instance_profile.id}"
 
-    asg_name                = "${var.environment}-master-asg"
+    asg_name                = "${var.tag_owner}-${var.environment}-master-asg"
     asg_subnet_ids          = "${data.terraform_remote_state.vpc.public_subnet_ids}"
     asg_desired_capacity    = "${var.master_asg_desired_capacity}"
     asg_min_size            = "${var.master_asg_min_size}"
@@ -561,7 +579,7 @@ data "template_file" "slave_userdata" {
 }
 
 resource "aws_iam_instance_profile" "slave_instance_profile" {
-  name  = "slave_instance_profile"
+  name  = "${var.tag_owner}-${var.environment}-slave_instance_profile"
   role = "${data.terraform_remote_state.iam.slave_iam_role_name}"
 }
 
@@ -573,11 +591,11 @@ module "slave_asg" {
     lc_instance_type        = "m4.4xlarge"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
-    lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}" ]
+    lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}", "${data.terraform_remote_state.vpc.sg_private_egress_subnet_id}" ]
     lc_user_data            = "${data.template_file.slave_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
 
-    asg_name                = "${var.environment}-slave-asg"
+    asg_name                = "${var.tag_owner}-${var.environment}-slave-asg"
     asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
     asg_desired_capacity    = "${var.slave_asg_desired_capacity}"
     asg_min_size            = "${var.slave_asg_min_size}"
@@ -610,6 +628,12 @@ module "baile_elb_sg" {
             protocol    = "tcp"
             from_port   = "80"
             to_port     = "80"
+            cidr_blocks = "${var.deploy_cidr}"
+        },
+        {
+            protocol    = "tcp"
+            from_port   = "80"
+            to_port     = "80"
             cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
         },
     ]
@@ -627,7 +651,7 @@ module "baile_elb_sg" {
 
 module "baile_elb" {
   source              = "../../terraform/modules/elb"
-  elb_name            = "${var.environment}-baile-elb"
+  elb_name            = "${var.tag_owner}-${var.environment}-baile-elb"
   elb_is_internal     = "false"
   elb_security_group  = "${module.baile_elb_sg.id}"
   subnets             = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
@@ -708,7 +732,7 @@ module "public_slave_asg" {
     lc_user_data            = "${data.template_file.public_slave_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
 
-    asg_name                = "${var.environment}-public-slave-asg"
+    asg_name                = "${var.tag_owner}-${var.environment}-public-slave-asg"
     asg_subnet_ids          = "${data.terraform_remote_state.vpc.public_subnet_ids}"
     asg_desired_capacity    = "${var.public_slave_asg_desired_capacity}"
     asg_min_size            = "${var.public_slave_asg_min_size}"
@@ -782,7 +806,7 @@ data "template_file" "captain_userdata" {
 }
 
 resource "aws_iam_instance_profile" "captain_instance_profile" {
-  name  = "captain_instance_profile"
+  name  = "${var.tag_owner}-${var.environment}-captain_instance_profile"
   role = "${data.terraform_remote_state.iam.captain_iam_role_name}"
 }
 
@@ -798,7 +822,7 @@ module "captain_asg" {
     lc_user_data            = "${data.template_file.captain_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.captain_instance_profile.id}"
 
-    asg_name                = "${var.environment}-captain-asg"
+    asg_name                = "${var.tag_owner}-${var.environment}-captain-asg"
     asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
     asg_desired_capacity    = "${var.captain_asg_desired_capacity}"
     asg_min_size            = "${var.captain_asg_min_size}"

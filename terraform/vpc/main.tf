@@ -260,7 +260,7 @@ module "asg_bastion" {
     asg_max_size         = 1
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "${var.environment}-bastion-asg"
-    instance_name_tag = "${var.environment}-bastion"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-bastion-asg"
+    instance_name_tag = "${var.tag_owner}-${var.environment}-bastion"
     instance_role_tag = "bastion"
 }

@@ -56,12 +56,12 @@ module "redshift-clstr-sg" {
 }
 
 resource "aws_redshift_parameter_group" "redshift-clstr-pg" {
-  name   = "redshift-parameter-group"
+  name   = "${var.tag_owner}-${var.environment}-param"
   family = "${var.redshift_family}"
 }
 
 resource "aws_redshift_subnet_group" "redshift-subnet-grp" {
-  name       = "redshift-subnet-group"
+  name       = "${var.tag_owner}-${var.environment}-subnets"
   subnet_ids = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
 
   tags = "${local.tags}"

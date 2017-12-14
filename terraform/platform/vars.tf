@@ -5,6 +5,7 @@ variable "environment" {}
 variable "tf_bucket" {}
 variable "account" {}
 variable "access_cidr" {}
+variable "deploy_cidr" {}
 
 # Bootstrap vars
 
