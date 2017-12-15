@@ -63,5 +63,5 @@ locals {
 variable "ssh_public_key" {}
 variable "bastion_ami_id" {}
 
-variable "nat_ami_id" { default = "ami-15e9c770" }
+variable "nat_ami_id" {}
 variable "access_cidr" {}

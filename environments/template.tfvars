@@ -10,22 +10,22 @@ ssh_public_key                  = <"YOUR_SSH_PUBLIC_KEY">
 
 # the CIDR for a VPN or machine IP that should be able to access DeepCortex
 access_cidr                     = <"YOUR_ACCESS_CIDR">
-
+deploy_cidr                     = <"YOUR_DEPLOY_CIDR">
 
 ### You may change any of the below names if you choose, otherwise the defaults we be used.
 
 # the name of the S3 buckets used for storing terraform artifacts, storing DeepCortex data, and storing DC/OS data
-tf_bucket                       = "falcon-deepcortex-dev-terraform"
-dcos_apps_bucket                = "falcon-deepcortex-dev-dcos-apps"
-dcos_stack_bucket               = "falcon-deepcortex-dev-dcos-backend"
+tf_bucket                       = "deepcortex-dev-terraform"
+dcos_apps_bucket                = "deepcortex-dev-dcos-apps"
+dcos_stack_bucket               = "deepcortex-dev-dcos-backend"
 
 # the tags that will be applied to the infrastructure (environment, owner, usage)
 environment                     = "dev"
 tag_owner                       = "deepcortex"
-tag_usage                       = "falcon"
+tag_usage                       = "dev"
 
 # the name of the redshfit cluster
-redshift_cluster_name           = "falcon-deepcortex-dev-redshift"
+redshift_cluster_name           = "deepcortex-dev-redshift"
 
 
 ### DO NOT CHANGE ANYTHING BELOW THIS LINE

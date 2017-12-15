@@ -369,24 +369,6 @@ module "master_elb_sg" {
             to_port     = "8181"
             cidr_blocks = "${var.access_cidr}"
         },
-        {
-            protocol    = "tcp"
-            from_port   = "80"
-            to_port     = "80"
-            cidr_blocks = "${var.deploy_cidr}"
-        },
-        {
-            protocol    = "tcp"
-            from_port   = "443"
-            to_port     = "443"
-            cidr_blocks = "${var.deploy_cidr}"
-        },
-        {
-            protocol    = "tcp"
-            from_port   = "8181"
-            to_port     = "8181"
-            cidr_blocks = "${var.deploy_cidr}"
-        },
     ]
 
     egress_rules_cidr = [
@@ -398,6 +380,18 @@ module "master_elb_sg" {
         },
     ]
     tags = "${local.tags}"
+}
+
+resource "aws_security_group_rule" "master_elb_deploy_ingress_rule_cidr" {
+    count = "${local.create_deploy_sgs}"
+
+    security_group_id = "${module.master_elb_sg.id}"
+    type              = "ingress"
+    from_port         = "80"
+    to_port           = "80"
+    protocol          = "tcp"
+    cidr_blocks       = ["${var.deploy_cidr}"]
+    description       = "Access for baile from deploy cidr"
 }
 
 module "master_elb_internal_sg" {
@@ -624,17 +618,15 @@ module "baile_elb_sg" {
             to_port     = "80"
             cidr_blocks = "${var.access_cidr}"
         },
+    ]
+
+    ingress_rules_sgid_count = 1
+    ingress_rules_sgid = [
         {
             protocol    = "tcp"
             from_port   = "80"
             to_port     = "80"
-            cidr_blocks = "${var.deploy_cidr}"
-        },
-        {
-            protocol    = "tcp"
-            from_port   = "80"
-            to_port     = "80"
-            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
+            sg_id       = "${data.terraform_remote_state.vpc.sg_bastion_id}"
         },
     ]
 
@@ -646,7 +638,20 @@ module "baile_elb_sg" {
             cidr_blocks = "0.0.0.0/0"
         },
     ]
+
     tags = "${local.tags}"
+}
+
+resource "aws_security_group_rule" "baile_elb_deploy_ingress_rule_cidr" {
+    count = "${local.create_deploy_sgs}"
+
+    security_group_id = "${module.baile_elb_sg.id}"
+    type              = "ingress"
+    from_port         = "80"
+    to_port           = "80"
+    protocol          = "tcp"
+    cidr_blocks       = ["${var.deploy_cidr}"]
+    description       = "Access for baile from deploy cidr"
 }
 
 module "baile_elb" {

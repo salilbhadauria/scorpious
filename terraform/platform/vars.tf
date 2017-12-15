@@ -48,6 +48,7 @@ variable "tag_owner" {}
 variable "tag_usage" {}
 
 locals {
+    create_deploy_sgs = "${var.access_cidr == var.deploy_cidr ? 0 : 1}"
     tags = {
         owner       = "${var.tag_owner}"
         environment = "${var.environment}"
