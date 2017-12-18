@@ -74,7 +74,7 @@ get_git_describe_with_dirty() {
 }
 
 : ${BUILD_UUID:=$(uuidgen)}
-GIT_COMMIT=${TRAVIS_BUILD_NUMBER:-1}
+GIT_COMMIT=1
 
 run_packer() {
   set -x
