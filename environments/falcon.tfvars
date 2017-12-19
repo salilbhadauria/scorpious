@@ -68,10 +68,10 @@ slave_asg_min_size             = "1"
 slave_asg_max_size             = "3"
 
 # mesos, docker, volume0, log
-slave_xvde_size                = "100"
-slave_xvdf_size                = "50"
+slave_xvde_size                = "250"
+slave_xvdf_size                = "100"
 slave_xvdg_size                = "100"
-slave_xvdh_size                = "50"
+slave_xvdh_size                = "60"
 
 public_slave_asg_desired_capacity  = "1"
 public_slave_asg_min_size          = "1"
