@@ -39,6 +39,9 @@ redshift_cluster_name           = "falcon-deepcortex-c2s-test-redshift"
 
 ### DO NOT CHANGE ANYTHING BELOW THIS LINE
 
+# prefix for terraform templates
+prefix                          = "c2s_"
+
 # Packer
 packer_base_ami                 = "ami-6f61e60e"
 packer_ssh_user                 = "ec2-user"
