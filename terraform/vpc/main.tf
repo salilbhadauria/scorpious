@@ -204,7 +204,7 @@ module "sg_nat" {
 }
 
 resource "aws_iam_instance_profile" "nat_instance_profile" {
-    name = "nat_instance_profile"
+    name = "${var.tag_owner}-${var.environment}-nat_instance_profile"
     role = "${data.terraform_remote_state.iam.nat_instance_iam_role_name}"
 }
 
@@ -244,7 +244,7 @@ module "asg_nat" {
 }
 
 resource "aws_iam_instance_profile" "bastion_profile" {
-    name = "bastion_profile"
+    name = "${var.tag_owner}-${var.environment}-bastion_profile"
     role = "${data.terraform_remote_state.iam.bastion_iam_role_name}"
 }
 

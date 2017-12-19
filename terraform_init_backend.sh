@@ -11,9 +11,8 @@ if [ -z "$1" ];then
   usage
 fi
 
-export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$CONFIG.tfvars")
-
 export CONFIG=$1
+export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$CONFIG.tfvars")
 export BUCKET=$(awk -F\" '/tf_bucket/{print $2}'  "environments/$CONFIG.tfvars")
 
 shift 1

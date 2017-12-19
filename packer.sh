@@ -21,6 +21,9 @@ export REGION=$(awk -F\"   '/^aws_region/{print $2}'           "environments/$CO
 export SSH_USER=$(awk -F\" '/^packer_ssh_user/{print $2}'      "environments/$CONFIG.tfvars")
 export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}' "environments/$CONFIG.tfvars")
 
+export PACKER_VPC_ID=$(awk -F\" '/^vpc_id/{print $2}'  "environments/$CONFIG.tfvars")
+export PACKER_SUBNET_ID=$(awk -F\" '/^subnet_id_1/{print $2}'  "environments/$CONFIG.tfvars")
+
 export MASTER_XVDE_SIZE=$(awk -F\" '/^master_xvde_size/{print $2}'  "environments/$CONFIG.tfvars")
 export MASTER_XVDF_SIZE=$(awk -F\" '/^master_xvdf_size/{print $2}'  "environments/$CONFIG.tfvars")
 export MASTER_XVDG_SIZE=$(awk -F\" '/^master_xvdg_size/{print $2}'  "environments/$CONFIG.tfvars")
