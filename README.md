@@ -76,10 +76,18 @@ Bootstrap instance requires the following env variables exported:
   - DCOS_USERNAME
   - DCOS_PASSWORD
 
+Run the following command to build all AMIs in parallel:
+```
+./packer.sh captain CONFIG
+```
+
+Or, to build a specific one:
+```
 ./packer.sh captain CONFIG
 ./packer.sh bootstrap CONFIG
 ./packer.sh master CONFIG
 ./packer.sh slave CONFIG
+```
 
 once we have the AMIs ready, we can continue with Terraform.
 
