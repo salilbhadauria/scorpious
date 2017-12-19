@@ -37,6 +37,14 @@
    group: root
    mode: 0644
 
+- name: Copy tools files
+  copy:
+   dest: /opt/
+   src: tools
+   owner: root
+   group: root
+   mode: 0644   
+
 - name: Generate /etc/environment file
   template:
     src: etc/environment.j2

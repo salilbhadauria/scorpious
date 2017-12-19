@@ -2,6 +2,9 @@
 
 variable "aws_region" {}
 variable "environment" {}
+variable "vpc_id" {}
+variable "subnet_id_1" {}
+variable "subnet_id_2" {}
 
 variable "tf_bucket" {}
 

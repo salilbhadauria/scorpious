@@ -12,9 +12,12 @@ export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$C
 
 sh terraform_init_backend.sh $CONFIG
 
-sh packer.sh all $CONFIG;
+#IMAGES=("captain" "bootstrap" "master" "slave")
+#for i in "${IMAGES[@]}"; do
+#  sh packer.sh $i $CONFIG;
+#done
 
-STACKS=("iam" "vpc" "redshift" "platform")
+STACKS=("iam" "c2s_vpc" "c2s_redshift" "c2s_platform")
 for i in "${STACKS[@]}"; do
   sh terraform.sh init $CONFIG $i;
   sh terraform.sh plan $CONFIG $i;

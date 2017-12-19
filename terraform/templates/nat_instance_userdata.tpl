@@ -8,6 +8,8 @@ VPC_CIDR=${vpc_cidr}
 PACKAGES="jq"
 
 yum install -y $${PACKAGES}
+curl https://amazon-ssm-us-east-1.s3.amazonaws.com/latest/linux_amd64/amazon-ssm-agent.rpm -o amazon-ssm-agent.rpm
+yum install -y amazon-ssm-agent.rpm
 
 META_DATA="http://169.254.169.254/latest"
 INSTANCE_ID=$(curl -s $${META_DATA}/meta-data/instance-id)

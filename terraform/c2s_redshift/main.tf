@@ -6,23 +6,13 @@ terraform {
 }
 
 #########################################################
-# Retrieve VPC data
-data "terraform_remote_state" "vpc" {
-  backend = "s3"
-  config {
-    bucket = "${var.tf_bucket}"
-    key    = "${var.aws_region}/${var.environment}/vpc/terraform.tfstate"
-    region = "${var.aws_region}"
-  }
-}
-#########################################################
 # Creates a Redshift Cluster
 module "redshift-clstr-sg" {
     source = "../../terraform/modules/security_group"
 
-    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+    vpc_id = "${var.vpc_id}"
 
-    sg_name = "redshift"
+    sg_name = "dc-redshift"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -31,16 +21,6 @@ module "redshift-clstr-sg" {
             from_port   = "5439"
             to_port     = "5439"
             cidr_blocks = "${var.access_cidr}"
-        },
-    ]
-
-    ingress_rules_sgid_count = 1
-    ingress_rules_sgid = [
-        {
-            protocol    = "tcp"
-            from_port   = "5439"
-            to_port     = "5439"
-            sg_id       = "${data.terraform_remote_state.vpc.sg_private_egress_subnet_id}"
         },
     ]
 
@@ -62,7 +42,7 @@ resource "aws_redshift_parameter_group" "redshift-clstr-pg" {
 
 resource "aws_redshift_subnet_group" "redshift-subnet-grp" {
   name       = "${var.tag_owner}-${var.environment}-subnets"
-  subnet_ids = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
+  subnet_ids = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
 
   tags = "${local.tags}"
 }

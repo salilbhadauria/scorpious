@@ -10,7 +10,9 @@ ENV PACKER_SHA256SUM=646da085cbcb8c666474d500a44d933df533cf4f1ff286193d67b51372c
 RUN apt-get update && \
     apt-get install -y unzip && \
     apt-get install -y uuid-runtime && \
-    apt-get install -y git
+    apt-get install -y openssh-client && \
+    apt-get install -y rsync && \
+    apt-get install -y curl
 
 RUN pip install awscli --upgrade   
 

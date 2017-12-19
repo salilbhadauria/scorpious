@@ -15,7 +15,7 @@ debug:
 	docker run --rm -it $(LATEST_TAG) /bin/bash	
 
 test:
-	docker run --rm -it $(LATEST_TAG) pwd
+	docker run --rm -it --entrypoint pwd $(LATEST_TAG)
 
 run:
 	docker run --rm -it $(LATEST_TAG) /bin/bash

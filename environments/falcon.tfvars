@@ -1,31 +1,30 @@
-
 ### You must fill in the following varibles before executing the deployment.
 # Remove the <> symbols before deploying.
 
 # the account ID of the AWS account you will deploy to
-account                         = <"YOUR_AWS_ACCOUNT_ID">
+account                         = "475276989310"
 
 # the public ssh key for the key you would like to use to access the DC/OS machines used for DeepCortex
-ssh_public_key                  = <"YOUR_SSH_PUBLIC_KEY">
+ssh_public_key                  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzAIMbSVnZohF71QmHYBwZ8049zJgDlQ7/7V/C05sDBd5gUeSqdloLG22YkuooIh6uWtnUtBCZc2Sqlyqveh+ly0BV2K+euBSb58idzldn7Cz/bvJKHjjxN5qe4uiaskJxT6V187GZ3WwJ7vBNkE5NQ1NRz9oZGv7B1mjy1+eUZIMXovv5vAIvorHeOQsussPlTbxpidHb3Nxt7Nq0DyFAtEq0Bkny5bWZJ33hwHc2u4IZTZWR0GVEXdneas7nSbAhyUA/XSQNN9uJTHJjm75oC9UM7rpgpIGgnUVWTz+syCM1uImxwZATaFXYfL6XjwiJFJwkoY0H8uaT8SX/FpgR"
 
 # the CIDR for a VPN or machine IP that should be able to access DeepCortex
-access_cidr                     = <"YOUR_ACCESS_CIDR">
-deploy_cidr                     = <"YOUR_DEPLOY_CIDR">
+access_cidr                     = "205.251.75.6/32"
+deploy_cidr                     = "205.251.75.6/32"
 
 ### You may change any of the below names if you choose, otherwise the defaults we be used.
 
 # the name of the S3 buckets used for storing terraform artifacts, storing DeepCortex data, and storing DC/OS data
-tf_bucket                       = "deepcortex-dev-terraform"
-dcos_apps_bucket                = "deepcortex-dev-dcos-apps"
-dcos_stack_bucket               = "deepcortex-dev-dcos-backend"
+tf_bucket                       = "falcon-deepcortex-test-terraform"
+dcos_apps_bucket                = "falcon-deepcortex-test-dcos-apps"
+dcos_stack_bucket               = "falcon-deepcortex-test-dcos-backend"
 
 # the tags that will be applied to the infrastructure (environment, owner, usage)
-environment                     = "dev"
+environment                     = "test"
 tag_owner                       = "deepcortex"
-tag_usage                       = "dev"
+tag_usage                       = "falcon"
 
 # the name of the redshfit cluster
-redshift_cluster_name           = "deepcortex-dev-redshift"
+redshift_cluster_name           = "falcon-deepcortex-test-redshift"
 
 
 ### DO NOT CHANGE ANYTHING BELOW THIS LINE

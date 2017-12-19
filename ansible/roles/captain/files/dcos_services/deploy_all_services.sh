@@ -13,13 +13,15 @@ if [[ $? -ne 0 ]]; then
 fi
 
 # Wait for master node to become online
-until $(curl --output /dev/null --silent --head --fail http://$DCOS_MASTER:/); do sleep 5; done
+until $(curl --output /dev/null --silent --head --fail http://$DCOS_MASTER:/); do sleep 30; done
 
 # Configure the DC/OS cli
 source setup_dcos_cli.sh
 
 # Wait for all nodes to become online
-until [[ $(dcos node | grep agent | wc -l) == $DCOS_NODES ]]; do sleep 5; done
+until [[ $(dcos node | grep agent | wc -l) == $DCOS_NODES ]]; do sleep 30; done
+
+sleep 60
 
 # Retrieve slave node IPs
 export MONGODB_HOSTS=$(aws ec2 describe-instances --filters "Name=tag:Role,Values=slave" --query Reservations[].Instances[].PrivateIpAddress --output text | sed -e 's/\s/,/g')
@@ -34,7 +36,7 @@ source deploy_service.sh rabbitmq/marathon.json rabbitmq/env_vars.sh
 
 # Initialization and migration
 
-while $(dcos marathon deployment list | grep -q scale); do sleep 5; done
+while $(dcos marathon deployment list | grep -q scale); do sleep 30; done
 
 export PATH="/usr/local/lib/npm/bin:$PATH"
 sleep 60

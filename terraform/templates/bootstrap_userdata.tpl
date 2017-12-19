@@ -14,6 +14,8 @@ runcmd:
   - hostnamectl set-hostname $newhostn
   - service rsyslog restart
   - service ntpd restart
+  - curl https://amazon-ssm-us-east-1.s3.amazonaws.com/latest/linux_amd64/amazon-ssm-agent.rpm -o amazon-ssm-agent.rpm
+  - yum install -y amazon-ssm-agent.rpm
   - sed -i "s/cluster_name_via_user_data/${cluster_name}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
   - sed -i "s/s3_bucket_via_user_data/${s3_bucket}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
   - sed -i "s/s3_prefix_via_user_data/${s3_prefix}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
