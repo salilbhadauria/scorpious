@@ -12,4 +12,8 @@ sudo pvresize /dev/xvda2
 sudo lvextend -l +100%FREE /dev/mapper/cl-root
 sudo xfs_growfs /dev/mapper/cl-root
 sudo yum -q -y install ansible
-echo "localhost ansible_connection=local" | sudo tee /etc/ansible/hosts
+cat <<EOF | sudo tee /etc/ansible/hosts
+[${PACKER_BUILD_NAME}]
+127.0.0.1 ansible_connection=local
+
+EOF
