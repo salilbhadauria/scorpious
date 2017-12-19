@@ -78,7 +78,7 @@ Bootstrap instance requires the following env variables exported:
 
 Run the following command to build all AMIs in parallel:
 ```
-./packer.sh captain CONFIG
+./packer.sh all CONFIG
 ```
 
 Or, to build a specific one:
