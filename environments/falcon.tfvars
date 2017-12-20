@@ -91,3 +91,14 @@ redshift_cluster_type = "multi-node"
 redshift_number_of_nodes = 2
 redshift_encrypted = false
 redshift_skip_final_snapshot = true
+
+# Application Docker Image Versions
+aries_docker_image_version = "0.0.0-ef21aeb1bd0eb01dca146d29c101994541cc3d81"
+baile_docker_image_version = "testv6"
+baile_nginx_docker_image_version = "latest"
+cortex_docker_image_version = "0.0.0-f0f882e6cb2d80621f57766c12dfc7a4321bf258"
+logstash_docker_image_version = "latest"
+orion_docker_image_version = "0.0.0-c12e95e9784037e5ab452183c5bf900ab61cf6dd"
+job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-4-g3a424df"
+rmq_docker_image_version = "latest"
+um_docker_image_version = "v1.0"
