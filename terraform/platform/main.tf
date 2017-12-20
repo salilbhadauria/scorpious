@@ -803,6 +803,15 @@ data "template_file" "captain_userdata" {
     aries_http_command_user_password = "${random_string.aries_http_command_user_password.result}"
     cortex_http_search_user_password = "${random_string.cortex_http_search_user_password.result}"
     orion_http_search_user_password = "${random_string.orion_http_search_user_password.result}"
+    aries_docker_image_version = "${var.aries_docker_image_version}"
+    baile_docker_image_version = "${var.baile_docker_image_version}"
+    baile_nginx_docker_image_version = "${var.baile_nginx_docker_image_version}"
+    cortex_docker_image_version = "${var.cortex_docker_image_version}"
+    logstash_docker_image_version = "${var.logstash_docker_image_version}"
+    orion_docker_image_version = "${var.orion_docker_image_version}"
+    job_master_docker_image = "${var.job_master_docker_image}"
+    rmq_docker_image_version = "${var.rmq_docker_image_version}"
+    um_docker_image_version = "${var.um_docker_image_version}"
   }
 
   depends_on = [

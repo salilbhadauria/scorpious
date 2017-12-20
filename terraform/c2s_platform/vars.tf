@@ -51,6 +51,16 @@ variable "captain_asg_max_size" {}
 variable "tag_owner" {}
 variable "tag_usage" {}
 
+variable "aries_docker_image_version" {}
+variable "baile_docker_image_version" {}
+variable "baile_nginx_docker_image_version" {}
+variable "cortex_docker_image_version" {}
+variable "logstash_docker_image_version" {}
+variable "orion_docker_image_version" {}
+variable "job_master_docker_image" {}
+variable "rmq_docker_image_version" {}
+variable "um_docker_image_version" {}
+
 locals {
     create_deploy_sgs = "${var.access_cidr == var.deploy_cidr ? 0 : 1}"
     tags = {
