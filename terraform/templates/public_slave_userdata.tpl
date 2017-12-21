@@ -1,6 +1,7 @@
 #cloud-config
 environment:
   environment: ${environment}
+  aws_default_region: ${aws_region}
 manage_resolv_conf: false
 preserve_hostname: true
 runcmd:
