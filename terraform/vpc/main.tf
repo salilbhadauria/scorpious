@@ -204,7 +204,7 @@ module "sg_nat" {
 }
 
 resource "aws_iam_instance_profile" "nat_instance_profile" {
-    name = "nat_instance_profile"
+    name = "${var.tag_owner}-${var.environment}-nat_instance_profile"
     role = "${data.terraform_remote_state.iam.nat_instance_iam_role_name}"
 }
 
@@ -243,6 +243,11 @@ module "asg_nat" {
 
 }
 
+resource "aws_iam_instance_profile" "bastion_profile" {
+    name = "${var.tag_owner}-${var.environment}-bastion_profile"
+    role = "${data.terraform_remote_state.iam.bastion_iam_role_name}"
+}
+
 module "asg_bastion" {
     source = "../../terraform/modules/autoscaling_group"
 
@@ -252,6 +257,8 @@ module "asg_bastion" {
     lc_ebs_optimized   = "false"
     lc_key_name        = "${module.devops_key.name}"
     lc_security_groups = [ "${module.sg_bastion.id}" ]
+    lc_user_data       = "#!/bin/bash\ncurl https://amazon-ssm-us-east-1.s3.amazonaws.com/latest/linux_amd64/amazon-ssm-agent.rpm -o amazon-ssm-agent.rpm && yum install -y amazon-ssm-agent.rpm"
+    lc_iam_instance_profile = "${aws_iam_instance_profile.bastion_profile.id}"
 
     asg_name             = "${var.environment}-bastion-asg"
     asg_subnet_ids       = "${module.vpc.public_subnet_ids}"

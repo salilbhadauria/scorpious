@@ -6,6 +6,10 @@ variable "tf_bucket" {}
 variable "account" {}
 variable "access_cidr" {}
 variable "deploy_cidr" {}
+variable "vpc_id" {}
+variable "vpc_cidr" {}
+variable "subnet_id_1" {}
+variable "subnet_id_2" {}
 
 # Bootstrap vars
 

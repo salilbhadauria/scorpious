@@ -11,21 +11,20 @@ ssh_public_key                  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzAIMbS
 access_cidr                     = "205.251.75.6/32"
 deploy_cidr                     = "205.251.75.6/32"
 
-
 ### You may change any of the below names if you choose, otherwise the defaults we be used.
 
 # the name of the S3 buckets used for storing terraform artifacts, storing DeepCortex data, and storing DC/OS data
-tf_bucket                       = "falcon-deepcortex-dev-terraform"
-dcos_apps_bucket                = "falcon-deepcortex-dev-dcos-apps"
-dcos_stack_bucket               = "falcon-deepcortex-dev-dcos-backend"
+tf_bucket                       = "falcon-deepcortex-test-terraform"
+dcos_apps_bucket                = "falcon-deepcortex-test-dcos-apps"
+dcos_stack_bucket               = "falcon-deepcortex-test-dcos-backend"
 
 # the tags that will be applied to the infrastructure (environment, owner, usage)
-environment                     = "dev"
+environment                     = "test"
 tag_owner                       = "deepcortex"
 tag_usage                       = "falcon"
 
 # the name of the redshfit cluster
-redshift_cluster_name           = "falcon-deepcortex-dev-redshift"
+redshift_cluster_name           = "falcon-deepcortex-test-redshift"
 
 
 ### DO NOT CHANGE ANYTHING BELOW THIS LINE
@@ -69,10 +68,10 @@ slave_asg_min_size             = "1"
 slave_asg_max_size             = "3"
 
 # mesos, docker, volume0, log
-slave_xvde_size                = "100"
-slave_xvdf_size                = "50"
+slave_xvde_size                = "250"
+slave_xvdf_size                = "100"
 slave_xvdg_size                = "100"
-slave_xvdh_size                = "50"
+slave_xvdh_size                = "60"
 
 public_slave_asg_desired_capacity  = "1"
 public_slave_asg_min_size          = "1"
@@ -92,3 +91,14 @@ redshift_cluster_type = "multi-node"
 redshift_number_of_nodes = 2
 redshift_encrypted = false
 redshift_skip_final_snapshot = true
+
+# Application Docker Image Versions
+aries_docker_image_version = "0.0.0-ef21aeb1bd0eb01dca146d29c101994541cc3d81"
+baile_docker_image_version = "testv6"
+baile_nginx_docker_image_version = "latest"
+cortex_docker_image_version = "0.0.0-f0f882e6cb2d80621f57766c12dfc7a4321bf258"
+logstash_docker_image_version = "latest"
+orion_docker_image_version = "0.0.0-c12e95e9784037e5ab452183c5bf900ab61cf6dd"
+job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-4-g3a424df"
+rmq_docker_image_version = "latest"
+um_docker_image_version = "v1.0"

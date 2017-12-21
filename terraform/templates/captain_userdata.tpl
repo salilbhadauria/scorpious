@@ -25,6 +25,15 @@ environment:
   aries_http_command_user_password: ${aries_http_command_user_password}
   cortex_http_search_user_password: ${cortex_http_search_user_password}
   orion_http_search_user_password: ${orion_http_search_user_password}
+  aries_docker_image_version: ${aries_docker_image_version}
+  baile_docker_image_version: ${baile_docker_image_version}
+  baile_nginx_docker_image_version: ${baile_nginx_docker_image_version}
+  cortex_docker_image_version: ${cortex_docker_image_version}
+  logstash_docker_image_version: ${logstash_docker_image_version}
+  orion_docker_image_version: ${orion_docker_image_version}
+  job_master_docker_image: ${job_master_docker_image}
+  rmq_docker_image_version: ${rmq_docker_image_version}
+  um_docker_image_version: ${um_docker_image_version}
 manage_resolv_conf: false
 preserve_hostname: true
 runcmd:
@@ -38,4 +47,6 @@ runcmd:
   - hostnamectl set-hostname $newhostn
   - service rsyslog restart
   - service ntpd restart
+  - curl https://amazon-ssm-us-east-1.s3.amazonaws.com/latest/linux_amd64/amazon-ssm-agent.rpm -o amazon-ssm-agent.rpm
+  - yum install -y amazon-ssm-agent.rpm
   - service mongod stop

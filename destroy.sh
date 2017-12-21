@@ -7,16 +7,11 @@ usage() {
   exit 1
 }
 
-if [ ${#} -ne 1 ]; then
-  usage
-fi
-
-export CONFIG=$1
 export TF_VAR_dcos_password="${DCOS_PASSWORD}"
 
-shift 1
+PREFIX=$(awk -F\" '/^prefix/{print $2}'  "environments/$CONFIG.tfvars")
 
-STACKS=("redshift" "vpc" "iam")
+STACKS=("${PREFIX}platform" "${PREFIX}redshift" "${PREFIX}vpc" "iam")
 for i in "${STACKS[@]}"; do
   sh terraform.sh init $CONFIG $i;
   sh terraform.sh plan $CONFIG $i;

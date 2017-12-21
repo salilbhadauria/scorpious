@@ -6,15 +6,6 @@ terraform {
 }
 
 #########################################################
-# Retrieve VPC data
-data "terraform_remote_state" "vpc" {
-  backend = "s3"
-  config {
-    bucket = "${var.tf_bucket}"
-    key    = "${var.aws_region}/${var.environment}/vpc/terraform.tfstate"
-    region = "${var.aws_region}"
-  }
-}
 
 # Retrieve IAM data
 data "terraform_remote_state" "iam" {
@@ -26,12 +17,22 @@ data "terraform_remote_state" "iam" {
   }
 }
 
+# Retrieve VPC data
+data "terraform_remote_state" "vpc" {
+  backend = "s3"
+  config {
+    bucket = "${var.tf_bucket}"
+    key    = "${var.aws_region}/${var.environment}/c2s_vpc/terraform.tfstate"
+    region = "${var.aws_region}"
+  }
+}
+
 # Retrieve Redshift data
 data "terraform_remote_state" "redshift" {
   backend = "s3"
   config {
     bucket = "${var.tf_bucket}"
-    key    = "${var.aws_region}/${var.environment}/redshift/terraform.tfstate"
+    key    = "${var.aws_region}/${var.environment}/c2s_redshift/terraform.tfstate"
     region = "${var.aws_region}"
   }
 }
@@ -83,9 +84,9 @@ resource "aws_s3_bucket_policy" "dcos_apps_bucket_policy" {
 module "dcos_stack_sg" {
     source = "../../terraform/modules/security_group"
 
-    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+    vpc_id = "${var.vpc_id}"
 
-    sg_name = "dcos-stack"
+    sg_name = "dc-dcos-stack"
     sg_description = "some description"
 
     ingress_rules_self = [
@@ -107,14 +108,26 @@ module "dcos_stack_sg" {
     tags = "${local.tags}"
 }
 
+resource "aws_security_group_rule" "redshift_ingress_rule_sgid" {
+    count = 1
+
+    security_group_id        = "${data.terraform_remote_state.redshift.sg_redshift_id}"
+    type                     = "ingress"
+    from_port                = "5439"
+    to_port                  = "5439"
+    protocol                 = "tcp"
+    source_security_group_id = "${module.dcos_stack_sg.id}"
+    description              = "Access for redshift from DC/OS"
+}
+
 #########################################################
 # Bootstrap
 module "bootstrap_sg" {
     source = "../../terraform/modules/security_group"
 
-    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+    vpc_id = "${var.vpc_id}"
 
-    sg_name = "bootstrap"
+    sg_name = "dc-bootstrap"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 2
@@ -147,17 +160,18 @@ module "bootstrap_sg" {
 module "bootstrap_elb_sg" {
     source = "../../terraform/modules/security_group"
 
-    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+    vpc_id = "${var.vpc_id}"
 
-    sg_name = "bootstrap-elb"
+    sg_name = "dc-bootstrap-elb"
     sg_description = "some description"
 
-    ingress_rules_cidr = [
+    ingress_rules_sgid_count = 1
+    ingress_rules_sgid = [
         {
             protocol    = "tcp"
             from_port   = "8080"
             to_port     = "8080"
-            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
+            sg_id       = "${module.dcos_stack_sg.id}"
         },
     ]
 
@@ -184,7 +198,7 @@ data "template_file" "bootstrap_userdata" {
     bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
     masters_elb = "${module.master_elb_internal.elb_dns_name}"
     aws_region = "${var.aws_region}"
-    dns_ip = "${cidrhost(data.terraform_remote_state.vpc.vpc_cidr, 2)}"
+    dns_ip = "${cidrhost(var.vpc_cidr, 2)}"
     dcos_password = "${var.dcos_password}"
   }
 
@@ -204,7 +218,7 @@ module "bootstrap_elb" {
   elb_name            = "${var.tag_owner}-${var.environment}-bootstrap-elb"
   elb_is_internal     = "true"
   elb_security_group  = "${module.bootstrap_elb_sg.id}"
-  subnets             = [ "${data.terraform_remote_state.vpc.private_egress_subnet_ids}" ]
+  subnets             = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
   frontend_port       = "8080"
   frontend_protocol   = "http"
   backend_port        = "8080"
@@ -227,7 +241,7 @@ module "bootstrap_asg" {
     lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
 
     asg_name                = "${var.tag_owner}-${var.environment}-bootstrap-asg"
-    asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
+    asg_subnet_ids          = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
     asg_desired_capacity    = "${var.bootstrap_asg_desired_capacity}"
     asg_min_size            = "${var.bootstrap_asg_min_size}"
     asg_max_size            = "${var.bootstrap_asg_max_size}"
@@ -244,9 +258,9 @@ module "bootstrap_asg" {
 module "master_sg" {
     source = "../../terraform/modules/security_group"
 
-    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+    vpc_id = "${var.vpc_id}"
 
-    sg_name = "master"
+    sg_name = "dc-master"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 13
@@ -345,9 +359,9 @@ module "master_sg" {
 module "master_elb_sg" {
     source = "../../terraform/modules/security_group"
 
-    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+    vpc_id = "${var.vpc_id}"
 
-    sg_name = "master-elb"
+    sg_name = "dc-master-elb"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -397,47 +411,48 @@ resource "aws_security_group_rule" "master_elb_deploy_ingress_rule_cidr" {
 module "master_elb_internal_sg" {
     source = "../../terraform/modules/security_group"
 
-    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+    vpc_id = "${var.vpc_id}"
 
-    sg_name = "master-elb-internal"
+    sg_name = "dc-master-elb-internal"
     sg_description = "some description"
 
-    ingress_rules_cidr = [
+    ingress_rules_sgid_count = 6
+    ingress_rules_sgid = [
         {
             protocol    = "tcp"
             from_port   = "80"
             to_port     = "80"
-            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
+            sg_id        = "${module.dcos_stack_sg.id}"
         },
         {
             protocol    = "tcp"
             from_port   = "443"
             to_port     = "443"
-            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
+            sg_id        = "${module.dcos_stack_sg.id}"
         },
         {
             protocol    = "tcp"
             from_port   = "5050"
             to_port     = "5050"
-            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
+            sg_id        = "${module.dcos_stack_sg.id}"
         },
         {
             protocol    = "tcp"
             from_port   = "2181"
             to_port     = "2181"
-            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
+            sg_id        = "${module.dcos_stack_sg.id}"
         },
         {
             protocol    = "tcp"
             from_port   = "8080"
             to_port     = "8080"
-            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
+            sg_id        = "${module.dcos_stack_sg.id}"
         },
         {
             protocol    = "tcp"
             from_port   = "8181"
             to_port     = "8181"
-            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
+            sg_id        = "${module.dcos_stack_sg.id}"
         },
     ]
 
@@ -470,7 +485,7 @@ module "master_elb" {
   elb_name            = "${var.tag_owner}-${var.environment}-master-elb"
   elb_is_internal     = "false"
   elb_security_group  = "${module.master_elb_sg.id}"
-  subnets             = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
+  subnets             = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
   health_check_target = "TCP:5050"
 
   tags                = "${local.tags}"
@@ -480,7 +495,7 @@ module "master_elb_internal" {
   source              = "../../terraform/modules/elb_internal_masters"
   elb_name            = "${var.tag_owner}-${var.environment}-master-elb-int"
   elb_security_group  = "${module.master_elb_internal_sg.id}"
-  subnets             = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
+  subnets             = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
   health_check_target = "TCP:5050"
 
   tags                = "${local.tags}"
@@ -504,7 +519,7 @@ module "master_asg" {
     lc_iam_instance_profile = "${aws_iam_instance_profile.master_instance_profile.id}"
 
     asg_name                = "${var.tag_owner}-${var.environment}-master-asg"
-    asg_subnet_ids          = "${data.terraform_remote_state.vpc.public_subnet_ids}"
+    asg_subnet_ids          = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
     asg_desired_capacity    = "${var.master_asg_desired_capacity}"
     asg_min_size            = "${var.master_asg_min_size}"
     asg_max_size            = "${var.master_asg_max_size}"
@@ -521,9 +536,9 @@ module "master_asg" {
 module "slave_sg" {
     source = "../../terraform/modules/security_group"
 
-    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+    vpc_id = "${var.vpc_id}"
 
-    sg_name = "slave"
+    sg_name = "dc-slave"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 3
@@ -585,12 +600,12 @@ module "slave_asg" {
     lc_instance_type        = "m4.4xlarge"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
-    lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}", "${data.terraform_remote_state.vpc.sg_private_egress_subnet_id}" ]
+    lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.slave_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
 
     asg_name                = "${var.tag_owner}-${var.environment}-slave-asg"
-    asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
+    asg_subnet_ids          = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
     asg_desired_capacity    = "${var.slave_asg_desired_capacity}"
     asg_min_size            = "${var.slave_asg_min_size}"
     asg_max_size            = "${var.slave_asg_max_size}"
@@ -606,9 +621,9 @@ module "slave_asg" {
 module "baile_elb_sg" {
     source = "../../terraform/modules/security_group"
 
-    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+    vpc_id = "${var.vpc_id}"
 
-    sg_name = "baile-elb"
+    sg_name = "dc-baile-elb"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -659,7 +674,7 @@ module "baile_elb" {
   elb_name            = "${var.tag_owner}-${var.environment}-baile-elb"
   elb_is_internal     = "false"
   elb_security_group  = "${module.baile_elb_sg.id}"
-  subnets             = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
+  subnets             = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
   frontend_port       = "80"
   frontend_protocol   = "http"
   backend_port        = "80"
@@ -674,9 +689,9 @@ module "baile_elb" {
 module "public_slave_sg" {
     source = "../../terraform/modules/security_group"
 
-    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+    vpc_id = "${var.vpc_id}"
 
-    sg_name = "public-slave"
+    sg_name = "dc-public-slave"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 3
@@ -738,7 +753,7 @@ module "public_slave_asg" {
     lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
 
     asg_name                = "${var.tag_owner}-${var.environment}-public-slave-asg"
-    asg_subnet_ids          = "${data.terraform_remote_state.vpc.public_subnet_ids}"
+    asg_subnet_ids          = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
     asg_desired_capacity    = "${var.public_slave_asg_desired_capacity}"
     asg_min_size            = "${var.public_slave_asg_min_size}"
     asg_max_size            = "${var.public_slave_asg_max_size}"
@@ -755,9 +770,9 @@ module "public_slave_asg" {
 module "captain_sg" {
     source = "../../terraform/modules/security_group"
 
-    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+    vpc_id = "${var.vpc_id}"
 
-    sg_name = "captain"
+    sg_name = "dc-captain"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 1
@@ -837,7 +852,7 @@ module "captain_asg" {
     lc_iam_instance_profile = "${aws_iam_instance_profile.captain_instance_profile.id}"
 
     asg_name                = "${var.tag_owner}-${var.environment}-captain-asg"
-    asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
+    asg_subnet_ids          = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
     asg_desired_capacity    = "${var.captain_asg_desired_capacity}"
     asg_min_size            = "${var.captain_asg_min_size}"
     asg_max_size            = "${var.captain_asg_max_size}"

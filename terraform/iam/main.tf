@@ -32,8 +32,8 @@ resource "aws_iam_user_policy" "app_s3" {
       ],
       "Effect": "Allow",
       "Resource": [
-        "${local.arn}:::${var.dcos_apps_bucket}",
-        "${local.arn}:::${var.dcos_apps_bucket}/*"
+        "${local.arn}:s3:::${var.dcos_apps_bucket}",
+        "${local.arn}:s3:::${var.dcos_apps_bucket}/*"
       ]
     }
   ]
@@ -45,6 +45,33 @@ EOF
 # IAM Roles
 ## Role and Policies
 
+resource "aws_iam_role" "bastion_role" {
+    name = "${var.tag_owner}-${var.environment}-bastion_role"
+    path = "/"
+    assume_role_policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": "sts:AssumeRole",
+            "Principal": {
+               "Service":[
+                "ec2.amazonaws.com",
+                "ssm.amazonaws.com"
+              ]
+            },
+            "Effect": "Allow"
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "bastion_ssm_attach" {
+    role       = "${aws_iam_role.bastion_role.name}"
+    policy_arn = "${local.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+}
+
 resource "aws_iam_role" "nat_instance_role" {
     name = "${var.tag_owner}-${var.environment}-nat_instance_role"
     path = "/"
@@ -55,13 +82,21 @@ resource "aws_iam_role" "nat_instance_role" {
         {
             "Action": "sts:AssumeRole",
             "Principal": {
-               "Service": "ec2.amazonaws.com"
+               "Service":[
+                "ec2.amazonaws.com",
+                "ssm.amazonaws.com"
+              ]
             },
             "Effect": "Allow"
         }
     ]
 }
 EOF
+}
+
+resource "aws_iam_role_policy_attachment" "nat_instance_ssm_attach" {
+    role       = "${aws_iam_role.nat_instance_role.name}"
+    policy_arn = "${local.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_role_policy" "nat_instance_policy" {
@@ -98,13 +133,21 @@ resource "aws_iam_role" "bootstrap_role" {
         {
             "Action": "sts:AssumeRole",
             "Principal": {
-               "Service": "ec2.amazonaws.com"
+               "Service":[
+                "ec2.amazonaws.com",
+                "ssm.amazonaws.com"
+              ]
             },
             "Effect": "Allow"
         }
     ]
 }
 EOF
+}
+
+resource "aws_iam_role_policy_attachment" "bootstrap_ssm_attach" {
+    role       = "${aws_iam_role.bootstrap_role.name}"
+    policy_arn = "${local.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_role_policy" "bootstrap_policy" {
@@ -136,13 +179,21 @@ resource "aws_iam_role" "master_role" {
         {
             "Action": "sts:AssumeRole",
             "Principal": {
-               "Service": "ec2.amazonaws.com"
+               "Service":[
+                "ec2.amazonaws.com",
+                "ssm.amazonaws.com"
+              ]
             },
             "Effect": "Allow"
         }
     ]
 }
 EOF
+}
+
+resource "aws_iam_role_policy_attachment" "master_ssm_attach" {
+    role       = "${aws_iam_role.master_role.name}"
+    policy_arn = "${local.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_role_policy" "master_policy" {
@@ -174,13 +225,21 @@ resource "aws_iam_role" "slave_role" {
         {
             "Action": "sts:AssumeRole",
             "Principal": {
-               "Service": "ec2.amazonaws.com"
+               "Service":[
+                "ec2.amazonaws.com",
+                "ssm.amazonaws.com"
+              ]
             },
             "Effect": "Allow"
         }
     ]
 }
 EOF
+}
+
+resource "aws_iam_role_policy_attachment" "slave_ssm_attach" {
+    role       = "${aws_iam_role.slave_role.name}"
+    policy_arn = "${local.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_role_policy" "slave_policy" {
@@ -212,13 +271,21 @@ resource "aws_iam_role" "captain_role" {
         {
             "Action": "sts:AssumeRole",
             "Principal": {
-               "Service": "ec2.amazonaws.com"
+               "Service":[
+                "ec2.amazonaws.com",
+                "ssm.amazonaws.com"
+              ]
             },
             "Effect": "Allow"
         }
     ]
 }
 EOF
+}
+
+resource "aws_iam_role_policy_attachment" "captain_ssm_attach" {
+    role       = "${aws_iam_role.captain_role.name}"
+    policy_arn = "${local.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_role_policy" "captain_policy" {

@@ -1,0 +1,227 @@
+{
+    "variables": {
+        "aws_access_key":    "",
+        "aws_secret_key":    "",
+        "aws_region":        "{{env `REGION`}}",
+        "aws_build_regions": "{{env `REGION`}}",
+        "aws_source_ami":    "{{env `AMI`}}",
+        "aws_instance_type": "t2.medium",
+        "aws_vpc_id":        "{{env `PACKER_VPC_ID`}}",
+        "aws_subnet_id":     "{{env `PACKER_SUBNET_ID`}}",
+        "image_name":        "",
+        "ssh_username":      "{{env `SSH_USER`}}",
+        "git_commit":        "",
+        "build_author":      "{{env `USER`}}",
+        "build_uuid":        "",
+        "customer_key":      "{{ env `CUSTOMER_KEY`}}",
+        "dcos_username":     "{{ env `DCOS_USERNAME`}}",
+        "dcos_password":     "{{ env `DCOS_PASSWORD`}}",
+
+        "master_xvde_size":  "{{ env `MASTER_XVDE_SIZE`}}",
+        "master_xvdf_size":  "{{ env `MASTER_XVDF_SIZE`}}",
+        "master_xvdg_size":  "{{ env `MASTER_XVDG_SIZE`}}",
+        "master_xvdh_size":  "{{ env `MASTER_XVDH_SIZE`}}",
+
+        "slave_xvde_size":   "{{ env `SLAVE_XVDE_SIZE`}}",
+        "slave_xvdf_size":   "{{ env `SLAVE_XVDF_SIZE`}}",
+        "slave_xvdg_size":   "{{ env `SLAVE_XVDG_SIZE`}}",
+        "slave_xvdh_size":   "{{ env `SLAVE_XVDH_SIZE`}}"
+    },
+    "builders": [
+      {
+        "name": "bootstrap",
+        "type": "amazon-ebs",
+        "access_key":    "{{user `aws_access_key`}}",
+        "secret_key":    "{{user `aws_secret_key`}}",
+        "region":        "{{user `aws_region`}}",
+        "source_ami":    "{{user `aws_source_ami`}}",
+        "vpc_id":        "{{user `aws_vpc_id`}}",
+        "instance_type": "{{user `aws_instance_type`}}",
+        "subnet_id":     "{{user `aws_subnet_id`}}",
+        "ssh_username":  "{{user `ssh_username`}}",
+        "ami_name":      "bootstrap-{{timestamp}}",
+        "ami_regions":   "{{user `aws_build_regions`}}",
+        "launch_block_device_mappings": [
+          {
+            "device_name": "/dev/sda1",
+            "volume_size": 12,
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          }
+        ],
+        "ssh_pty": "true",
+        "tags": {
+          "Name":        "bootstrap-{{timestamp}}",
+          "Role":        "bootstrap",
+          "BuildDate":   "{{isotime}}",
+          "BuildAuthor": "{{user `build_author`}}",
+          "BuildUUID":   "{{user `build_uuid`}}",
+          "GitCommit":   "{{user `git_commit`}}"
+        }
+      },
+      {
+        "name": "master",
+        "type": "amazon-ebs",
+        "access_key":    "{{user `aws_access_key`}}",
+        "secret_key":    "{{user `aws_secret_key`}}",
+        "region":        "{{user `aws_region`}}",
+        "source_ami":    "{{user `aws_source_ami`}}",
+        "vpc_id":        "{{user `aws_vpc_id`}}",
+        "instance_type": "{{user `aws_instance_type`}}",
+        "subnet_id":     "{{user `aws_subnet_id`}}",
+        "ssh_username":  "{{user `ssh_username`}}",
+        "ami_name":      "master-{{timestamp}}",
+        "ami_regions":   "{{user `aws_build_regions`}}",
+        "launch_block_device_mappings": [
+          {
+            "device_name": "/dev/sda1",
+            "volume_size": 16,
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          },
+          {
+            "device_name": "/dev/xvde",
+            "volume_size": "{{ user `master_xvde_size`}}",
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          },
+          {
+            "device_name": "/dev/xvdf",
+            "volume_size": "{{ user `master_xvdf_size`}}",
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          },
+          {
+            "device_name": "/dev/xvdg",
+            "volume_size": "{{ user `master_xvdg_size`}}",
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          },
+          {
+            "device_name": "/dev/xvdh",
+            "volume_size": "{{ user `master_xvdh_size`}}",
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          }
+        ],
+        "ssh_pty": "true",
+        "tags": {
+          "Name":        "master-{{timestamp}}",
+          "Role":        "master",
+          "BuildDate":   "{{isotime}}",
+          "BuildAuthor": "{{user `build_author`}}",
+          "BuildUUID":   "{{user `build_uuid`}}",
+          "GitCommit":   "{{user `git_commit`}}"
+        }
+      },
+      {
+        "name": "slave",
+        "type": "amazon-ebs",
+        "access_key":    "{{user `aws_access_key`}}",
+        "secret_key":    "{{user `aws_secret_key`}}",
+        "region":        "{{user `aws_region`}}",
+        "source_ami":    "{{user `aws_source_ami`}}",
+        "vpc_id":        "{{user `aws_vpc_id`}}",
+        "instance_type": "{{user `aws_instance_type`}}",
+        "subnet_id":     "{{user `aws_subnet_id`}}",
+        "ssh_username":  "{{user `ssh_username`}}",
+        "ami_name":      "slave-{{timestamp}}",
+        "ami_regions":   "{{user `aws_build_regions`}}",
+        "launch_block_device_mappings": [
+          {
+            "device_name": "/dev/sda1",
+            "volume_size": 16,
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          },
+          {
+            "device_name": "/dev/xvde",
+            "volume_size": "{{ user `slave_xvde_size`}}",
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          },
+          {
+            "device_name": "/dev/xvdf",
+            "volume_size": "{{ user `slave_xvdf_size`}}",
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          },
+          {
+            "device_name": "/dev/xvdg",
+            "volume_size": "{{ user `slave_xvdg_size`}}",
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          },
+          {
+            "device_name": "/dev/xvdh",
+            "volume_size": "{{ user `slave_xvdh_size`}}",
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          }
+        ],
+        "ssh_pty": "true",
+        "tags": {
+          "Name": "slave-{{timestamp}}",
+          "Role": "slave",
+          "BuildDate": "{{isotime}}",
+          "BuildAuthor": "{{user `build_author`}}",
+          "BuildUUID": "{{user `build_uuid`}}",
+          "GitCommit": "{{user `git_commit`}}"
+        }
+      },
+      {
+        "name": "captain",
+        "type": "amazon-ebs",
+        "access_key":    "{{user `aws_access_key`}}",
+        "secret_key":    "{{user `aws_secret_key`}}",
+        "region":        "{{user `aws_region`}}",
+        "source_ami":    "{{user `aws_source_ami`}}",
+        "vpc_id":        "{{user `aws_vpc_id`}}",
+        "instance_type": "{{user `aws_instance_type`}}",
+        "subnet_id":     "{{user `aws_subnet_id`}}",
+        "ssh_username":  "{{user `ssh_username`}}",
+        "ami_name":      "captain-{{timestamp}}",
+        "ami_regions":   "{{user `aws_build_regions`}}",
+        "launch_block_device_mappings": [
+          {
+            "device_name": "/dev/sda1",
+            "volume_size": 16,
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          }
+        ],
+        "ssh_pty": "true",
+        "tags": {
+          "Name":        "captain-{{timestamp}}",
+          "Role":        "captain",
+          "BuildDate":   "{{isotime}}",
+          "BuildAuthor": "{{user `build_author`}}",
+          "BuildUUID":   "{{user `build_uuid`}}",
+          "GitCommit":   "{{user `git_commit`}}"
+        }
+      }
+    ],
+    "provisioners": [
+      {
+        "type": "shell",
+        "script": "./packer/scripts/install.sh"
+      },
+      {
+        "type": "ansible-local",
+        "playbook_file": "packer/playbook.yml",
+        "playbook_dir": "./ansible/",
+        "galaxy_file": "./ansible/requirements.yml",
+        "extra_arguments": [
+          "-i /etc/ansible/hosts",
+          "--extra-vars \"customer_key={{ user `customer_key`}} \"",
+          "-e \"dcos_username={{ user `dcos_username`}}\"",
+          "-e \"dcos_password={{ user `dcos_password`}}\""
+        ]
+      },
+      {
+        "type": "ansible-local",
+        "playbook_file": "packer/cleanup.yml",
+        "playbook_dir": "./ansible/"
+      }
+    ]
+}

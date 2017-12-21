@@ -17,10 +17,12 @@ public_subnets                  = [ "10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24",
 private_subnets                 = [ "10.0.11.0/24", "10.0.12.0/24", "10.0.13.0/24", ]
 private_subnets_egress          = [ "10.0.21.0/24", "10.0.22.0/24", "10.0.23.0/24", ]
 bastion_ami_id                  = "ami-c5062ba0"
+nat_ami_id                      = "ami-15e9c770"
 ssh_public_key                  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCztxYxgAYrXzSrfu2SDM58Ahca801YVhQ14HCDCRRzeziz6R/zVZATnfrCCUU5N3Fas7foZuzjXfwalD1xRbCABDaQayTSOHEJqsqnjJ2DZadRZJRKsHoEDoXf92963KHPz8BnNmPMTqhc+u115Q4HW3LyHlcIphuHtNcnKnbb4GVfSpOXYUw8b/Z31ujgKMUcyJpITQDDUrjti5+sWdmHOkcaSHS0IZMrLhaw43uCwwXlNxUacKORweTSUhna6HtehnTbgIWnVVJ9KekmV0TffNLbyXrYPluvqVUjs+WkOywvVPyMWxzXmqUU3caD6bXuhyjU8VuKGqXfhu/otvyr"
 tag_owner                       = "n911"
 tag_usage                       = "test"
 access_cidr                     = "0.0.0.0/0"
+deploy_cidr                     = "0.0.0.0/0"
 
 # Platform
 dcos_stack_bucket               = "deepcortex-dcos-backend"
@@ -67,3 +69,14 @@ redshift_cluster_type = "multi-node"
 redshift_number_of_nodes = 2
 redshift_encrypted = false
 redshift_skip_final_snapshot = true
+
+# Application Docker Image Versions
+aries_docker_image_version = "0.0.0-ef21aeb1bd0eb01dca146d29c101994541cc3d81"
+baile_docker_image_version = "testv6"
+baile_nginx_docker_image_version = "latest"
+cortex_docker_image_version = "0.0.0-f0f882e6cb2d80621f57766c12dfc7a4321bf258"
+logstash_docker_image_version = "latest"
+orion_docker_image_version = "0.0.0-c12e95e9784037e5ab452183c5bf900ab61cf6dd"
+job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-4-g3a424df"
+rmq_docker_image_version = "latest"
+um_docker_image_version = "v1.0"
