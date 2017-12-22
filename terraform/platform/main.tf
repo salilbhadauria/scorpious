@@ -457,6 +457,7 @@ data "template_file" "master_userdata" {
 
   vars {
     environment = "${var.environment}"
+    aws_region = "${var.aws_region}"
     bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
   }
 
@@ -564,6 +565,7 @@ data "template_file" "slave_userdata" {
 
   vars {
     environment = "${var.environment}"
+    aws_region = "${var.aws_region}"
     bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
   }
 
@@ -717,6 +719,7 @@ data "template_file" "public_slave_userdata" {
 
   vars {
     environment = "${var.environment}"
+    aws_region = "${var.aws_region}"
     bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
   }
 
