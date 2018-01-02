@@ -64,6 +64,7 @@ resource "aws_autoscaling_group" "asg" {
     launch_configuration      = "${aws_launch_configuration.lc.name}"
     load_balancers            = [ "${var.asg_load_balancers}" ]
     #target_group_arns         = [ "${var.asg_target_groups}" ]
+    enabled_metrics           = [ "${var.asg_enabled_metrics}" ]
 
 
     tags = ["${concat(

@@ -113,6 +113,11 @@ variable "asg_load_balancers" {
     default     = []
 }
 
+variable "asg_enabled_metrics" {
+    description = "Enabled metrics for ASGs"
+    default     = [ "GroupInServiceInstances" ]
+}
+
 variable "tags_asg" {
     type    = "list"
     default = []
