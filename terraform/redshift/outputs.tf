@@ -9,3 +9,6 @@ output "redshift_master_password" {
 output "redshift_url" {
   value = "${element(split(":", aws_redshift_cluster.redshift-clstr.endpoint), 0)}"
 }
+output "redshift_cluster_identifier" {
+  value = "${aws_redshift_cluster.redshift-clstr.cluster_identifier}"
+}
