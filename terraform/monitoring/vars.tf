@@ -6,6 +6,10 @@ variable "tf_bucket" {}
 variable "account" {}
 variable "access_cidr" {}
 variable "deploy_cidr" {}
+variable "azs" {
+    description = "Array AVZs. Must match number of public and or private subnets"
+    type    = "list"
+}
 
 # Bootstrap vars
 
