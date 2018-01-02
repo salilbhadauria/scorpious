@@ -58,10 +58,13 @@ resource "aws_s3_bucket" "dcos_apps_bucket" {
 }
 
 data "template_file" "dcos_apps_bucket_policy" {
-  template = "${file("../../terraform/templates/dcos_apps_bucket_policy.tpl")}"
+  template = "${file("../../terraform/templates/dcos_apps_bucket_policy_${var.baile_access}.tpl")}"
 
   vars {
     dcos_apps_bucket_arn = "${aws_s3_bucket.dcos_apps_bucket.arn}"
+    access_cidr = "${var.access_cidr}"
+    deploy_cidr = "${var.deploy_cidr}"
+    vpce_id = "${var.vpce_id}"
   }
 
   depends_on = [

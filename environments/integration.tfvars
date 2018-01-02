@@ -23,6 +23,7 @@ tag_owner                       = "n911"
 tag_usage                       = "test"
 access_cidr                     = "0.0.0.0/0"
 deploy_cidr                     = "0.0.0.0/0"
+baile_access                    = "public"
 
 # Platform
 dcos_stack_bucket               = "deepcortex-dcos-backend"

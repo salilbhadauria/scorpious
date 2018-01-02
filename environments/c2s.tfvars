@@ -7,6 +7,9 @@ account                         = "475276989310"
 # the VPC ID of the VPC you will launch DeepCortex into
 vpc_id                          = "vpc-7a51d11f"
 
+# the VPC S3 Endpoint of the VPC you will launch DeepCortex into
+vpce_id                         = "vpce-8f887fe6"
+
 # the VPC CIDR block you will launch DeepCortex into
 vpc_cidr                        = "10.0.0.0/16"
 
@@ -24,20 +27,23 @@ deploy_cidr                     = "205.251.75.6/32"
 ### You may change any of the below names if you choose, otherwise the defaults we be used.
 
 # the name of the S3 buckets used for storing terraform artifacts, storing DeepCortex data, and storing DC/OS data
-tf_bucket                       = "falcon-deepcortex-c2s-test-terraform"
-dcos_apps_bucket                = "falcon-deepcortex-c2s-test-dcos-apps"
-dcos_stack_bucket               = "falcon-deepcortex-c2s-test-dcos-backend"
+tf_bucket                       = "falcon-deepcortex-staging-terraform"
+dcos_apps_bucket                = "falcon-deepcortex-staging-dcos-apps"
+dcos_stack_bucket               = "falcon-deepcortex-staging-dcos-backend"
 
 # the tags that will be applied to the infrastructure (environment, owner, usage)
-environment                     = "c2s"
+environment                     = "staging"
 tag_owner                       = "deepcortex"
 tag_usage                       = "falcon"
 
 # the name of the redshfit cluster
-redshift_cluster_name           = "falcon-deepcortex-c2s-test-redshift"
+redshift_cluster_name           = "falcon-deepcortex-staging-redshift"
 
 
 ### DO NOT CHANGE ANYTHING BELOW THIS LINE
+
+# public vs private baile
+baile_access                    = "private"
 
 # prefix for terraform templates
 prefix                          = "c2s_"
