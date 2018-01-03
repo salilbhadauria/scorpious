@@ -45,6 +45,14 @@
    group: root
    mode: 0644   
 
+- name: Copy endpoints file for AWS CLI if needed
+  copy: 
+   dest: /opt/
+   src: extra_files/endpoints.json.bak
+   owner: root
+   group: root
+   mode: 0644
+
 - name: Generate /etc/environment file
   template:
     src: etc/environment.j2
