@@ -475,6 +475,7 @@ data "template_file" "master_userdata" {
 
   vars {
     environment = "${var.environment}"
+    aws_region = "${var.aws_region}"
     bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
   }
 
@@ -496,7 +497,7 @@ module "master_elb" {
 
 module "master_elb_internal" {
   source              = "../../terraform/modules/elb_internal_masters"
-  elb_name            = "${var.tag_owner}-${var.environment}-master-elb-int"
+  elb_name            = "${var.tag_owner}-${var.environment}-master-elb-in"
   elb_security_group  = "${module.master_elb_internal_sg.id}"
   subnets             = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
   health_check_target = "TCP:5050"
@@ -582,6 +583,7 @@ data "template_file" "slave_userdata" {
 
   vars {
     environment = "${var.environment}"
+    aws_region = "${var.aws_region}"
     bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
   }
 
@@ -735,6 +737,7 @@ data "template_file" "public_slave_userdata" {
 
   vars {
     environment = "${var.environment}"
+    aws_region = "${var.aws_region}"
     bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
   }
 

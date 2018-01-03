@@ -32,6 +32,7 @@ dcos_apps_bucket                = "falcon-deepcortex-staging-dcos-apps"
 dcos_stack_bucket               = "falcon-deepcortex-staging-dcos-backend"
 
 # the tags that will be applied to the infrastructure (environment, owner, usage)
+# environment and owner can only be a combined 17 characters
 environment                     = "staging"
 tag_owner                       = "deepcortex"
 tag_usage                       = "falcon"
