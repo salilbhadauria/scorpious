@@ -29,6 +29,9 @@ redshift_cluster_name           = "falcon-deepcortex-test-redshift"
 
 ### DO NOT CHANGE ANYTHING BELOW THIS LINE
 
+# public vs private baile
+baile_access                    = "private"
+
 # Packer
 packer_base_ami                 = "ami-6f61e60e"
 packer_ssh_user                 = "ec2-user"
