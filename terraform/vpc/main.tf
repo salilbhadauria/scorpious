@@ -230,7 +230,7 @@ module "asg_nat" {
     lc_user_data       = "${data.template_file.nat_instance_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.nat_instance_profile.id}"
 
-    asg_name             = "${var.environment}-nat-asg"
+    asg_name             = "${var.tag_owner}-{var.environment}-nat-asg"
     asg_subnet_ids       = "${module.vpc.public_subnet_ids}"
     asg_desired_capacity = "${length(var.azs)}"
     asg_min_size         = "${length(var.azs)}"
@@ -260,7 +260,7 @@ module "asg_bastion" {
     lc_user_data       = "#!/bin/bash\ncurl https://amazon-ssm-us-east-1.s3.amazonaws.com/latest/linux_amd64/amazon-ssm-agent.rpm -o amazon-ssm-agent.rpm && yum install -y amazon-ssm-agent.rpm"
     lc_iam_instance_profile = "${aws_iam_instance_profile.bastion_profile.id}"
 
-    asg_name             = "${var.environment}-bastion-asg"
+    asg_name             = "${var.tag_owner}-${var.environment}-bastion-asg"
     asg_subnet_ids       = "${module.vpc.public_subnet_ids}"
     asg_desired_capacity = 1
     asg_min_size         = 1
