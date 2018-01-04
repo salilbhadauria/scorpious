@@ -31,7 +31,7 @@ module "sg_bastion" {
 
     vpc_id = "${var.vpc_id}"
 
-    sg_name = "ssh-bastion2"
+    sg_name = "ssh-bastion"
     sg_description = "some description"
 
     ingress_rules_cidr = [
