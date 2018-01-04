@@ -230,7 +230,7 @@ module "asg_nat" {
     lc_user_data       = "${data.template_file.nat_instance_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.nat_instance_profile.id}"
 
-    asg_name             = "${var.tag_owner}-{var.environment}-nat-asg"
+    asg_name             = "${var.tag_owner}-${var.environment}-nat-asg"
     asg_subnet_ids       = "${module.vpc.public_subnet_ids}"
     asg_desired_capacity = "${length(var.azs)}"
     asg_min_size         = "${length(var.azs)}"
