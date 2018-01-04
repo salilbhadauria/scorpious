@@ -12,7 +12,7 @@ data "terraform_remote_state" "iam" {
   backend = "s3"
   config {
     bucket = "${var.tf_bucket}"
-    key    = "${var.aws_region}/${var.environment}/iam/terraform.tfstate"
+    key    = "${var.aws_region}/${var.environment}/c2s_iam/terraform.tfstate"
     region = "${var.aws_region}"
   }
 }
@@ -31,7 +31,7 @@ module "sg_bastion" {
 
     vpc_id = "${var.vpc_id}"
 
-    sg_name = "ssh-bastion2"
+    sg_name = "dc-ssh-bastion"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -71,7 +71,7 @@ module "asg_bastion" {
     lc_user_data       = "#!/bin/bash\ncurl https://amazon-ssm-us-east-1.s3.amazonaws.com/latest/linux_amd64/amazon-ssm-agent.rpm -o amazon-ssm-agent.rpm && yum install -y amazon-ssm-agent.rpm"
     lc_iam_instance_profile = "${aws_iam_instance_profile.bastion_profile.id}"
 
-    asg_name             = "${var.environment}-bastion-asg"
+    asg_name             = "${var.tag_owner}-${var.environment}-bastion-asg"
     asg_subnet_ids       = [ "${var.subnet_id_1}","${var.subnet_id_2}" ]
     asg_desired_capacity = 1
     asg_min_size         = 1

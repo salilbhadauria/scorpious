@@ -11,3 +11,7 @@ output "devops_key_name" {
 output "sg_bastion_id" {
   value = "${module.sg_bastion.id}"
 }
+
+output "asg_bastion_name" {
+  value = "${module.asg_bastion.asg_name}"
+}

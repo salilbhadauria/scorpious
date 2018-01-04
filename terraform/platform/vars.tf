@@ -6,6 +6,7 @@ variable "tf_bucket" {}
 variable "account" {}
 variable "access_cidr" {}
 variable "deploy_cidr" {}
+variable "baile_access" {}
 
 # Bootstrap vars
 

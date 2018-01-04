@@ -16,7 +16,7 @@ sh packer.sh all $CONFIG;
 
 PREFIX=$(awk -F\" '/^prefix/{print $2}'  "environments/$CONFIG.tfvars")
 
-STACKS=("iam" "${PREFIX}vpc" "${PREFIX}redshift" "${PREFIX}platform")
+STACKS=("${PREFIX}iam" "${PREFIX}vpc" "${PREFIX}redshift" "${PREFIX}platform" "${PREFIX}monitoring")
 for i in "${STACKS[@]}"; do
   sh terraform.sh init $CONFIG $i;
   sh terraform.sh plan $CONFIG $i;
