@@ -7,9 +7,11 @@ variable "account" {}
 variable "access_cidr" {}
 variable "deploy_cidr" {}
 variable "vpc_id" {}
+variable "vpce_id" {}
 variable "vpc_cidr" {}
 variable "subnet_id_1" {}
 variable "subnet_id_2" {}
+variable "baile_access" {}
 
 # Bootstrap vars
 

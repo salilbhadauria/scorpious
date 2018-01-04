@@ -32,7 +32,10 @@ Prior to deployment you must make sure the Terms and Services for the CentOS 7.3
       -e DCOS_PASSWORD=${DCOS_PASSWORD} \
       deepcortex/scorpius-deployment:TAG
     ```
-7. Once your terminal output states the deployment it complete you can access the DeepCortex UI.
+7. To add endpoints.json for C2S:
+    * Create a directory on your local machine called "extra_files" and place the endpoints.json file in that directory.
+    * Add "-v /path/to/extra_files:/opt/deploy/ansible/roles/captain/files/extra_files" to the docker command.
+8. Once your terminal output states the deployment it complete you can access the DeepCortex UI.
 
 ### Manual deploying the scripts without docker.
 

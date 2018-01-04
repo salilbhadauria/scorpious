@@ -8,6 +8,7 @@ service mongod stop
 # Upload front end files to S3
 aws s3 ls "s3://${AWS_S3_BUCKET}/static-content/dev/"
 if [[ $? -ne 0 ]]; then
+  curl -O https://s3.amazonaws.com/dev.deepcortex.ai/static-content/front-end.tar.gz
   tar -xvf front-end.tar.gz
   aws s3 sync front-end "s3://${AWS_S3_BUCKET}/static-content/dev/"
 fi

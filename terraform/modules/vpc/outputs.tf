@@ -4,6 +4,10 @@ output "vpc_id" {
     value = "${aws_vpc.vpc.id}"
 }
 
+output "vpce_id" {
+    value = "${aws_vpc_endpoint.s3.id}"
+}
+
 output "vpc_igw" {
     value = "${aws_internet_gateway.igw.id}"
 }
