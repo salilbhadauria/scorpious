@@ -34,3 +34,10 @@ output "sg_private_egress_subnet_id" {
 output "sg_bastion_id" {
   value = "${module.sg_bastion.id}"
 }
+
+output "asg_bastion_name" {
+  value = "${module.asg_bastion.asg_name}"
+}
+output "asg_nat_name" {
+  value = "${module.asg_nat.asg_name}"
+}
