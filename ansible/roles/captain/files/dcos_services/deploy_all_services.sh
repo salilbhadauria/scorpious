@@ -5,6 +5,9 @@ cd /opt/dcos_services/
 # Stop mongo if running
 service mongod stop
 
+# Add S3 bucket encryption
+aws s3api put-bucket-encryption --bucket "${AWS_S3_BUCKET}" --server-side-encryption-configuration '{"Rules": [{"ApplyServerSideEncryptionByDefault": {"SSEAlgorithm": "AES256"}}]}'
+
 # Upload front end files to S3
 aws s3 ls "s3://${AWS_S3_BUCKET}/static-content/dev/"
 if [[ $? -ne 0 ]]; then
