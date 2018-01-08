@@ -64,7 +64,7 @@
       },
       "gracePeriodSeconds": 300,
       "intervalSeconds": 60,
-      "timeoutSeconds": 20,
+      "timeoutSeconds": 40,
       "maxConsecutiveFailures": 3
     }
   ]

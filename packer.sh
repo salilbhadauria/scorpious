@@ -20,6 +20,8 @@ export AMI=$(awk -F\"      '/^packer_base_ami/{print $2}'      "environments/$CO
 export REGION=$(awk -F\"   '/^aws_region/{print $2}'           "environments/$CONFIG.tfvars")
 export SSH_USER=$(awk -F\" '/^packer_ssh_user/{print $2}'      "environments/$CONFIG.tfvars")
 export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}' "environments/$CONFIG.tfvars")
+export ENVIRONMENT=$(awk -F\" '/^environment/{print $2}'  "environments/$CONFIG.tfvars")
+export OWNER=$(awk -F\" '/^tag_owner/{print $2}'  "environments/$CONFIG.tfvars")
 
 export PACKER_VPC_ID=$(awk -F\" '/^vpc_id/{print $2}'  "environments/$CONFIG.tfvars")
 export PACKER_SUBNET_ID=$(awk -F\" '/^subnet_id_1/{print $2}'  "environments/$CONFIG.tfvars")

@@ -5,6 +5,8 @@
         "aws_region":        "{{env `REGION`}}",
         "aws_build_regions": "{{env `REGION`}}",
         "aws_source_ami":    "{{env `AMI`}}",
+        "owner":             "{{env `OWNER`}}",
+        "environment":       "{{env `ENVIRONMENT`}}",
         "aws_instance_type": "t2.medium",
         "aws_vpc_id":        "{{env `PACKER_VPC_ID`}}",
         "aws_subnet_id":     "{{env `PACKER_SUBNET_ID`}}",
@@ -39,7 +41,7 @@
         "instance_type": "{{user `aws_instance_type`}}",
         "subnet_id":     "{{user `aws_subnet_id`}}",
         "ssh_username":  "{{user `ssh_username`}}",
-        "ami_name":      "bootstrap-{{timestamp}}",
+        "ami_name":      "bootstrap-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
         "ami_regions":   "{{user `aws_build_regions`}}",
         "launch_block_device_mappings": [
           {
@@ -51,7 +53,7 @@
         ],
         "ssh_pty": "true",
         "tags": {
-          "Name":        "bootstrap-{{timestamp}}",
+          "Name":        "bootstrap-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
           "Role":        "bootstrap",
           "BuildDate":   "{{isotime}}",
           "BuildAuthor": "{{user `build_author`}}",
@@ -70,7 +72,7 @@
         "instance_type": "{{user `aws_instance_type`}}",
         "subnet_id":     "{{user `aws_subnet_id`}}",
         "ssh_username":  "{{user `ssh_username`}}",
-        "ami_name":      "master-{{timestamp}}",
+        "ami_name":      "master-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
         "ami_regions":   "{{user `aws_build_regions`}}",
         "launch_block_device_mappings": [
           {
@@ -106,7 +108,7 @@
         ],
         "ssh_pty": "true",
         "tags": {
-          "Name":        "master-{{timestamp}}",
+          "Name":        "master-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
           "Role":        "master",
           "BuildDate":   "{{isotime}}",
           "BuildAuthor": "{{user `build_author`}}",
@@ -125,7 +127,7 @@
         "instance_type": "{{user `aws_instance_type`}}",
         "subnet_id":     "{{user `aws_subnet_id`}}",
         "ssh_username":  "{{user `ssh_username`}}",
-        "ami_name":      "slave-{{timestamp}}",
+        "ami_name":      "slave-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
         "ami_regions":   "{{user `aws_build_regions`}}",
         "launch_block_device_mappings": [
           {
@@ -161,7 +163,7 @@
         ],
         "ssh_pty": "true",
         "tags": {
-          "Name": "slave-{{timestamp}}",
+          "Name": "slave-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
           "Role": "slave",
           "BuildDate": "{{isotime}}",
           "BuildAuthor": "{{user `build_author`}}",
@@ -180,7 +182,7 @@
         "instance_type": "{{user `aws_instance_type`}}",
         "subnet_id":     "{{user `aws_subnet_id`}}",
         "ssh_username":  "{{user `ssh_username`}}",
-        "ami_name":      "captain-{{timestamp}}",
+        "ami_name":      "captain-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
         "ami_regions":   "{{user `aws_build_regions`}}",
         "launch_block_device_mappings": [
           {
@@ -192,7 +194,7 @@
         ],
         "ssh_pty": "true",
         "tags": {
-          "Name":        "captain-{{timestamp}}",
+          "Name":        "captain-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
           "Role":        "captain",
           "BuildDate":   "{{isotime}}",
           "BuildAuthor": "{{user `build_author`}}",
