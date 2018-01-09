@@ -10,5 +10,9 @@
     "disk": 90000,
     "disk_type": "MOUNT",
     "placement": "hostname:unique"
+  },
+  "coordinator_nodes": {
+    "count": 3,
+    "placement": "hostname:unique"
   }
 }

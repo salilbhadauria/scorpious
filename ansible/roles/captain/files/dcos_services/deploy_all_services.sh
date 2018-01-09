@@ -28,7 +28,7 @@ until [[ $(dcos node | grep agent | wc -l) == $DCOS_NODES ]]; do sleep 30; done
 sleep 60
 
 # Retrieve slave node IPs
-export MONGODB_HOSTS=$(aws ec2 describe-instances --filters "Name=tag:Role,Values=slave" --query Reservations[].Instances[].PrivateIpAddress --output text | sed -e 's/\s/,/g')
+export MONGODB_HOSTS=$(aws ec2 describe-instances --filters "Name=tag:Role,Values=slave" "Name=tag:environment,Values=$ENVIRONMENT" --query "Reservations[].Instances[].PrivateIpAddress" --output text | sed -e 's/\s/,/g')
 export DCOS_MASTER_PRIVATE_IP=$(aws ec2 describe-instances --filter Name=tag-key,Values=Name Name=tag-value,Values=$MASTER_INSTANCE_NAME --query "Reservations[*].Instances[*].PrivateIpAddress" --output=text)
 
 # Deploy frameworks from DC/OS universe + rabbitMQ
@@ -37,6 +37,8 @@ dcos package install mongodb-replicaset --options=mongodb/options.json --yes
 dcos package install elastic --options=elasticsearch/options.json --yes
 dcos package install kibana --yes
 source deploy_service.sh rabbitmq/marathon.json rabbitmq/env_vars.sh
+dcos package install --cli elastic
+dcos package install --cli mongodb-replicaset
 
 # Initialization and migration
 
