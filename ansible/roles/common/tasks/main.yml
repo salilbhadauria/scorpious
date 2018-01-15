@@ -10,3 +10,5 @@
     tags: common_environment
   - import_tasks: disk.yml
     tags: common_disk
+  - import_tasks: logs.yml
+    tags: common_logs
