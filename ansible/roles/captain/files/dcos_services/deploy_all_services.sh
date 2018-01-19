@@ -15,12 +15,14 @@ if [[ $? -ne 0 ]]; then
   tar -xvf front-end.tar.gz
   aws s3 sync front-end "s3://${AWS_S3_BUCKET}/static-content/dev/"
   rm -rf front-end
+  rm -f front-end.tar.gz
 
   if [ $UPLOAD_MSTAR_DATA = "true" ]; then
     curl -O https://s3.amazonaws.com/dev.deepcortex.ai/deployment_downloads/MSTAR_Data.tar.gz
     tar -xvf MSTAR_Data.tar.gz
     aws s3 sync MSTAR_Data "s3://${AWS_S3_BUCKET}/MSTAR_Data"
     rm -rf MSTAR_Data
+    rm -f MSTAR_Data.tar.gz
   fi  
 fi
 
