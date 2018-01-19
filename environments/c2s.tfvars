@@ -24,6 +24,9 @@ ssh_public_key                  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzAIMbS
 access_cidr                     = "205.251.75.6/32"
 deploy_cidr                     = "205.251.75.6/32"
 
+# specify if Public MSTAR data should be uploaded to teh default DeepCortex S3 bucket
+upload_mstar_data               = "true"
+
 ### You may change any of the below names if you choose, otherwise the defaults we be used.
 
 # the name of the S3 buckets used for storing terraform artifacts, storing DeepCortex data, and storing DC/OS data

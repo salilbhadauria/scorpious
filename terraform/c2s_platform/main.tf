@@ -833,6 +833,7 @@ data "template_file" "captain_userdata" {
     job_master_docker_image = "${var.job_master_docker_image}"
     rmq_docker_image_version = "${var.rmq_docker_image_version}"
     um_docker_image_version = "${var.um_docker_image_version}"
+    upload_mstar_data = "${var.upload_mstar_data}"
   }
 
   depends_on = [
