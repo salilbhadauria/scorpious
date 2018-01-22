@@ -809,7 +809,7 @@ data "template_file" "captain_userdata" {
     environment = "${var.environment}"
     dcos_master_url = "${module.master_elb_internal.elb_dns_name}"
     dcos_apps_bucket = "${aws_s3_bucket.dcos_apps_bucket.id}"
-    dcos_apps_bucket_domain = "${aws_s3_bucket.dcos_apps_bucket.id}.s3-${aws_s3_bucket.dcos_apps_bucket.region}.amazonaws.com"
+    dcos_apps_bucket_domain = "${aws_s3_bucket.dcos_apps_bucket.id}.${var.s3_endpoint}"
     aws_region = "${var.aws_region}"
     redshift_user = "${data.terraform_remote_state.redshift.redshift_master_username}"
     redshift_password = "${data.terraform_remote_state.redshift.redshift_master_password}"
@@ -834,6 +834,7 @@ data "template_file" "captain_userdata" {
     rmq_docker_image_version = "${var.rmq_docker_image_version}"
     um_docker_image_version = "${var.um_docker_image_version}"
     upload_mstar_data = "${var.upload_mstar_data}"
+    download_from_s3 = "${var.download_from_s3}"
   }
 
   depends_on = [

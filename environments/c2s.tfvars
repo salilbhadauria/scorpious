@@ -4,6 +4,29 @@
 # the account ID of the AWS account you will deploy to
 account                         = "475276989310"
 
+# the name of the AWS region e.g. "us-east-1"
+aws_region                      = "us-gov-west-1"
+
+# the comma separated list of availability zones e.g. [ "1a", "1b" ]
+azs                             = [ "1a", "1b" ]
+
+# the arn value for the region being used
+# ex: in AWS gov cloud a polic resources is written as "arn:aws-us-gov:iam::aws:policy"
+# the arn value you would supply for AWS gov cloud is "aws-us-gov"
+arn                             = "aws-us-gov"
+
+# the S3 endpoint for the region being used e.g. "s3-us-gov-west-1.amazonaws.com"
+s3_endpoint                     = "s3-us-gov-west-1.amazonaws.com"
+
+# the ami id for the machine that will serve as the bastion (can be CentOS or Amazon Linux)
+bastion_ami_id                  = "ami-b2d056d3"
+
+# the ami id for the machines that will run DeepCortex (should be a CentOS 7.4 ami)
+packer_base_ami                 = "ami-6f61e60e"
+
+# the default ssh user for the above ami (likely centos for CentOS machines, but could be ec2-user so make sure to check the ami you are using)
+packer_ssh_user                 = "ec2-user"
+
 # the VPC ID of the VPC you will launch DeepCortex into
 vpc_id                          = "vpc-7a51d11f"
 
@@ -22,9 +45,11 @@ ssh_public_key                  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzAIMbS
 
 # the CIDR for a VPN or machine IP that should be able to access DeepCortex
 access_cidr                     = "205.251.75.6/32"
+
+# the CIDR for the IP of the machine that is running the deployment container
 deploy_cidr                     = "205.251.75.6/32"
 
-# specify if Public MSTAR data should be uploaded to teh default DeepCortex S3 bucket
+# specify if Public MSTAR data should be uploaded to the default DeepCortex S3 bucket
 upload_mstar_data               = "true"
 
 ### You may change any of the below names if you choose, otherwise the defaults we be used.
@@ -49,22 +74,11 @@ redshift_cluster_name           = "falcon-deepcortex-staging-redshift"
 # public vs private baile
 baile_access                    = "private"
 
+# true or false for downloading latest files (frontend and mstar) from S3 rather than using files in the docker container
+download_from_s3                = "false"
+
 # prefix for terraform templates
 prefix                          = "c2s_"
-
-# Packer
-packer_base_ami                 = "ami-6f61e60e"
-packer_ssh_user                 = "ec2-user"
-
-# Terraform
-# VPC
-aws_region                      = "us-gov-west-1"
-azs                             = [ "1a", "1b" ]
-public_subnets                  = [ "10.0.1.0/24", "10.0.2.0/24" ]
-private_subnets                 = [ "10.0.11.0/24", "10.0.12.0/24" ]
-private_subnets_egress          = [ "10.0.21.0/24", "10.0.22.0/24" ]
-bastion_ami_id                  = "ami-b2d056d3"
-nat_ami_id                      = "ami-fe991b9f"
 
 # Platform
 bootstrap_asg_desired_capacity  = "1"
@@ -124,6 +138,3 @@ orion_docker_image_version = "0.0.0-c12e95e9784037e5ab452183c5bf900ab61cf6dd"
 job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-4-g3a424df"
 rmq_docker_image_version = "latest"
 um_docker_image_version = "v1.0"
-
-
-

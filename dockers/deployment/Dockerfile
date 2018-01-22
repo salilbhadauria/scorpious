@@ -47,6 +47,9 @@ COPY packer.sh packer.sh
 COPY terraform.sh terraform.sh
 COPY terraform_init_backend.sh terraform_init_backend.sh
 
+ADD https://s3.amazonaws.com/dev.deepcortex.ai/deployment_downloads/front-end.tar.gz ansible/roles/captain/files/dcos_services/
+ADD https://s3.amazonaws.com/dev.deepcortex.ai/deployment_downloads/MSTAR_Data.tar.gz ansible/roles/captain/files/dcos_services/
+
 ENTRYPOINT ["/bin/bash", "/opt/deploy/build.sh"]
 
 LABEL maintainer="sergey.semichev@sentrana.com" \
