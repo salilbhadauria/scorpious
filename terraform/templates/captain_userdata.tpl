@@ -34,6 +34,7 @@ environment:
   job_master_docker_image: ${job_master_docker_image}
   rmq_docker_image_version: ${rmq_docker_image_version}
   um_docker_image_version: ${um_docker_image_version}
+  upload_mstar_data: "${upload_mstar_data}"
 manage_resolv_conf: false
 preserve_hostname: true
 runcmd:

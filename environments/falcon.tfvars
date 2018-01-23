@@ -26,6 +26,8 @@ tag_usage                       = "falcon"
 # the name of the redshfit cluster
 redshift_cluster_name           = "falcon-deepcortex-test-redshift"
 
+# specify if Public MSTAR data should be uploaded to DeepCortex S3 Bucket
+upload_mstar_data               = "true"
 
 ### DO NOT CHANGE ANYTHING BELOW THIS LINE
 
@@ -96,12 +98,12 @@ redshift_encrypted = false
 redshift_skip_final_snapshot = true
 
 # Application Docker Image Versions
-aries_docker_image_version = "0.0.0-ef21aeb1bd0eb01dca146d29c101994541cc3d81"
-baile_docker_image_version = "testv6"
+aries_docker_image_version = "0.0.0-d7d4808443dccd85278492a35614894e6051ae23"
+baile_docker_image_version = "v1.0.0"
 baile_nginx_docker_image_version = "latest"
-cortex_docker_image_version = "0.0.0-f0f882e6cb2d80621f57766c12dfc7a4321bf258"
+cortex_docker_image_version = "0.0.0-7f2913f624a1260cf2ed15852c1857ac0e50bbbf"
 logstash_docker_image_version = "latest"
-orion_docker_image_version = "0.0.0-c12e95e9784037e5ab452183c5bf900ab61cf6dd"
-job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-4-g3a424df"
+orion_docker_image_version = "0.0.0-77ec7b0ac9a37becf35606e404e09c30324da6cb"
+job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-194-ga95f9d9"
 rmq_docker_image_version = "latest"
 um_docker_image_version = "v1.0"
