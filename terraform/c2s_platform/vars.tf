@@ -12,6 +12,7 @@ variable "vpc_cidr" {}
 variable "subnet_id_1" {}
 variable "subnet_id_2" {}
 variable "baile_access" {}
+variable "s3_endpoint" {}
 
 # Bootstrap vars
 
@@ -63,6 +64,7 @@ variable "job_master_docker_image" {}
 variable "rmq_docker_image_version" {}
 variable "um_docker_image_version" {}
 variable "upload_mstar_data" { default = "false"}
+variable "download_from_s3" { default = "false" }
 
 locals {
     create_deploy_sgs = "${var.access_cidr == var.deploy_cidr ? 0 : 1}"

@@ -5,5 +5,5 @@ variable "environment" {}
 variable "dcos_apps_bucket" {}
 variable "tag_owner" {}
 locals {
-  arn = "${var.aws_region == "us-gov-west-1" ? "arn:aws-us-gov" : "arn:aws"}"
+  arn = "${var.aws_region == "us-gov-west-1" ? "aws-us-gov" : "aws"}"
 }

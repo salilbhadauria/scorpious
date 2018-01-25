@@ -819,6 +819,7 @@ data "template_file" "captain_userdata" {
     rmq_docker_image_version = "${var.rmq_docker_image_version}"
     um_docker_image_version = "${var.um_docker_image_version}"
     upload_mstar_data = "${var.upload_mstar_data}"
+    download_from_s3 = "${var.download_from_s3}"
   }
 
   depends_on = [

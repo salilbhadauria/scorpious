@@ -35,7 +35,7 @@ export STACK=$3
 shift 3
 
 set_backend_variables() {
-  REGION=$(awk -F\" '/region/{print $2}'  "environments/$CONFIG.tfvars")
+  REGION=$(awk -F\" '/aws_region/{print $2}'  "environments/$CONFIG.tfvars")
   ACCOUNT=$(awk -F\" '/account/{print $2}'  "environments/$CONFIG.tfvars")
   ENVIRONMENT=$(awk -F\" '/environment /{print $2}'  "environments/$CONFIG.tfvars" | tr -d '\n')
   BUCKET="$(awk -F\" '/^tf_bucket/{print $2}'  "environments/$CONFIG.tfvars")"

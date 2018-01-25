@@ -11,14 +11,18 @@ aws s3api put-bucket-encryption --bucket "${AWS_S3_BUCKET}" --server-side-encryp
 # Upload front end files to S3
 aws s3 ls "s3://${AWS_S3_BUCKET}/static-content/dev/"
 if [[ $? -ne 0 ]]; then
-  curl -O https://s3.amazonaws.com/dev.deepcortex.ai/deployment_downloads/front-end.tar.gz
+  if [ $DOWNLOAD_FROM_S3 = "true" ]; then
+    curl -O https://s3.amazonaws.com/dev.deepcortex.ai/deployment_downloads/front-end.tar.gz
+  fi  
   tar -xvf front-end.tar.gz
   aws s3 sync front-end "s3://${AWS_S3_BUCKET}/static-content/dev/"
   rm -rf front-end
   rm -f front-end.tar.gz
 
   if [ $UPLOAD_MSTAR_DATA = "true" ]; then
-    curl -O https://s3.amazonaws.com/dev.deepcortex.ai/deployment_downloads/MSTAR_Data.tar.gz
+    if [ $DOWNLOAD_FROM_S3 = "true" ]; then
+      curl -O https://s3.amazonaws.com/dev.deepcortex.ai/deployment_downloads/MSTAR_Data.tar.gz
+    fi
     tar -xvf MSTAR_Data.tar.gz
     aws s3 sync MSTAR_Data "s3://${AWS_S3_BUCKET}/MSTAR_Data"
     rm -rf MSTAR_Data

@@ -32,8 +32,8 @@ resource "aws_iam_user_policy" "app_s3" {
       ],
       "Effect": "Allow",
       "Resource": [
-        "${local.arn}:s3:::${var.dcos_apps_bucket}",
-        "${local.arn}:s3:::${var.dcos_apps_bucket}/*"
+        "arn:${var.arn}:s3:::${var.dcos_apps_bucket}",
+        "arn:${var.arn}:s3:::${var.dcos_apps_bucket}/*"
       ]
     }
   ]
@@ -69,7 +69,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "bastion_ssm_attach" {
     role       = "${aws_iam_role.bastion_role.name}"
-    policy_arn = "${local.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+    policy_arn = "arn:${var.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_role" "bootstrap_role" {
@@ -96,7 +96,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "bootstrap_ssm_attach" {
     role       = "${aws_iam_role.bootstrap_role.name}"
-    policy_arn = "${local.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+    policy_arn = "arn:${var.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_role_policy" "bootstrap_policy" {
@@ -142,7 +142,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "master_ssm_attach" {
     role       = "${aws_iam_role.master_role.name}"
-    policy_arn = "${local.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+    policy_arn = "arn:${var.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_role_policy" "master_policy" {
@@ -188,7 +188,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "slave_ssm_attach" {
     role       = "${aws_iam_role.slave_role.name}"
-    policy_arn = "${local.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+    policy_arn = "arn:${var.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_role_policy" "slave_policy" {
@@ -234,7 +234,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "captain_ssm_attach" {
     role       = "${aws_iam_role.captain_role.name}"
-    policy_arn = "${local.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+    policy_arn = "arn:${var.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_role_policy" "captain_policy" {

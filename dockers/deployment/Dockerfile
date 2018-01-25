@@ -1,9 +1,5 @@
 FROM deepcortex/scala-python3:latest
 
-ARG BUILD_DATE
-ARG VCS_REF
-ARG IMAGE_VERSION
-
 ENV PACKER_VERSION=1.0.4
 ENV PACKER_SHA256SUM=646da085cbcb8c666474d500a44d933df533cf4f1ff286193d67b51372c3c59e
 
@@ -14,10 +10,10 @@ RUN apt-get update && \
     apt-get install -y rsync && \
     apt-get install -y curl
 
-RUN pip install awscli --upgrade   
+RUN pip install awscli --upgrade
 
-ADD https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip ./
-ADD https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_SHA256SUMS ./
+RUN wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip
+RUN wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_SHA256SUMS
 
 RUN sed -i '/.*linux_amd64.zip/!d' packer_${PACKER_VERSION}_SHA256SUMS && \
     sha256sum -c --strict packer_${PACKER_VERSION}_SHA256SUMS && \
@@ -47,7 +43,14 @@ COPY packer.sh packer.sh
 COPY terraform.sh terraform.sh
 COPY terraform_init_backend.sh terraform_init_backend.sh
 
+RUN wget https://s3.amazonaws.com/dev.deepcortex.ai/deployment_downloads/front-end.tar.gz -P ansible/roles/captain/files/dcos_services/
+RUN wget https://s3.amazonaws.com/dev.deepcortex.ai/deployment_downloads/MSTAR_Data.tar.gz -P ansible/roles/captain/files/dcos_services/
+
 ENTRYPOINT ["/bin/bash", "/opt/deploy/build.sh"]
+
+ARG BUILD_DATE=""
+ARG VCS_REF=""
+ARG IMAGE_VERSION=""
 
 LABEL maintainer="sergey.semichev@sentrana.com" \
       org.label-schema.build-date=$BUILD_DATE \
