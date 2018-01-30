@@ -19,13 +19,13 @@ arn                             = "aws-us-gov"
 s3_endpoint                     = "s3-us-gov-west-1.amazonaws.com"
 
 # the ami id for the machine that will serve as the bastion (can be CentOS or Amazon Linux)
-bastion_ami_id                  = "ami-0bb9056a"
+bastion_ami_id                  = "ami-6f61e60e"
 
 # the ami id for the machines that will run DeepCortex (should be a CentOS 7.4 ami)
-packer_base_ami                 = "ami-0bb9056a"
+packer_base_ami                 = "ami-6f61e60e"
 
 # the default ssh user for the above ami (likely centos for CentOS machines, but could be ec2-user so make sure to check the ami you are using)
-packer_ssh_user                 = "centos"
+packer_ssh_user                 = "ec2-user"
 
 # the VPC ID of the VPC you will launch DeepCortex into
 vpc_id                          = "vpc-7a51d11f"
@@ -61,7 +61,7 @@ dcos_stack_bucket               = "falcon-deepcortex-c2s-test-dcos-backend"
 
 # the tags that will be applied to the infrastructure (environment, owner, usage)
 # environment and owner can only be a combined 17 characters
-environment                     = "c2s-test"
+environment                     = "c2stest"
 tag_owner                       = "deepcortex"
 tag_usage                       = "falcon"
 
@@ -138,3 +138,4 @@ orion_docker_image_version = "0.0.0-77ec7b0ac9a37becf35606e404e09c30324da6cb"
 job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-194-ga95f9d9"
 rmq_docker_image_version = "latest"
 um_docker_image_version = "v1.0"
+salsa_version = "base"
