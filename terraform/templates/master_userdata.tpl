@@ -19,6 +19,7 @@ runcmd:
   - yum install -y amazon-ssm-agent.rpm
   - sysctl net.bridge.bridge-nf-call-iptables=1
   - sysctl net.bridge.bridge-nf-call-ip6tables=1
+  - sleep 60
   - until $(curl --output /dev/null --silent --head --fail http://${bootstrap_dns}:8080/dcos_install.sh); do sleep 5; done
   - curl http://${bootstrap_dns}:8080/dcos_install.sh -o /tmp/dcos_install.sh -s
   - cd /tmp; bash dcos_install.sh master

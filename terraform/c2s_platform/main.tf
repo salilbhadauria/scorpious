@@ -749,9 +749,9 @@ data "template_file" "public_slave_userdata" {
 module "public_slave_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
-    ami_name                = "slave-${var.tag_owner}-${var.environment}*"
+    ami_name                = "public-slave-${var.tag_owner}-${var.environment}*"
     lc_name_prefix          = "${var.environment}-public-slave-"
-    lc_instance_type        = "m4.xlarge"
+    lc_instance_type        = "m4.large"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.public_slave_sg.id}", "${module.dcos_stack_sg.id}" ]

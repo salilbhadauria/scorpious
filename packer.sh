@@ -26,9 +26,16 @@ export OWNER=$(awk -F\" '/^tag_owner/{print $2}'  "environments/$CONFIG.tfvars")
 export PACKER_VPC_ID=$(awk -F\" '/^vpc_id/{print $2}'  "environments/$CONFIG.tfvars")
 export PACKER_SUBNET_ID=$(awk -F\" '/^subnet_id_1/{print $2}'  "environments/$CONFIG.tfvars")
 
+export DCOS_VERSION=$(awk -F\" '/^dcos_version/{print $2}'  "environments/$CONFIG.tfvars")
+
+if [ -z "$DCOS_VERSION" ];then
+  export DCOS_DOWNLOAD_URL="https://downloads.mesosphere.com/dcos-enterprise/stable/dcos_generate_config.ee.sh"
+else
+  export DCOS_DOWNLOAD_URL="https://downloads.mesosphere.com/dcos-enterprise/stable/$DCOS_VERSION/dcos_generate_config.ee.sh"
+fi
+
 export MASTER_XVDE_SIZE=$(awk -F\" '/^master_xvde_size/{print $2}'  "environments/$CONFIG.tfvars")
 export MASTER_XVDF_SIZE=$(awk -F\" '/^master_xvdf_size/{print $2}'  "environments/$CONFIG.tfvars")
-export MASTER_XVDG_SIZE=$(awk -F\" '/^master_xvdg_size/{print $2}'  "environments/$CONFIG.tfvars")
 export MASTER_XVDH_SIZE=$(awk -F\" '/^master_xvdh_size/{print $2}'  "environments/$CONFIG.tfvars")
 
 export SLAVE_XVDE_SIZE=$(awk -F\" '/^slave_xvde_size/{print $2}'  "environments/$CONFIG.tfvars")
@@ -36,13 +43,17 @@ export SLAVE_XVDF_SIZE=$(awk -F\" '/^slave_xvdf_size/{print $2}'  "environments/
 export SLAVE_XVDG_SIZE=$(awk -F\" '/^slave_xvdg_size/{print $2}'  "environments/$CONFIG.tfvars")
 export SLAVE_XVDH_SIZE=$(awk -F\" '/^slave_xvdh_size/{print $2}'  "environments/$CONFIG.tfvars")
 
+export PUBLIC_SLAVE_XVDE_SIZE=$(awk -F\" '/^public_slave_xvde_size/{print $2}'  "environments/$CONFIG.tfvars")
+export PUBLIC_SLAVE_XVDF_SIZE=$(awk -F\" '/^public_slave_xvdf_size/{print $2}'  "environments/$CONFIG.tfvars")
+export PUBLIC_SLAVE_XVDH_SIZE=$(awk -F\" '/^public_slave_xvdh_size/{print $2}'  "environments/$CONFIG.tfvars")
+
 export AWS_REGION="${REGION:-us-east-1}"
 
 if [ -z "$AWS_PROFILE" ];then
   if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ];then
     echo "AWS_PROFILE or access keys (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) are not set"
     usage
-  fi  
+  fi
 fi
 
 if [ -z "$CUSTOMER_KEY" ] && [ "${IMAGE}" = "bootstrap" ];then

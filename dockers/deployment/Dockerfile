@@ -43,7 +43,9 @@ COPY packer.sh packer.sh
 COPY terraform.sh terraform.sh
 COPY terraform_init_backend.sh terraform_init_backend.sh
 
-RUN wget https://s3.amazonaws.com/dev.deepcortex.ai/deployment_downloads/front-end.tar.gz -P ansible/roles/captain/files/dcos_services/
+ENV SALSA_VERSION=falcon
+
+RUN wget https://s3.amazonaws.com/dev.deepcortex.ai/deployment_downloads/${SALSA_VERSION}/front-end.tar.gz -P ansible/roles/captain/files/dcos_services/
 RUN wget https://s3.amazonaws.com/dev.deepcortex.ai/deployment_downloads/MSTAR_Data.tar.gz -P ansible/roles/captain/files/dcos_services/
 
 ENTRYPOINT ["/bin/bash", "/opt/deploy/build.sh"]

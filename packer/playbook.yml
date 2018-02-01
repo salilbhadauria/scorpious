@@ -59,7 +59,7 @@
 - hosts: bootstrap
   become: yes
   vars:
-    dcos_download: https://downloads.mesosphere.com/dcos-enterprise/stable/dcos_generate_config.ee.sh
+    dcos_download: "{{dcos_download_url}}"
     security: disabled
     registry: true
     docker_registry_auth_token: "ZGVlcGNvcnRleHJlYWQ6bnkyUDJwUlVMWHcyY1Vydg=="
