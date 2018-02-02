@@ -137,7 +137,7 @@ redshift_skip_final_snapshot = true
 
 # Application Docker Image Versions
 aries_docker_image_version = "0.0.0-d7d4808443dccd85278492a35614894e6051ae23"
-baile_docker_image_version = "v1.1.0"
+baile_docker_image_version = "v1.0.0"
 baile_nginx_docker_image_version = "latest"
 cortex_docker_image_version = "0.0.0-7f2913f624a1260cf2ed15852c1857ac0e50bbbf"
 logstash_docker_image_version = "latest"
