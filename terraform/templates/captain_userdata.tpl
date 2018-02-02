@@ -27,7 +27,7 @@ environment:
   orion_http_search_user_password: ${orion_http_search_user_password}
   aries_docker_image_version: ${aries_docker_image_version}
   baile_docker_image_version: ${baile_docker_image_version}
-  baile_nginx_docker_image_version: ${baile_nginx_docker_image_version}
+  baile_haproxy_docker_image_version: ${baile_haproxy_docker_image_version}
   cortex_docker_image_version: ${cortex_docker_image_version}
   logstash_docker_image_version: ${logstash_docker_image_version}
   orion_docker_image_version: ${orion_docker_image_version}

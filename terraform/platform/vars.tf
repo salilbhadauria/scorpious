@@ -51,7 +51,7 @@ variable "tag_usage" {}
 
 variable "aries_docker_image_version" {}
 variable "baile_docker_image_version" {}
-variable "baile_nginx_docker_image_version" {}
+variable "baile_haproxy_docker_image_version" {}
 variable "cortex_docker_image_version" {}
 variable "logstash_docker_image_version" {}
 variable "orion_docker_image_version" {}
