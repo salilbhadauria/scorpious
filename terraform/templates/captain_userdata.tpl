@@ -34,6 +34,7 @@ environment:
   job_master_docker_image: ${job_master_docker_image}
   rmq_docker_image_version: ${rmq_docker_image_version}
   um_docker_image_version: ${um_docker_image_version}
+  salsa_version: ${salsa_version}
   upload_mstar_data: "${upload_mstar_data}"
   download_from_s3: "${download_from_s3}"
 manage_resolv_conf: false

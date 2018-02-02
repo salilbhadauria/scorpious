@@ -22,7 +22,7 @@ data "terraform_remote_state" "iam" {
 module "devops_key" {
     source = "../../terraform/modules/key_pair"
 
-    key_name   = "${var.environment}-devops"
+    key_name   = "${var.tag_owner}-${var.environment}"
     public_key = "${var.ssh_public_key}"
 }
 
@@ -31,7 +31,7 @@ module "sg_bastion" {
 
     vpc_id = "${var.vpc_id}"
 
-    sg_name = "dc-ssh-bastion"
+    sg_name = "ssh-bastion-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_cidr = [

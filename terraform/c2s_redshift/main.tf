@@ -12,7 +12,7 @@ module "redshift-clstr-sg" {
 
     vpc_id = "${var.vpc_id}"
 
-    sg_name = "dc-redshift"
+    sg_name = "redshift-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_cidr = [

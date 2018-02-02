@@ -7,6 +7,7 @@ variable "account" {}
 variable "access_cidr" {}
 variable "deploy_cidr" {}
 variable "baile_access" {}
+variable "s3_endpoint" {}
 
 # Bootstrap vars
 
@@ -58,7 +59,6 @@ variable "job_master_docker_image" {}
 variable "rmq_docker_image_version" {}
 variable "um_docker_image_version" {}
 variable "upload_mstar_data" { default = "false"}
-variable "s3_endpoint" {}
 variable "download_from_s3" { default = "true" }
 
 locals {

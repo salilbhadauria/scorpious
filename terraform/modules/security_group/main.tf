@@ -10,12 +10,7 @@ resource "aws_security_group" "sg" {
     description = "${var.sg_description}"
 
     tags = "${merge(var.tags, map(
-            "Name", format("%s-sg-%s-%s",
-                var.sg_name,
-                var.tags["owner"],
-                var.tags["environment"]
-            )
-        )
+            "Name", var.sg_name)
     )}"
 }
 

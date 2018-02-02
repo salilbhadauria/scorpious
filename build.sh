@@ -23,8 +23,8 @@ for i in "${STACKS[@]}"; do
   sh terraform.sh apply $CONFIG $i;
 done
 
-curl https://downloads.dcos.io/binaries/cli/linux/x86-64/dcos-1.10/dcos -o dcos && 
-mv dcos /usr/local/bin && 
+curl https://downloads.dcos.io/binaries/cli/linux/x86-64/dcos-1.10/dcos -o dcos &&
+mv dcos /usr/local/bin &&
 chmod +x /usr/local/bin/dcos
 
 ENVIRONMENT=$(awk -F\" '/^environment/{print $2}'  "environments/$CONFIG.tfvars")
@@ -47,12 +47,12 @@ echo "*** This may take up to $(( MAX_WAIT_TIMES * SLEEP_SECONDS / 60 )) minutes
 
 while [ ${NEXT_WAIT_TIME} -lt ${MAX_WAIT_TIMES} ]; do
 
-  if $(curl --output /dev/null --silent --head --fail http://$DCOS_MASTER_ELB:/); then  
+  if $(curl --output /dev/null --silent --head --fail http://$DCOS_MASTER_ELB:/); then
     if [ $MASTER_CONNECTED == false ]; then
-      echo "Connecting to the DC/OS cluster..." 
+      echo "Connecting to the DC/OS cluster..."
       dcos cluster setup http://${DCOS_MASTER_ELB} --username=${DCOS_USERNAME} --password-env=DCOS_PASSWORD --no-check
-      echo "Connected to cluster." 
-      MASTER_CONNECTED=true   
+      echo "Connected to cluster."
+      MASTER_CONNECTED=true
     fi
     NODES=$(dcos node | grep agent | wc -l)
     if [ $NODES -lt $DCOS_NODES ]; then
@@ -63,8 +63,8 @@ while [ ${NEXT_WAIT_TIME} -lt ${MAX_WAIT_TIMES} ]; do
       SERVICES_DEPLOYING=$(dcos marathon app list | grep scale | wc -l)
       SERVICES_RUNNING=$(dcos marathon app list | grep False | wc -l)
       if [ $SERVICES_DEPLOYING -gt 0 ] || [ $SERVICES_RUNNING -lt 12 ]; then
-        echo "There are currently $SERVICES_RUNNING services running and $SERVICES_DEPLOYING services still deploying..."   
-      else 
+        echo "There are currently $SERVICES_RUNNING services running and $SERVICES_DEPLOYING services still deploying..."
+      else
         echo "All services deployed."
         if $(curl --output /dev/null --silent --head --fail http://$BAILE_ELB:/); then
           sleep 30
@@ -72,16 +72,15 @@ while [ ${NEXT_WAIT_TIME} -lt ${MAX_WAIT_TIMES} ]; do
           exit 0
         else
           echo "Waiting for DeepCortex to initialize..."
-        fi      
+        fi
       fi
-    fi 
+    fi
   else
     echo "Waiting to connnect to Master node."
-  fi    
+  fi
 
   (( NEXT_WAIT_TIME++ )) && sleep ${SLEEP_SECONDS}
 
 done
 
 echo "Failed due to timeout"
-abort
