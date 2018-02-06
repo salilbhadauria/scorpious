@@ -22,7 +22,6 @@
 
         "master_xvde_size":  "{{ env `MASTER_XVDE_SIZE`}}",
         "master_xvdf_size":  "{{ env `MASTER_XVDF_SIZE`}}",
-        "master_xvdg_size":  "{{ env `MASTER_XVDG_SIZE`}}",
         "master_xvdh_size":  "{{ env `MASTER_XVDH_SIZE`}}",
 
         "slave_xvde_size":   "{{ env `SLAVE_XVDE_SIZE`}}",
@@ -32,7 +31,6 @@
 
         "public_slave_xvde_size":   "{{ env `PUBLIC_SLAVE_XVDE_SIZE`}}",
         "public_slave_xvdf_size":   "{{ env `PUBLIC_SLAVE_XVDF_SIZE`}}",
-        "public_slave_xvdg_size":   "{{ env `PUBLIC_SLAVE_XVDG_SIZE`}}",
         "public_slave_xvdh_size":   "{{ env `PUBLIC_SLAVE_XVDH_SIZE`}}"
     },
     "builders": [
