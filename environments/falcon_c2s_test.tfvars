@@ -94,7 +94,6 @@ cluster_name                    = "deepcortex"
 master_asg_desired_capacity     = "1"
 master_asg_min_size             = "1"
 master_asg_max_size             = "1"
-master_elb_dns_name             = "master"
 
 # mesos, docker, log
 master_xvde_size                = "50"
@@ -110,6 +109,15 @@ slave_xvde_size                 = "150"
 slave_xvdf_size                 = "100"
 slave_xvdg_size                 = "100"
 slave_xvdh_size                 = "50"
+
+gpu_slave_asg_desired_capacity  = "1"
+gpu_slave_asg_min_size          = "1"
+gpu_slave_asg_max_size          = "1"
+
+# mesos, docker, log
+gpu_slave_xvde_size             = "50"
+gpu_slave_xvdf_size             = "50"
+gpu_slave_xvdh_size             = "50"
 
 public_slave_asg_desired_capacity  = "1"
 public_slave_asg_min_size          = "1"

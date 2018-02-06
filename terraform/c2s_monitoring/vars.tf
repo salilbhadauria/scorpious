@@ -23,6 +23,10 @@ variable "master_asg_desired_capacity" {}
 
 variable "slave_asg_desired_capacity" {}
 
+# GPU slave vars
+
+variable "gpu_slave_asg_desired_capacity" {}
+
 # Public slave vars
 
 variable "public_slave_asg_desired_capacity" {}

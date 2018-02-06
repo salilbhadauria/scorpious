@@ -38,27 +38,43 @@ cluster_name                    = "deepcortex"
 master_asg_desired_capacity     = "1"
 master_asg_min_size             = "1"
 master_asg_max_size             = "1"
-master_elb_dns_name             = "master"
-master_xvde_size                = "20"
-master_xvdf_size                = "100"
-master_xvdg_size                = "100"
-master_xvdh_size                = "20"
 
-slave_asg_desired_capacity     = "3"
-slave_asg_min_size             = "1"
-slave_asg_max_size             = "3"
-slave_xvde_size                = "20"
-slave_xvdf_size                = "100"
-slave_xvdg_size                = "100"
-slave_xvdh_size                = "20"
+# mesos, docker, log
+master_xvde_size                = "50"
+master_xvdf_size                = "20"
+master_xvdh_size                = "50"
+
+slave_asg_desired_capacity      = "3"
+slave_asg_min_size              = "1"
+slave_asg_max_size              = "3"
+
+# mesos, docker, volume0, log
+slave_xvde_size                 = "150"
+slave_xvdf_size                 = "100"
+slave_xvdg_size                 = "100"
+slave_xvdh_size                 = "50"
+
+gpu_slave_asg_desired_capacity  = "1"
+gpu_slave_asg_min_size          = "1"
+gpu_slave_asg_max_size          = "1"
+
+# mesos, docker, log
+gpu_slave_xvde_size             = "50"
+gpu_slave_xvdf_size             = "50"
+gpu_slave_xvdh_size             = "50"
 
 public_slave_asg_desired_capacity  = "1"
 public_slave_asg_min_size          = "1"
 public_slave_asg_max_size          = "1"
 
-captain_asg_desired_capacity  = "1"
-captain_asg_min_size          = "1"
-captain_asg_max_size          = "1"
+# mesos, docker, log
+public_slave_xvde_size             = "50"
+public_slave_xvdf_size             = "50"
+public_slave_xvdh_size             = "50"
+
+captain_asg_desired_capacity       = "1"
+captain_asg_min_size               = "1"
+captain_asg_max_size               = "1"
 
 # Redshift
 redshift_family = "redshift-1.0"
