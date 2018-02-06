@@ -1,6 +1,6 @@
-# Packer
-packer_base_ami                 = "ami-267fdc30"
-packer_ssh_user                 = "ec2-user"
+# Packer (base ami changed for GPU)
+packer_base_ami                 = "ami-a34853d8"
+packer_ssh_user                 = "centos"
 
 # Ansible
 dcos_apps_bucket                = "deepcortex-dcos-apps"
@@ -9,7 +9,7 @@ dcos_apps_bucket                = "deepcortex-dcos-apps"
 # VPC
 tf_bucket                       = "deepcortex-terraform-state"
 aws_region                      = "us-east-1"
-environment                     = "integration"
+environment                     = "dev"
 account                         = "068078214683"
 vpc_cidr                        = "10.0.0.0/16"
 vpc_id                          = "vpc-a7d785c1"
@@ -21,8 +21,8 @@ private_subnets_egress          = [ "10.0.21.0/24", "10.0.22.0/24", "10.0.23.0/2
 bastion_ami_id                  = "ami-c5062ba0"
 nat_ami_id                      = "ami-15e9c770"
 ssh_public_key                  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCztxYxgAYrXzSrfu2SDM58Ahca801YVhQ14HCDCRRzeziz6R/zVZATnfrCCUU5N3Fas7foZuzjXfwalD1xRbCABDaQayTSOHEJqsqnjJ2DZadRZJRKsHoEDoXf92963KHPz8BnNmPMTqhc+u115Q4HW3LyHlcIphuHtNcnKnbb4GVfSpOXYUw8b/Z31ujgKMUcyJpITQDDUrjti5+sWdmHOkcaSHS0IZMrLhaw43uCwwXlNxUacKORweTSUhna6HtehnTbgIWnVVJ9KekmV0TffNLbyXrYPluvqVUjs+WkOywvVPyMWxzXmqUU3caD6bXuhyjU8VuKGqXfhu/otvyr"
-tag_owner                       = "n911"
-tag_usage                       = "test"
+tag_owner                       = "deepcortex"
+tag_usage                       = "dev"
 access_cidr                     = "0.0.0.0/0"
 deploy_cidr                     = "0.0.0.0/0"
 baile_access                    = "public"
@@ -53,6 +53,14 @@ slave_xvde_size                = "250"
 slave_xvdf_size                = "100"
 slave_xvdg_size                = "100"
 slave_xvdh_size                = "60"
+
+gpu_slave_asg_desired_capacity     = "3"
+gpu_slave_asg_min_size             = "1"
+gpu_slave_asg_max_size             = "3"
+gpu_slave_xvde_size                = "100"
+gpu_slave_xvdf_size                = "100"
+gpu_slave_xvdg_size                = "50"
+gpu_slave_xvdh_size                = "60"
 
 public_slave_asg_desired_capacity  = "1"
 public_slave_asg_min_size          = "1"
