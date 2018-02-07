@@ -58,6 +58,7 @@ upload_mstar_data               = "true"
 tf_bucket                       = "falcon-deepcortex-c2s-test-terraform"
 dcos_apps_bucket                = "falcon-deepcortex-c2s-test-dcos-apps"
 dcos_stack_bucket               = "falcon-deepcortex-c2s-test-dcos-backend"
+online_prediction_bucket        = "falcon-deepcortex-c2s-test-online-prediction"
 
 # the tags that will be applied to the infrastructure (environment, owner, usage)
 # environment and owner can only be a combined 17 characters
@@ -143,6 +144,8 @@ cortex_docker_image_version = "0.0.0-7f2913f624a1260cf2ed15852c1857ac0e50bbbf"
 logstash_docker_image_version = "latest"
 orion_docker_image_version = "0.0.0-77ec7b0ac9a37becf35606e404e09c30324da6cb"
 job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-194-ga95f9d9"
+pegasus_docker_image_version = ""
 rmq_docker_image_version = "latest"
+taurus_docker_image_version = ""
 um_docker_image_version = "v1.0"
 salsa_version = "falcon"

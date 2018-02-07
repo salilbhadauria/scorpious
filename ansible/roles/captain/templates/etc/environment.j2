@@ -20,12 +20,19 @@ ELASTIC_SSL={{elastic_ssl}}
 ARIES_SRV_INSTANCES={{aries_srv_instances}}
 ARIES_SRV_CPUS={{aries_srv_cpus}}
 ARIES_SRV_MEM={{aries_srv_mem}}
+ARIES_HOST={{aries_host}}
+ARIES_PORT={{aries_port}}
+ARIES_REST_URL={{aries_rest_url}}
 
 # Baile
 BAILE_SRV_INSTANCES={{baile_srv_instances}}
 BAILE_SRV_CPUS={{baile_srv_cpus}}
 BAILE_SRV_MEM={{baile_srv_mem}}
 UM_SERVICE_URL={{um_service_url}}
+BAILE_REST_URL={{baile_rest_url}}
+BAILE_USERNAME={{baile_username}}
+BAILE_ARIES_REST_VERSION={{baile_aries_rest_version}}
+BAILE_CORTEX_REST_VERSION={{baile_cortex_rest_version}}
 
 # Baile Nginx
 BAILE_NGINX_SRV_INSTANCES={{baile_nginx_srv_instances}}
@@ -34,11 +41,13 @@ BAILE_NGINX_SRV_MEM={{baile_nginx_srv_mem}}
 
 # Cortex
 CORTEX_HTTP_SEARCH_USER_NAME="{{cortex_http_search_user_name}}"
-ARIES_REST_URL="{{aries_rest_url}}"
-ARIES_REST_VERSION="{{aries_rest_version}}"
+CORTEX_ARIES_REST_VERSION="{{cortex_aries_rest_version}}"
 CORTEX_SRV_INSTANCES={{cortex_srv_instances}}
 CORTEX_SRV_CPUS={{cortex_srv_cpus}}
 CORTEX_SRV_MEM={{cortex_srv_mem}}
+CORTEX_HOST={{cortex_host}}
+CORTEX_PORT={{cortex_port}}
+CORTEX_REST_URL={{cortex_rest_url}}
 
 # Logstash
 LOGSTASH_SRV_INSTANCES={{logstash_srv_instances}}
@@ -57,10 +66,23 @@ ORION_SRV_INSTANCES={{orion_srv_instances}}
 ORION_SRV_CPUS={{orion_srv_cpus}}
 ORION_SRV_MEM={{orion_srv_mem}}
 
+# Pegasus
+PEGASUS_AUTH_USER_NAME={{pegasus_auth_user_name}}
+PEGASUS_SRV_INSTANCES={{pegasus_srv_instances}}
+PEGASUS_SRV_CPUS={{pegasus_srv_cpus}}
+PEGASUS_SRV_MEM={{pegasus_srv_mem}}
+
 # RabbitMQ
 RMQ_SRV_INSTANCES={{rmq_srv_instances}}
 RMQ_SRV_CPUS={{rmq_srv_cpus}}
 RMQ_SRV_MEM={{rmq_srv_mem}}
+
+# Taurus
+TAURUS_CORTEX_REST_VERION={{taurus_cortex_rest_version}}
+TAURUS_BAILE_REST_VERION={{taurus_baile_rest_version}}
+TAURUS_SRV_INSTANCES={{taurus_srv_instances}}
+TAURUS_SRV_CPUS={{taurus_srv_cpus}}
+TAURUS_SRV_MEM={{taurus_srv_mem}}
 
 # UM Service
 UM_MONGODB_URI="{{um_mongodb_uri}}"

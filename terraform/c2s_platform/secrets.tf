@@ -15,12 +15,22 @@ resource "random_string" "aries_http_command_user_password" {
   special = false
 }
 
+resource "random_string" "baile_password" {
+  length = 17
+  special = false
+}
+
 resource "random_string" "cortex_http_search_user_password" {
   length = 17
   special = false
 }
 
 resource "random_string" "orion_http_search_user_password" {
+  length = 17
+  special = false
+}
+
+resource "random_string" "pegasus_password" {
   length = 17
   special = false
 }

@@ -33,7 +33,9 @@ resource "aws_iam_user_policy" "app_s3" {
       "Effect": "Allow",
       "Resource": [
         "arn:${var.arn}:s3:::${var.dcos_apps_bucket}",
-        "arn:${var.arn}:s3:::${var.dcos_apps_bucket}/*"
+        "arn:${var.arn}:s3:::${var.dcos_apps_bucket}/*",
+        "arn:${var.arn}:s3:::${var.online_prediction_bucket}",
+        "arn:${var.arn}:s3:::${var.online_prediction_bucket}/*"
       ]
     }
   ]

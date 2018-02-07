@@ -7,6 +7,7 @@ service mongod stop
 
 # Add S3 bucket encryption
 aws s3api put-bucket-encryption --bucket "${AWS_S3_BUCKET}" --server-side-encryption-configuration '{"Rules": [{"ApplyServerSideEncryptionByDefault": {"SSEAlgorithm": "AES256"}}]}'
+aws s3api put-bucket-encryption --bucket "${ONLINE_PREDICTION_S3_BUCKET}" --server-side-encryption-configuration '{"Rules": [{"ApplyServerSideEncryptionByDefault": {"SSEAlgorithm": "AES256"}}]}'
 
 # Upload front end files to S3
 aws s3 ls "s3://${AWS_S3_BUCKET}/static-content/dev/"
@@ -72,4 +73,6 @@ bash deploy_service.sh baile-nginx/marathon.json baile-nginx/env_vars.sh
 bash deploy_service.sh cortex/marathon.json cortex/env_vars.sh
 bash deploy_service.sh logstash/marathon.json logstash/env_vars.sh
 bash deploy_service.sh orion/marathon.json orion/env_vars.sh
+bash deploy_service.sh pegasus/marathon.json pegasus/env_vars.sh
+bash deploy_service.sh taurus/marathon.json taurus/env_vars.sh
 bash deploy_service.sh um-service/marathon.json um-service/env_vars.sh

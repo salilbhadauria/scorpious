@@ -56,7 +56,9 @@ variable "cortex_docker_image_version" {}
 variable "logstash_docker_image_version" {}
 variable "orion_docker_image_version" {}
 variable "job_master_docker_image" {}
+variable "pegaus_docker_image_version" {}
 variable "rmq_docker_image_version" {}
+variable "taurus_docker_image_version" {}
 variable "um_docker_image_version" {}
 variable "upload_mstar_data" { default = "false"}
 variable "download_from_s3" { default = "true" }

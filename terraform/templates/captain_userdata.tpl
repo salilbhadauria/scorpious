@@ -5,13 +5,10 @@ environment:
   dcos_master_url: ${dcos_master_url}
   aws_s3_bucket: ${dcos_apps_bucket}
   aws_s3_bucket_domain: ${dcos_apps_bucket_domain}
+  online_prediction_s3_bucket: ${online_prediction_bucket}
   app_aws_access_key_id: ${apps_aws_access_key}
   app_aws_secret_access_key: ${apps_aws_secret_key}
   aws_default_region: ${aws_region}
-  job_master_s3_region: ${aws_region}
-  job_master_s3_bucket: ${dcos_apps_bucket}
-  job_master_s3_access_key: ${apps_aws_access_key}
-  job_master_s3_secret_key: ${apps_aws_secret_key}
   dcos_master: ${dcos_master_url}
   baile_lb_url: ${baile_lb_url}
   redshift_host: ${redshift_host}
@@ -23,8 +20,10 @@ environment:
   rabbit_password: ${rabbit_password}
   aries_http_search_user_password: ${aries_http_search_user_password}
   aries_http_command_user_password: ${aries_http_command_user_password}
+  baile_password: ${baile_password}
   cortex_http_search_user_password: ${cortex_http_search_user_password}
   orion_http_search_user_password: ${orion_http_search_user_password}
+  pegasus_password: ${pegasus_password}
   aries_docker_image_version: ${aries_docker_image_version}
   baile_docker_image_version: ${baile_docker_image_version}
   baile_nginx_docker_image_version: ${baile_nginx_docker_image_version}
@@ -32,7 +31,9 @@ environment:
   logstash_docker_image_version: ${logstash_docker_image_version}
   orion_docker_image_version: ${orion_docker_image_version}
   job_master_docker_image: ${job_master_docker_image}
+  pegasus_docker_image_version: ${pegasus_docker_image_version}
   rmq_docker_image_version: ${rmq_docker_image_version}
+  taurus_docker_image_version: ${taurus_docker_image_version}
   um_docker_image_version: ${um_docker_image_version}
   salsa_version: ${salsa_version}
   upload_mstar_data: "${upload_mstar_data}"

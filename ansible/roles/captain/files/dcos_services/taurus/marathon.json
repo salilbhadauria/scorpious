@@ -1,0 +1,59 @@
+{
+  "id": "taurus",
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "deepcortex/taurus:${DOCKER_IMAGE_VERSION}",
+      "network": "BRIDGE",
+      "portMappings": [
+        {
+          "hostPort": 0,
+          "containerPort": 9000,
+          "labels": {
+            "VIP_0": "/taurus:9000"
+          }
+        },
+        {
+          "hostPort": 0,
+          "containerPort": 2552
+        }
+      ],
+      "parameters": [
+        { "key": "env", "value": "RABBIT_HOSTS=${RABBIT_HOSTS}" },
+        { "key": "env", "value": "RABBIT_USERNAME=${RABBIT_USERNAME}" },
+        { "key": "env", "value": "RABBIT_PASSWORD=${RABBIT_PASSWORD}" },
+        { "key": "env", "value": "CORTEX_REST_URL=${CORTEX_REST_URL}" },
+        { "key": "env", "value": "CORTEX_REST_VERSION=${CORTEX_REST_VERSION}" },
+        { "key": "env", "value": "CORTEX_USERNAME=${CORTEX_USERNAME}" },
+        { "key": "env", "value": "CORTEX_PASSWORD=${CORTEX_PASSWORD}" },
+        { "key": "env", "value": "BAILE_REST_URL=${BAILE_REST_URL}" },
+        { "key": "env", "value": "BAILE_REST_VERSION=${BAILE_REST_VERSION}" },
+        { "key": "env", "value": "BAILE_USERNAME=${BAILE_USERNAME}" },
+        { "key": "env", "value": "BAILE_PASSWORD=${BAILE_PASSWORD}" },
+        { "key": "env", "value": "S3_ACCESS_KEY=${S3_ACCESS_KEY}" },
+        { "key": "env", "value": "S3_SECRET_KEY=${S3_SECRET_KEY}" },
+        { "key": "env", "value": "S3_REGION=${S3_REGION}" },
+        { "key": "env", "value": "S3_BUCKET=${S3_BUCKET}" }
+      ],
+      "forcePullImage": true
+    }
+  },
+  "instances": ${SRV_INSTANCES},
+  "cpus": ${SRV_CPUS},
+  "mem": ${SRV_MEM},
+  "constraints": [
+      [
+        "hostname",
+        "UNIQUE"
+      ]
+    ],
+  "healthChecks": [{
+    "protocol": "HTTP",
+    "path": "/v1/health",
+    "portIndex": 0,
+    "timeoutSeconds": 10,
+    "gracePeriodSeconds": 10,
+    "intervalSeconds": 2,
+    "maxConsecutiveFailures": 10
+  }]
+}

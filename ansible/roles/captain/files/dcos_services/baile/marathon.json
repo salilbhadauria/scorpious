@@ -23,10 +23,16 @@
         { "key": "env", "value": "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" },
         { "key": "env", "value": "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" },
         { "key": "env", "value": "UM_SERVICE_URL=${UM_SERVICE_URL}" },
+        { "key": "env", "value": "CORTEX_HOST=${CORTEX_HOST}" },
+        { "key": "env", "value": "CORTEX_PORT=${CORTEX_PORT}" },
+        { "key": "env", "value": "CORTEX_REST_VERSION=${CORTEX_REST_VERSION}" },
         { "key": "env", "value": "CORTEX_SEARCH_USER=${CORTEX_SEARCH_USER}" },
         { "key": "env", "value": "CORTEX_SEARCH_PASSWORD=${CORTEX_SEARCH_PASSWORD}" },
         { "key": "env", "value": "ARIES_SEARCH_USER=${ARIES_SEARCH_USER}" },
-        { "key": "env", "value": "ARIES_SEARCH_PASSWORD=${ARIES_SEARCH_PASSWORD}" }
+        { "key": "env", "value": "ARIES_SEARCH_PASSWORD=${ARIES_SEARCH_PASSWORD}" },
+        { "key": "env", "value": "ARIES_HOST=${ARIES_HOST}" },
+        { "key": "env", "value": "ARIES_PORT=${ARIES_PORT}" },
+        { "key": "env", "value": "ARIES_REST_VERSION=${ARIES_REST_VERSION}" }
       ],
       "forcePullImage": true
     }

@@ -1,0 +1,47 @@
+{
+  "id": "pegasus-api-rest",
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "deepcortex/pegasus:${DOCKER_IMAGE_VERSION}",
+      "network": "BRIDGE",
+      "portMappings": [
+        { "hostPort": 0,
+          "containerPort": 9000,
+          "labels": {
+            "VIP_0": "/pegasus-api-rest:9000"
+          }
+        }
+      ],
+      "parameters": [
+        { "key": "env", "value": "HTTP_AUTH_USER_NAME=${HTTP_AUTH_USER_NAME}" },
+        { "key": "env", "value": "HTTP_AUTH_USER_PASSWORD=${HTTP_AUTH_USER_PASSWORD}" },
+        { "key": "env", "value": "AWS_S3_REGION=${AWS_S3_REGION}" },
+        { "key": "env", "value": "AWS_S3_ACCCESS_KEY_ID=${AWS_S3_ACCCESS_KEY_ID}" },
+        { "key": "env", "value": "AWS_S3_SECRET_ACCESS_KEY=${AWS_S3_SECRET_ACCESS_KEY}" },
+        { "key": "env", "value": "AWS_REDSHIFT_URL=${AWS_REDSHIFT_URL}" },
+        { "key": "env", "value": "AWS_REDSHIFT_USER=${AWS_REDSHIFT_USER}" },
+        { "key": "env", "value": "AWS_REDSHIFT_PASSWORD=${AWS_REDSHIFT_PASSWORD}" }
+      ],
+      "forcePullImage": true
+    }
+  },
+  "instances": ${SRV_INSTANCES},
+  "cpus": ${SRV_CPUS},
+  "mem": ${SRV_MEM},
+  "constraints": [
+      [
+        "hostname",
+        "UNIQUE"
+      ]
+    ],
+  "healthChecks": [{
+    "protocol": "HTTP",
+    "path": "/v1/health",
+    "portIndex": 0,
+    "timeoutSeconds": 10,
+    "gracePeriodSeconds": 10,
+    "intervalSeconds": 2,
+    "maxConsecutiveFailures": 10
+  }]
+}

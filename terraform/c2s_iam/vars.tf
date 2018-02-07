@@ -3,5 +3,6 @@
 variable "aws_region" {}
 variable "environment" {}
 variable "dcos_apps_bucket" {}
+variable "online_prediction_bucket" {}
 variable "tag_owner" {}
 variable "arn" {}

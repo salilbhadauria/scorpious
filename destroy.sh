@@ -11,7 +11,7 @@ export TF_VAR_dcos_password="${DCOS_PASSWORD}"
 
 PREFIX=$(awk -F\" '/^prefix/{print $2}'  "environments/$CONFIG.tfvars")
 
-STACKS=("${PREFIX}monitoring" "${PREFIX}platform" "${PREFIX}redshift" "${PREFIX}vpc" "iam")
+STACKS=("${PREFIX}monitoring" "${PREFIX}online_prediction" "${PREFIX}platform" "${PREFIX}redshift" "${PREFIX}vpc" "iam")
 for i in "${STACKS[@]}"; do
   sh terraform.sh init $CONFIG $i;
   sh terraform.sh plan $CONFIG $i;
