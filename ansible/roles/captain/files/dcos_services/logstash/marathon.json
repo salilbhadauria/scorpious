@@ -16,6 +16,17 @@
   "instances": ${SRV_INSTANCES},
   "cpus": ${SRV_CPUS},
   "mem": ${SRV_MEM},
+  "constraints": [
+      [
+        "hostname",
+        "UNIQUE"
+      ],
+      [
+        "cluster",
+        "UNLIKE",
+        "gpu"
+      ]
+    ],
   "portDefinitions": [
     {
       "port": 5044,
