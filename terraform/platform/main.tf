@@ -840,7 +840,7 @@ data "template_file" "captain_userdata" {
     redshift_password = "${data.terraform_remote_state.redshift.redshift_master_password}"
     redshift_host = "${data.terraform_remote_state.redshift.redshift_url}"
     baile_lb_url = "${module.baile_elb.elb_dns_name}"
-    dcos_nodes = "${var.slave_asg_max_size + var.public_slave_asg_max_size}"
+    dcos_nodes = "${var.slave_asg_max_size + var.public_slave_asg_max_size + var.gpu_slave_asg_max_size}"
     master_instance_name = "${var.tag_owner}-${var.environment}-master"
     apps_aws_access_key = "${data.terraform_remote_state.iam.app_access_key}"
     apps_aws_secret_key = "${data.terraform_remote_state.iam.app_secret_key}"
