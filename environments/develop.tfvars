@@ -1,5 +1,5 @@
 # Packer (base ami changed for GPU)
-packer_base_ami                 = "ami-a34853d8"
+packer_base_ami                 = "ami-22ef9734"
 packer_ssh_user                 = "centos"
 
 # Ansible
