@@ -265,7 +265,7 @@
         "ssh_pty": "true",
         "tags": {
           "Name": "gpu-slave-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
-          "Role": "slave",
+          "Role": "gpu-slave",
           "BuildDate": "{{isotime}}",
           "BuildAuthor": "{{user `build_author`}}",
           "BuildUUID": "{{user `build_uuid`}}",
