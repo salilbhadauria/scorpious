@@ -23,6 +23,7 @@ aries_srv_mem: 1024
 baile_srv_instances: 1
 baile_srv_cpus: 1
 baile_srv_mem: 4096
+baile_address: "baile.marathon.l4lb.thisdcos.directory:9000"
 um_service_url: "http://um-service.marathon.l4lb.thisdcos.directory"
 
 # Baile Haproxy
