@@ -621,6 +621,47 @@ module "slave_asg" {
     instance_role_tag = "slave"
 }
 
+#GPU Slave
+
+data "template_file" "gpu_slave_userdata" {
+  template = "${file("../../terraform/templates/gpu_slave_userdata.tpl")}"
+
+  vars {
+    environment = "${var.environment}"
+    aws_region = "${var.aws_region}"
+    bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
+  }
+
+  depends_on = [
+    "module.bootstrap_elb"
+  ]
+}
+
+module "gpu_slave_asg" {
+    source = "../../terraform/modules/autoscaling_group"
+
+    ami_name                = "gpu-slave-${var.tag_owner}-${var.environment}*"
+    lc_name_prefix          = "${var.environment}-gpu-slave-"
+    lc_instance_type        = "p2.xlarge"
+    lc_ebs_optimized        = "false"
+    lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
+    lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}" ]
+    lc_user_data            = "${data.template_file.gpu_slave_userdata.rendered}"
+    lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
+
+    asg_name                = "gpu-slave-asg-${var.tag_owner}-${var.environment}"
+    asg_subnet_ids          = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
+    asg_desired_capacity    = "${var.gpu_slave_asg_desired_capacity}"
+    asg_min_size            = "${var.gpu_slave_asg_min_size}"
+    asg_max_size            = "${var.gpu_slave_asg_max_size}"
+    asg_load_balancers      = [ "${module.baile_elb.elb_id}" ]
+
+    tags_asg = "${local.tags_asg}"
+    asg_name_tag = "gpu-slave-asg-${var.tag_owner}-${var.environment}"
+    instance_name_tag = "${var.tag_owner}-${var.environment}-gpu-slave"
+    instance_role_tag = "gpu-slave"
+}
+
 #########################################################
 # Baile ELB
 module "baile_elb_sg" {
@@ -815,7 +856,7 @@ data "template_file" "captain_userdata" {
     redshift_password = "${data.terraform_remote_state.redshift.redshift_master_password}"
     redshift_host = "${data.terraform_remote_state.redshift.redshift_url}"
     baile_lb_url = "${module.baile_elb.elb_dns_name}"
-    dcos_nodes = "${var.slave_asg_max_size + var.public_slave_asg_max_size}"
+    dcos_nodes = "${var.slave_asg_max_size + var.public_slave_asg_max_size + var.gpu_slave_asg_max_size}"
     master_instance_name = "${var.tag_owner}-${var.environment}-master"
     apps_aws_access_key = "${data.terraform_remote_state.iam.app_access_key}"
     apps_aws_secret_key = "${data.terraform_remote_state.iam.app_secret_key}"

@@ -31,7 +31,8 @@ ENVIRONMENT=$(awk -F\" '/^environment/{print $2}'  "environments/$CONFIG.tfvars"
 OWNER=$(awk -F\" '/^tag_owner/{print $2}'  "environments/$CONFIG.tfvars")
 NUM_SLAVES=$(awk -F\" '/^slave_asg_max_size/{print $2}'  "environments/$CONFIG.tfvars")
 NUM_PUB_SLAVES=$(awk -F\" '/^public_slave_asg_max_size/{print $2}'  "environments/$CONFIG.tfvars")
-DCOS_NODES=$((NUM_SLAVES + NUM_PUB_SLAVES))
+NUM_GPU_SLAVES=$(awk -F\" '/^gpu_slave_asg_max_size/{print $2}'  "environments/$CONFIG.tfvars")
+DCOS_NODES=$((NUM_SLAVES + NUM_PUB_SLAVES + NUM_GPU_SLAVES))
 DCOS_SERVICES=12
 
 DCOS_MASTER_ELB=$(aws elb describe-load-balancers --load-balancer-names=$OWNER-$ENVIRONMENT-master-elb --output=text --query "LoadBalancerDescriptions[*].DNSName")

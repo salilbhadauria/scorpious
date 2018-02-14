@@ -26,13 +26,18 @@ variable "dcos_password" {}
 variable "master_asg_desired_capacity" {}
 variable "master_asg_min_size" {}
 variable "master_asg_max_size" {}
-variable "master_elb_dns_name" {}
 
 # Slave vars
 
 variable "slave_asg_desired_capacity" {}
 variable "slave_asg_min_size" {}
 variable "slave_asg_max_size" {}
+
+# GPU slave vars
+
+variable "gpu_slave_asg_desired_capacity" {}
+variable "gpu_slave_asg_min_size" {}
+variable "gpu_slave_asg_max_size" {}
 
 # Public slave vars
 

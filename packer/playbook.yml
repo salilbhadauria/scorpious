@@ -102,3 +102,9 @@
     - mongodb
     - nodejs
     - java
+
+- hosts: gpu-slave
+  become: yes
+  roles:
+    - services
+    - gpu
