@@ -137,12 +137,12 @@ redshift_skip_final_snapshot = true
 
 # Application Docker Image Versions
 aries_docker_image_version = "0.0.0-d7d4808443dccd85278492a35614894e6051ae23"
-baile_docker_image_version = "v1.0.0"
-baile_nginx_docker_image_version = "latest"
+baile_docker_image_version = "v1.0.2"
+baile_haproxy_docker_image_version = "latest"
 cortex_docker_image_version = "0.0.0-7f2913f624a1260cf2ed15852c1857ac0e50bbbf"
 logstash_docker_image_version = "latest"
 orion_docker_image_version = "0.0.0-77ec7b0ac9a37becf35606e404e09c30324da6cb"
-job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-194-ga95f9d9"
+job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-188-gba9f359"
 rmq_docker_image_version = "latest"
 um_docker_image_version = "v1.0"
 salsa_version = "falcon"

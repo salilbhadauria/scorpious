@@ -68,7 +68,7 @@ bash mongodb/mongo_init.sh
 # Deploy custom services and frameworkds
 bash deploy_service.sh aries/marathon.json aries/env_vars.sh
 bash deploy_service.sh baile/marathon.json baile/env_vars.sh
-bash deploy_service.sh baile-nginx/marathon.json baile-nginx/env_vars.sh
+bash deploy_service.sh baile-haproxy/marathon.json baile-haproxy/env_vars.sh
 bash deploy_service.sh cortex/marathon.json cortex/env_vars.sh
 bash deploy_service.sh logstash/marathon.json logstash/env_vars.sh
 bash deploy_service.sh orion/marathon.json orion/env_vars.sh
