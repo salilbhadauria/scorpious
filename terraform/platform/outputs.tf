@@ -36,6 +36,10 @@ output "public_slave_asg_name" {
   value = "${module.public_slave_asg.asg_name}"
 }
 
+output "gpu_slave_asg_name" {
+  value = "${module.gpu_slave_asg.asg_name}"
+}
+
 output "captain_asg_name" {
   value = "${module.captain_asg.asg_name}"
 }

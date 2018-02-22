@@ -875,7 +875,7 @@ data "template_file" "captain_userdata" {
     rmq_docker_image_version = "${var.rmq_docker_image_version}"
     um_docker_image_version = "${var.um_docker_image_version}"
     salsa_version = "${var.salsa_version}"
-    upload_mstar_data = "${var.upload_mstar_data}"
+    upload_datasets = "${var.upload_datasets}"
     download_from_s3 = "${var.download_from_s3}"
   }
 

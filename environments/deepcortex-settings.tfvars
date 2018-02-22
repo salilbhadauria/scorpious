@@ -2,7 +2,7 @@
 # Remove the <> symbols before deploying.
 
 # the account ID of the AWS account you will deploy to
-account                         = "475276989310"
+account                         = "<AWS_ACCOUNT_ID>"
 
 # the name of the AWS region e.g. "us-east-1"
 aws_region                      = "us-gov-west-1"
@@ -28,26 +28,26 @@ packer_base_ami                 = "ami-128c0873"
 packer_ssh_user                 = "centos"
 
 # the VPC ID of the VPC you will launch DeepCortex into
-vpc_id                          = "vpc-7a51d11f"
+vpc_id                          = "<VPC_ID>"
 
 # the VPC S3 Endpoint of the VPC you will launch DeepCortex into
-vpce_id                         = "vpce-8f887fe6"
+vpce_id                         = "<VPCE_ID>"
 
 # the VPC CIDR block you will launch DeepCortex into
-vpc_cidr                        = "10.0.0.0/16"
+vpc_cidr                        = "<VPC_CIDR>"
 
 # the subnet IDs of the subnets you will launch DeepCortex into
-subnet_id_1                     = "subnet-b0380fc7"
-subnet_id_2                     = "subnet-131e1976"
+subnet_id_1                     = "<SUBNET_1>"
+subnet_id_2                     = "<SUBNET_2>"
 
 # the public ssh key for the key you would like to use to access the DC/OS machines used for DeepCortex
-ssh_public_key                  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzAIMbSVnZohF71QmHYBwZ8049zJgDlQ7/7V/C05sDBd5gUeSqdloLG22YkuooIh6uWtnUtBCZc2Sqlyqveh+ly0BV2K+euBSb58idzldn7Cz/bvJKHjjxN5qe4uiaskJxT6V187GZ3WwJ7vBNkE5NQ1NRz9oZGv7B1mjy1+eUZIMXovv5vAIvorHeOQsussPlTbxpidHb3Nxt7Nq0DyFAtEq0Bkny5bWZJ33hwHc2u4IZTZWR0GVEXdneas7nSbAhyUA/XSQNN9uJTHJjm75oC9UM7rpgpIGgnUVWTz+syCM1uImxwZATaFXYfL6XjwiJFJwkoY0H8uaT8SX/FpgR"
+ssh_public_key                  = "<SSH_PUBLIC_KEY>"
 
-# the CIDR for a VPN or machine IP that should be able to access DeepCortex
-access_cidr                     = "205.251.70.6/32"
+# the CIDR for a VPN or machine IP(s) that should be able to access DeepCortex
+access_cidr                     = "<ACCESS_CIDR>"
 
 # the CIDR for the IP of the machine that is running the deployment container
-deploy_cidr                     = "205.251.70.6/32"
+deploy_cidr                     = "<DEPLOY_CIDR>"
 
 # specify if Public MSTAR data should be uploaded to the default DeepCortex S3 bucket
 upload_datasets                 = "true"
@@ -55,18 +55,18 @@ upload_datasets                 = "true"
 ### You may change any of the below names if you choose, otherwise the defaults we be used.
 
 # the name of the S3 buckets used for storing terraform artifacts, storing DeepCortex data, and storing DC/OS data
-tf_bucket                       = "falcon-deepcortex-staging-terraform"
-dcos_apps_bucket                = "falcon-deepcortex-staging-dcos-apps"
-dcos_stack_bucket               = "falcon-deepcortex-staging-dcos-backend"
+tf_bucket                       = "falcon-deepcortex-mda-dev-terraform"
+dcos_apps_bucket                = "falcon-deepcortex-mda-dev-dcos-apps"
+dcos_stack_bucket               = "falcon-deepcortex-mda-dev-dcos-backend"
 
 # the tags that will be applied to the infrastructure (environment, owner, usage)
 # environment and owner can only be a combined 17 characters
-environment                     = "staging"
+environment                     = "dev"
 tag_owner                       = "deepcortex"
 tag_usage                       = "falcon"
 
 # the name of the redshfit cluster
-redshift_cluster_name           = "falcon-deepcortex-staging-redshift"
+redshift_cluster_name           = "falcon-deepcortex-mda-dev-redshift"
 
 
 ### DO NOT CHANGE ANYTHING BELOW THIS LINE
@@ -78,7 +78,7 @@ dcos_version                    = "1.10.2"
 baile_access                    = "private"
 
 # true or false for downloading latest files (frontend and mstar) from S3 rather than using files in the docker container
-download_from_s3                = "true"
+download_from_s3                = "false"
 
 # prefix for terraform templates
 prefix                          = "c2s_"
@@ -145,12 +145,12 @@ redshift_skip_final_snapshot = true
 
 # Application Docker Image Versions
 aries_docker_image_version = "0.0.0-d7d4808443dccd85278492a35614894e6051ae23"
-baile_docker_image_version = "v1.0.5"
+baile_docker_image_version = "v1.0.4"
 baile_haproxy_docker_image_version = "v1.0"
 cortex_docker_image_version = "0.0.0-7f2913f624a1260cf2ed15852c1857ac0e50bbbf"
 logstash_docker_image_version = "latest"
 orion_docker_image_version = "0.0.0-1ed179f8beed4f129d6fa105250c8ee3246af718"
-job_master_docker_image = "deepcortex/cortex-job-master:0.10.0-1-gfa0767e-SNAPSHOT"
+job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-237-g4b21a7d"
 rmq_docker_image_version = "latest"
 um_docker_image_version = "v1.0"
 salsa_version = "falcon"

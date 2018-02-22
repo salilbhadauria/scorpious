@@ -35,7 +35,7 @@ environment:
   rmq_docker_image_version: ${rmq_docker_image_version}
   um_docker_image_version: ${um_docker_image_version}
   salsa_version: ${salsa_version}
-  upload_mstar_data: "${upload_mstar_data}"
+  upload_datasets: "${upload_datasets}"
   download_from_s3: "${download_from_s3}"
 manage_resolv_conf: false
 preserve_hostname: true

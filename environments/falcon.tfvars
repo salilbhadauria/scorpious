@@ -27,7 +27,7 @@ tag_usage                       = "falcon"
 redshift_cluster_name           = "falcon-deepcortex-test-redshift"
 
 # specify if Public MSTAR data should be uploaded to DeepCortex S3 Bucket
-upload_mstar_data               = "true"
+upload_datasets                 = "true"
 
 ### DO NOT CHANGE ANYTHING BELOW THIS LINE
 

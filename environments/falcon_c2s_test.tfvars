@@ -50,7 +50,7 @@ access_cidr                     = "205.251.70.6/32"
 deploy_cidr                     = "205.251.70.6/32"
 
 # specify if Public MSTAR data should be uploaded to the default DeepCortex S3 bucket
-upload_mstar_data               = "true"
+upload_datasets                 = "true"
 
 ### You may change any of the below names if you choose, otherwise the defaults we be used.
 
@@ -145,12 +145,12 @@ redshift_skip_final_snapshot = true
 
 # Application Docker Image Versions
 aries_docker_image_version = "0.0.0-d7d4808443dccd85278492a35614894e6051ae23"
-baile_docker_image_version = "v1.0.4"
+baile_docker_image_version = "v1.0.5"
 baile_haproxy_docker_image_version = "v1.0"
 cortex_docker_image_version = "0.0.0-7f2913f624a1260cf2ed15852c1857ac0e50bbbf"
 logstash_docker_image_version = "latest"
 orion_docker_image_version = "0.0.0-1ed179f8beed4f129d6fa105250c8ee3246af718"
-job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-237-g4b21a7d"
+job_master_docker_image = "deepcortex/cortex-job-master:0.10.0-1-gfa0767e-SNAPSHOT"
 rmq_docker_image_version = "latest"
 um_docker_image_version = "v1.0"
 salsa_version = "falcon"

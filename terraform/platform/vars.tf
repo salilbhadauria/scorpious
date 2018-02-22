@@ -63,7 +63,7 @@ variable "orion_docker_image_version" {}
 variable "job_master_docker_image" {}
 variable "rmq_docker_image_version" {}
 variable "um_docker_image_version" {}
-variable "upload_mstar_data" { default = "false"}
+variable "upload_datasets" { default = "false"}
 variable "download_from_s3" { default = "true" }
 
 locals {
