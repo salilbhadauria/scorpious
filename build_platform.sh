@@ -28,9 +28,6 @@ OWNER=$(awk -F\" '/^tag_owner/{print $2}'  "environments/$CONFIG.tfvars")
 NUM_SLAVES=$(awk -F\" '/^slave_asg_desired_capacity/{print $2}'  "environments/$CONFIG.tfvars")
 NUM_PUB_SLAVES=$(awk -F\" '/^public_slave_asg_desired_capacity/{print $2}'  "environments/$CONFIG.tfvars")
 NUM_GPU_SLAVES=$(awk -F\" '/^gpu_slave_asg_desired_capacity/{print $2}'  "environments/$CONFIG.tfvars")
-UPLOAD_DATASETS=$(awk -F\" '/^upload_datasets/{print $2}'  "environments/$CONFIG.tfvars")
-DOWNLOAD_FROM_S3=$(awk -F\" '/^upload_from_s3/{print $2}'  "environments/$CONFIG.tfvars")
-AWS_S3_BUCKET=$(awk -F\" '/^dcos_apps_bucket/{print $2}'  "environments/$CONFIG.tfvars")
 DCOS_NODES=$((NUM_SLAVES + NUM_PUB_SLAVES + NUM_GPU_SLAVES))
 DCOS_SERVICES=12
 
