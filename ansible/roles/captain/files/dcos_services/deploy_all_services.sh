@@ -31,7 +31,7 @@ if [[ $? -ne 0 ]]; then
 fi
 
 # Wait for master node to become online
-until $(curl --output /dev/null --silent --head --fail http://$DCOS_MASTER:/); do sleep 30; done
+until $(curl --output /dev/null --silent --head --fail http://$DCOS_MASTER:/); do sleep 60; done
 
 # Configure the DC/OS cli
 bash setup_dcos_cli.sh

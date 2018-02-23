@@ -2,21 +2,17 @@
 set -e
 
 usage() {
-  echo "Usage: $0 <config> <aws_profile> or (<aws_access_key_id> and <aws_secret_access_key>) <customer_key> <dcos_username> <dcos_password> [args...]"
-  echo " e.g.: $0 integration default XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX deepcortex password "
+  echo "Usage: $0 <config_file> [args...]"
+  echo " e.g.: $0 integration "
   exit 1
 }
 
-export TF_VAR_dcos_password=$DCOS_PASSWORD
+export TF_VAR_dcos_password="${DCOS_PASSWORD}"
 export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$CONFIG.tfvars")
-
-sh terraform_init_backend.sh $CONFIG
-
-sh packer.sh all $CONFIG;
 
 PREFIX=$(awk -F\" '/^prefix/{print $2}'  "environments/$CONFIG.tfvars")
 
-STACKS=("${PREFIX}iam" "${PREFIX}vpc" "${PREFIX}redshift" "${PREFIX}platform")
+STACKS=("${PREFIX}platform")
 for i in "${STACKS[@]}"; do
   sh terraform.sh init $CONFIG $i;
   sh terraform.sh plan $CONFIG $i;
@@ -32,6 +28,9 @@ OWNER=$(awk -F\" '/^tag_owner/{print $2}'  "environments/$CONFIG.tfvars")
 NUM_SLAVES=$(awk -F\" '/^slave_asg_desired_capacity/{print $2}'  "environments/$CONFIG.tfvars")
 NUM_PUB_SLAVES=$(awk -F\" '/^public_slave_asg_desired_capacity/{print $2}'  "environments/$CONFIG.tfvars")
 NUM_GPU_SLAVES=$(awk -F\" '/^gpu_slave_asg_desired_capacity/{print $2}'  "environments/$CONFIG.tfvars")
+UPLOAD_DATASETS=$(awk -F\" '/^upload_datasets/{print $2}'  "environments/$CONFIG.tfvars")
+DOWNLOAD_FROM_S3=$(awk -F\" '/^upload_from_s3/{print $2}'  "environments/$CONFIG.tfvars")
+AWS_S3_BUCKET=$(awk -F\" '/^dcos_apps_bucket/{print $2}'  "environments/$CONFIG.tfvars")
 DCOS_NODES=$((NUM_SLAVES + NUM_PUB_SLAVES + NUM_GPU_SLAVES))
 DCOS_SERVICES=12
 

@@ -110,8 +110,8 @@ slave_xvdf_size                 = "100"
 slave_xvdg_size                 = "100"
 slave_xvdh_size                 = "50"
 
-gpu_slave_asg_desired_capacity  = "1"
-gpu_slave_asg_min_size          = "1"
+gpu_slave_asg_desired_capacity  = "0"
+gpu_slave_asg_min_size          = "0"
 gpu_slave_asg_max_size          = "1"
 
 # mesos, docker, log

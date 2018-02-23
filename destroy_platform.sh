@@ -17,7 +17,7 @@ AWS_DCOS_APPS_BUCKET=$(awk -F\" '/^dcos_apps_bucket/{print $2}'  "environments/$
 aws s3 rm "s3://$AWS_DCOS_STACK_BUCKET" --recursive
 aws s3 rm "s3://$AWS_DCOS_APPS_BUCKET" --recursive
 
-STACKS=("${PREFIX}platform" "${PREFIX}redshift" "${PREFIX}vpc" "${PREFIX}iam")
+STACKS=("${PREFIX}platform")
 for i in "${STACKS[@]}"; do
   sh terraform.sh init $CONFIG $i;
   sh terraform.sh plan $CONFIG $i;
@@ -25,4 +25,4 @@ for i in "${STACKS[@]}"; do
   sh terraform.sh apply $CONFIG $i;
 done
 
-echo "All artifacts destroyed."
+echo "Platform destroyed."
