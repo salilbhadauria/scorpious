@@ -50,7 +50,7 @@ access_cidr                     = "<ACCESS_CIDR>"
 deploy_cidr                     = "<DEPLOY_CIDR>"
 
 # specify if MSTAR data and CAD data should be uploaded to the default DeepCortex S3 bucket during build (adds 20-30 min to build time)
-upload_datasets                 = "<true/false>"
+upload_datasets                 = "true"
 
 ### You may change any of the below names if you choose, otherwise the defaults we be used.
 
