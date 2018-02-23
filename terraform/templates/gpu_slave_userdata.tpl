@@ -7,7 +7,7 @@ preserve_hostname: true
 runcmd:
   - instanceid=$(curl -s http://169.254.169.254/latest/meta-data/instance-id | tr -d 'i-')
   - hostn=$(cat /etc/hostname)
-  - newhostn="public-slave-$instanceid"
+  - newhostn="gpu-slave-$instanceid"
   - echo "Exisitng hostname is $hostn"
   - echo "New hostname will be $newhostn"
   - sed -i "s/localhost/$newhostn/g" /etc/hosts
@@ -22,8 +22,9 @@ runcmd:
   - zone_id=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
   - mkdir -p /var/lib/dcos
   - touch /var/lib/dcos/mesos-slave-common || exit
-  - echo "MESOS_ATTRIBUTES='az_id:$zone_id;public_ip:true;'" > /var/lib/dcos/mesos-slave-common
-  - until $(curl --output /dev/null --silent --head --fail http://${bootstrap_dns}:8080/dcos_install.sh); do sleep 30; done
+  - echo "MESOS_ATTRIBUTES='az_id:$zone_id;cluster:gpu;'" > /var/lib/dcos/mesos-slave-common
+  - sudo /bin/bash /opt/gpu_support/NVIDIA-Linux-x86_64-367.106.run -s
+  - until $(curl --output /dev/null --silent --head --fail http://${bootstrap_dns}:8080/dcos_install.sh); do sleep 5; done
   - curl http://${bootstrap_dns}:8080/dcos_install.sh -o /tmp/dcos_install.sh -s
-  - cd /tmp; bash dcos_install.sh slave_public
+  - cd /tmp; bash dcos_install.sh slave
   - service ntpd restart

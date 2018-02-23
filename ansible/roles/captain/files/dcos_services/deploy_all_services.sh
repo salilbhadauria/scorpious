@@ -20,19 +20,19 @@ if [[ $? -ne 0 ]]; then
   rm -rf front-end
   rm -f front-end.tar.gz
 
-  if [ $UPLOAD_MSTAR_DATA = "true" ]; then
+  if [ $UPLOAD_DATASETS = "true" ]; then
     if [ $DOWNLOAD_FROM_S3 = "true" ]; then
-      curl -O "https://s3.amazonaws.com/dev.deepcortex.ai/deployment_downloads/MSTAR_Data.tar.gz"
+      curl -O "https://s3.amazonaws.com/dev.deepcortex.ai/deployment_downloads/Datasets.tar.gz"
     fi
-    tar -xvf MSTAR_Data.tar.gz
-    aws s3 sync MSTAR_Data "s3://${AWS_S3_BUCKET}/MSTAR_Data"
-    rm -rf MSTAR_Data
-    rm -f MSTAR_Data.tar.gz
+    tar -xvf Datasets.tar.gz
+    aws s3 sync Datasets "s3://${AWS_S3_BUCKET}/Datasets"
+    rm -rf Datasets
+    rm -f Datasets.tar.gz
   fi
 fi
 
 # Wait for master node to become online
-until $(curl --output /dev/null --silent --head --fail http://$DCOS_MASTER:/); do sleep 30; done
+until $(curl --output /dev/null --silent --head --fail http://$DCOS_MASTER:/); do sleep 60; done
 
 # Configure the DC/OS cli
 bash setup_dcos_cli.sh
@@ -69,7 +69,7 @@ bash mongodb/mongo_init.sh
 # Deploy custom services and frameworkds
 bash deploy_service.sh aries/marathon.json aries/env_vars.sh
 bash deploy_service.sh baile/marathon.json baile/env_vars.sh
-bash deploy_service.sh baile-nginx/marathon.json baile-nginx/env_vars.sh
+bash deploy_service.sh baile-haproxy/marathon.json baile-haproxy/env_vars.sh
 bash deploy_service.sh cortex/marathon.json cortex/env_vars.sh
 bash deploy_service.sh logstash/marathon.json logstash/env_vars.sh
 bash deploy_service.sh orion/marathon.json orion/env_vars.sh

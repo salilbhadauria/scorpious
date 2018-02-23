@@ -44,6 +44,11 @@
       [
         "hostname",
         "UNIQUE"
+      ],
+      [
+        "cluster",
+        "UNLIKE",
+        "gpu"
       ]
     ],
   "healthChecks": [{

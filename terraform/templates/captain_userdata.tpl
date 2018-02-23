@@ -24,9 +24,10 @@ environment:
   cortex_http_search_user_password: ${cortex_http_search_user_password}
   orion_http_search_user_password: ${orion_http_search_user_password}
   pegasus_password: ${pegasus_password}
+  argo_docker_image_version: ${argo_docker_image_version}
   aries_docker_image_version: ${aries_docker_image_version}
   baile_docker_image_version: ${baile_docker_image_version}
-  baile_nginx_docker_image_version: ${baile_nginx_docker_image_version}
+  baile_haproxy_docker_image_version: ${baile_haproxy_docker_image_version}
   cortex_docker_image_version: ${cortex_docker_image_version}
   logstash_docker_image_version: ${logstash_docker_image_version}
   orion_docker_image_version: ${orion_docker_image_version}
@@ -36,7 +37,7 @@ environment:
   taurus_docker_image_version: ${taurus_docker_image_version}
   um_docker_image_version: ${um_docker_image_version}
   salsa_version: ${salsa_version}
-  upload_mstar_data: "${upload_mstar_data}"
+  upload_datasets: "${upload_datasets}"
   download_from_s3: "${download_from_s3}"
 manage_resolv_conf: false
 preserve_hostname: true

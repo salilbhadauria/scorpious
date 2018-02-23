@@ -26,16 +26,17 @@ aries_rest_url: "http://aries-api-rest.marathon.l4lb.thisdcos.directory:9000"
 baile_srv_instances: 1
 baile_srv_cpus: 1
 baile_srv_mem: 4096
+baile_address: "baile.marathon.l4lb.thisdcos.directory:9000"
 um_service_url: "http://um-service.marathon.l4lb.thisdcos.directory"
 baile_rest_url: "http://baile.marathon.l4lb.thisdcos.directory:9000"
 baile_username: "baile-user"
 baile_aries_rest_version: "v1"
 baile_cortex_rest_version: "v1"
 
-# Baile Nginx
-baile_nginx_srv_instances: 1
-baile_nginx_srv_cpus: 0.1
-baile_nginx_srv_mem: 65
+# Baile Haproxy
+baile_haproxy_srv_instances: 1
+baile_haproxy_srv_cpus: 0.1
+baile_haproxy_srv_mem: 65
 
 # Cortex
 cortex_http_search_user_name: "cortex-search-user"

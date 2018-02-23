@@ -1,0 +1,12 @@
+---
+
+- name: Copy install script
+  copy:
+   dest: /opt/
+   src: gpu_support
+   owner: root
+   group: root
+   mode: 0755
+
+- name: Execute install script
+  command: sh /opt/gpu_support/install_gpu.sh

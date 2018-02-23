@@ -26,13 +26,18 @@ variable "dcos_password" {}
 variable "master_asg_desired_capacity" {}
 variable "master_asg_min_size" {}
 variable "master_asg_max_size" {}
-variable "master_elb_dns_name" {}
 
 # Slave vars
 
 variable "slave_asg_desired_capacity" {}
 variable "slave_asg_min_size" {}
 variable "slave_asg_max_size" {}
+
+# GPU slave vars
+
+variable "gpu_slave_asg_desired_capacity" {}
+variable "gpu_slave_asg_min_size" {}
+variable "gpu_slave_asg_max_size" {}
 
 # Public slave vars
 
@@ -49,9 +54,10 @@ variable "captain_asg_max_size" {}
 variable "tag_owner" {}
 variable "tag_usage" {}
 
+variable "argo_docker_image_version" {}
 variable "aries_docker_image_version" {}
 variable "baile_docker_image_version" {}
-variable "baile_nginx_docker_image_version" {}
+variable "baile_haproxy_docker_image_version" {}
 variable "cortex_docker_image_version" {}
 variable "logstash_docker_image_version" {}
 variable "orion_docker_image_version" {}
@@ -60,7 +66,7 @@ variable "pegaus_docker_image_version" {}
 variable "rmq_docker_image_version" {}
 variable "taurus_docker_image_version" {}
 variable "um_docker_image_version" {}
-variable "upload_mstar_data" { default = "false"}
+variable "upload_datasets" { default = "false"}
 variable "download_from_s3" { default = "true" }
 
 locals {

@@ -47,6 +47,10 @@ export PUBLIC_SLAVE_XVDE_SIZE=$(awk -F\" '/^public_slave_xvde_size/{print $2}'  
 export PUBLIC_SLAVE_XVDF_SIZE=$(awk -F\" '/^public_slave_xvdf_size/{print $2}'  "environments/$CONFIG.tfvars")
 export PUBLIC_SLAVE_XVDH_SIZE=$(awk -F\" '/^public_slave_xvdh_size/{print $2}'  "environments/$CONFIG.tfvars")
 
+export GPU_SLAVE_XVDE_SIZE=$(awk -F\" '/^gpu_slave_xvde_size/{print $2}'  "environments/$CONFIG.tfvars")
+export GPU_SLAVE_XVDF_SIZE=$(awk -F\" '/^gpu_slave_xvdf_size/{print $2}'  "environments/$CONFIG.tfvars")
+export GPU_SLAVE_XVDH_SIZE=$(awk -F\" '/^gpu_slave_xvdh_size/{print $2}'  "environments/$CONFIG.tfvars")
+
 export AWS_REGION="${REGION:-us-east-1}"
 
 if [ -z "$AWS_PROFILE" ];then

@@ -1,5 +1,7 @@
 Automated deployment for DeepCortex platform
 
+Running the entire deployment
+
 1) Create a folder called environments on your computer.
 
 2) Place the deepcortex-settings.tfvars file under this "environmnets" directory.
@@ -13,15 +15,15 @@ AWS_ACCESS_KEY_ID - the access key that should be used to deploy in AWS.
 AWS_SECRET_ACCESS_KEY - the secret key that should be used to deploy in AWS.
 CUSTOMER_KEY - the DC/OS enterprise key
 DCOS_USERNAME - the username you'd like to use to login to the DC/OS cluster
-DCOS_PASSWORD - the password you'd like to use to login to the DC/OS cluster
+DCOS_PASSWORD - the password you'd like to use to login to the DC/OS cluster (avoid special characters used in bash such as "#", ";", "$", etc.)
 
-5) Run "docker login -u falcondeepcortex" and enter the provided password.
+5) Run "docker login -u falcondeepcortex" and enter the password: 6apXmvzquPKGDwzx.
 
-6) Run "docker pull deepcortex/scorpius-deployment:falconv1".
+6) Run "docker pull deepcortex/scorpius-deployment:falconv2".
 
 7) Run the following docker command replacing /path/to/environments with the path to the environments directory you created in step 1.
 
-docker run --rm \
+docker run \
   -v </path/to/environments>:/opt/deploy/environments \
   -e CONFIG=${CONFIG} \
   -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
@@ -29,8 +31,44 @@ docker run --rm \
   -e CUSTOMER_KEY=${CUSTOMER_KEY} \
   -e DCOS_USERNAME=${DCOS_USERNAME} \
   -e DCOS_PASSWORD=${DCOS_PASSWORD} \
-  deepcortex/scorpius-deployment:falconv1
+  deepcortex/scorpius-deployment:falconv2
 
 8) Once your terminal output states the deployment is complete you can access the DeepCortex UI.
 
+### Additional Docker Commands ###
 
+Destroying the entire deployment
+
+docker run \
+  -v ~/Desktop/environments:/opt/deploy/environments \
+  -e CONFIG=${CONFIG} \
+  -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+  -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+  -e CUSTOMER_KEY=${CUSTOMER_KEY} \
+  -e DCOS_USERNAME=${DCOS_USERNAME} \
+  -e DCOS_PASSWORD=${DCOS_PASSWORD} \
+  -it --entrypoint "/bin/bash" deepcortex/scorpius-deployment:falconv2 /opt/deploy/destroy.sh
+
+Building just the platform (DC/OS cluster)
+
+docker run \
+  -v ~/Desktop/environments:/opt/deploy/environments \
+  -e CONFIG=${CONFIG} \
+  -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+  -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+  -e CUSTOMER_KEY=${CUSTOMER_KEY} \
+  -e DCOS_USERNAME=${DCOS_USERNAME} \
+  -e DCOS_PASSWORD=${DCOS_PASSWORD} \
+  -it --entrypoint "/bin/bash" deepcortex/scorpius-deployment:falconv2 /opt/deploy/build_platform.sh
+
+Destroying just the platform (DC/OS cluster)
+
+docker run \
+  -v ~/Desktop/environments:/opt/deploy/environments \
+  -e CONFIG=${CONFIG} \
+  -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+  -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+  -e CUSTOMER_KEY=${CUSTOMER_KEY} \
+  -e DCOS_USERNAME=${DCOS_USERNAME} \
+  -e DCOS_PASSWORD=${DCOS_PASSWORD} \
+  -it --entrypoint "/bin/bash" deepcortex/scorpius-deployment:falconv2 /opt/deploy/destroy_platform.sh
