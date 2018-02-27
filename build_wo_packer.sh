@@ -12,7 +12,7 @@ export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$C
 
 PREFIX=$(awk -F\" '/^prefix/{print $2}'  "environments/$CONFIG.tfvars")
 
-STACKS=("${PREFIX}iam" "${PREFIX}vpc" "${PREFIX}redshift" "${PREFIX}platform")
+STACKS=("${PREFIX}iam" "${PREFIX}vpc" "${PREFIX}redshift" "${PREFIX}platform" "${PREFIX}online_prediction")
 for i in "${STACKS[@]}"; do
   sh terraform.sh init $CONFIG $i;
   sh terraform.sh plan $CONFIG $i;

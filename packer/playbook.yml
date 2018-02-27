@@ -102,6 +102,7 @@
     - mongodb
     - nodejs
     - java
+    - postgresql
 
 - hosts: gpu-slave
   become: yes
