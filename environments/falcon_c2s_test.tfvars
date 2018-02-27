@@ -19,10 +19,10 @@ arn                             = "aws-us-gov"
 s3_endpoint                     = "s3-us-gov-west-1.amazonaws.com"
 
 # the ami id for the machine that will serve as the bastion (can be CentOS or Amazon Linux)
-bastion_ami_id                  = "ami-128c0873"
+bastion_ami_id                  = "ami-0bb9056a"
 
 # the ami id for the machines that will run DeepCortex (should be a CentOS 7.4 ami)
-packer_base_ami                 = "ami-128c0873"
+packer_base_ami                 = "ami-0bb9056a"
 
 # the default ssh user for the above ami (likely centos for CentOS machines, but could be ec2-user so make sure to check the ami you are using)
 packer_ssh_user                 = "centos"
@@ -145,12 +145,12 @@ redshift_skip_final_snapshot = true
 
 # Application Docker Image Versions
 aries_docker_image_version = "0.0.0-d7d4808443dccd85278492a35614894e6051ae23"
-baile_docker_image_version = "v1.0.5"
+baile_docker_image_version = "v1.0.6"
 baile_haproxy_docker_image_version = "v1.0"
 cortex_docker_image_version = "0.0.0-7f2913f624a1260cf2ed15852c1857ac0e50bbbf"
 logstash_docker_image_version = "latest"
 orion_docker_image_version = "0.0.0-1ed179f8beed4f129d6fa105250c8ee3246af718"
-job_master_docker_image = "deepcortex/cortex-job-master:0.10.0-1-gfa0767e-SNAPSHOT"
+job_master_docker_image = "deepcortex/cortex-job-master:0.10.0-3-gcdcbf13-SNAPSHOT"
 rmq_docker_image_version = "latest"
 um_docker_image_version = "v1.0"
 salsa_version = "falcon"
