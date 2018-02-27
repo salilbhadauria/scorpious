@@ -28,6 +28,9 @@ argo_elastic_config_setting_index: cortex_config_settings_dev
 argo_srv_instances: 3
 argo_srv_cpus: 1
 argo_srv_mem: 1024
+argo_host: "aries-api-rest.marathon.l4lb.thisdcos.directory"
+argo_port: 9000
+argo_rest_url: "http://aries-api-rest.marathon.l4lb.thisdcos.directory:9000"
 
 # Baile
 baile_srv_instances: 1
@@ -85,7 +88,7 @@ rmq_srv_mem: 512
 # Taurus
 taurus_cortex_rest_version: "v1"
 taurus_baile_rest_version: "v1"
-taurus_srv_instances: 3
+taurus_srv_instances: 1
 taurus_srv_cpus: 1
 taurus_srv_mem: 1024
 
