@@ -38,8 +38,10 @@ COPY packer packer
 COPY scripts scripts
 COPY terraform terraform
 COPY build.sh build.sh
-COPY build_platform.sh build_platform.sh
 COPY destroy.sh destroy.sh
+COPY build_platform.sh build_platform.sh
+COPY build_platform.sh build_platform.sh
+COPY build_wo_packer.sh build_wo_packer.sh
 COPY destroy_platform.sh destroy_platform.sh
 COPY packer.sh packer.sh
 COPY terraform.sh terraform.sh
