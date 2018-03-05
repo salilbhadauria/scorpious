@@ -49,5 +49,9 @@
       },
       "protocol": "COMMAND"
     }
-  ]
+  ],
+  "upgradeStrategy": {
+    "maximumOverCapacity": 1,
+    "minimumHealthCapacity": 0.5
+  }
 }

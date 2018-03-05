@@ -58,8 +58,8 @@
       "networkName": "dcos"
   },
   "upgradeStrategy": {
-    "minimumHealthCapacity": 0,
-    "maximumOverCapacity": 0
+    "minimumHealthCapacity": 0.5,
+    "maximumOverCapacity": 0.5
   },
   "healthChecks": [
     {

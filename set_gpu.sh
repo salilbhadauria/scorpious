@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# -s: stacks - a list of comma separated values to overwrite which asgs to shutdown
+
+usage() {
+  echo "Usage: Must set environment variables for CONFIG, AWS_PROFILE or (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY)"
+  exit 1
+}
+
+VARS=("CONFIG")
+for i in "${VARS[@]}"; do
+  if [[ -z "${!i}" ]];then
+    echo "$i is not set"
+    usage
+  fi
+done
+
+if [[ -z "$AWS_PROFILE" ]] && ([[ -z "$AWS_ACCESS_KEY_ID" ]] || [[ -z "$AWS_SECRET_ACCESS_KEY" ]]);then
+  echo "AWS_PROFILE or access keys (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) are not set"
+  usage
+fi
+
+if [ ${#} -ne 1 ]; then
+  echo "Must specify a value for the desired gpu capacity"
+  exit 1
+fi
+
+DESIRED_CAPACITY=$1
+
+export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$CONFIG.tfvars")
+ENVIRONMENT=$(awk -F\" '/^environment/{print $2}'  "environments/$CONFIG.tfvars")
+OWNER=$(awk -F\" '/^tag_owner/{print $2}'  "environments/$CONFIG.tfvars")
+
+aws autoscaling set-desired-capacity --auto-scaling-group-name "$OWNER-$ENVIRONMENT-gpu-slave-asg" --desired-capacity "$DESIRED_CAPACITY"
+
+echo "GPU desired capacity set to $DESIRED_CAPACITY"

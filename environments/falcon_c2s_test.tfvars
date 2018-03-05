@@ -19,10 +19,10 @@ arn                             = "aws-us-gov"
 s3_endpoint                     = "s3-us-gov-west-1.amazonaws.com"
 
 # the ami id for the machine that will serve as the bastion (can be CentOS or Amazon Linux)
-bastion_ami_id                  = "ami-0bb9056a"
+bastion_ami_id                  = "ami-128c0873"
 
 # the ami id for the machines that will run DeepCortex (should be a CentOS 7.4 ami)
-packer_base_ami                 = "ami-0bb9056a"
+packer_base_ami                 = "ami-128c0873"
 
 # the default ssh user for the above ami (likely centos for CentOS machines, but could be ec2-user so make sure to check the ami you are using)
 packer_ssh_user                 = "centos"
@@ -85,11 +85,11 @@ prefix                          = "c2s_"
 
 # Platform
 bootstrap_asg_desired_capacity  = "1"
-bootstrap_asg_min_size          = "1"
+bootstrap_asg_min_size          = "0"
 bootstrap_asg_max_size          = "1"
 bootstrap_elb_dns_name          = "bootstrap"
 s3_prefix                       = "deepcortex"
-cluster_name                    = "deepcortex"
+cluster_name                    = "deepcortex-c2stest"
 
 master_asg_desired_capacity     = "1"
 master_asg_min_size             = "1"
@@ -129,7 +129,7 @@ public_slave_xvdf_size             = "50"
 public_slave_xvdh_size             = "50"
 
 captain_asg_desired_capacity       = "1"
-captain_asg_min_size               = "1"
+captain_asg_min_size               = "0"
 captain_asg_max_size               = "1"
 
 
@@ -154,3 +154,6 @@ job_master_docker_image = "deepcortex/cortex-job-master:0.10.0-3-gcdcbf13-SNAPSH
 rmq_docker_image_version = "latest"
 um_docker_image_version = "v1.0"
 salsa_version = "falcon"
+
+# Number of total DC/OS services
+dcos_services = "12"
