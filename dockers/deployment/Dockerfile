@@ -45,6 +45,7 @@ COPY build.sh build.sh
 COPY destroy.sh destroy.sh
 COPY suspend_dc.sh suspend_dc.sh
 COPY resume_dc.sh resume_dc.sh
+COPY set_capacity.sh set_capacity.sh
 COPY packer.sh packer.sh
 COPY terraform.sh terraform.sh
 COPY terraform_init_backend.sh terraform_init_backend.sh

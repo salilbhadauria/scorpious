@@ -147,7 +147,7 @@ if [[ "$DEPLOY_MODE" != "simple" ]];then
 
   if [[ "$GPU_ON_START" != "false" ]];then
     echo "Starting up GPU node"
-    bash set_gpu.sh 1
+    bash set_capacity.sh gpu-slave 1
 
     COUNT=0
     echo "Deploying gpu node."
@@ -167,7 +167,7 @@ if [[ "$DEPLOY_MODE" != "simple" ]];then
 
   if [[ "$BOOTSTRAP_ON_START" != "false" ]];then
     echo "Shutting down bootstrap node"
-    bash set_bootstrap.sh 0
+    bash set_capacity.sh bootstrap 0
   fi
 
   echo "*** Deployment complete"

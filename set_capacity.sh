@@ -20,17 +20,18 @@ if [[ -z "$AWS_PROFILE" ]] && ([[ -z "$AWS_ACCESS_KEY_ID" ]] || [[ -z "$AWS_SECR
   usage
 fi
 
-if [ ${#} -ne 1 ]; then
-  echo "Must specify a value for the desired gpu capacity"
+if [ ${#} -ne 2 ]; then
+  echo "Must specify machine and a value for the desired capacity"
   exit 1
 fi
 
-DESIRED_CAPACITY=$1
+MACHINE=$1
+DESIRED_CAPACITY=$2
 
 export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$CONFIG.tfvars")
 ENVIRONMENT=$(awk -F\" '/^environment/{print $2}'  "environments/$CONFIG.tfvars")
 OWNER=$(awk -F\" '/^tag_owner/{print $2}'  "environments/$CONFIG.tfvars")
 
-aws autoscaling set-desired-capacity --auto-scaling-group-name "$OWNER-$ENVIRONMENT-gpu-slave-asg" --desired-capacity "$DESIRED_CAPACITY"
+aws autoscaling set-desired-capacity --auto-scaling-group-name "$OWNER-$ENVIRONMENT-$MACHINE-asg" --desired-capacity "$DESIRED_CAPACITY"
 
-echo "GPU desired capacity set to $DESIRED_CAPACITY"
+echo "Bootstrap desired capacity set to $DESIRED_CAPACITY"
