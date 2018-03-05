@@ -42,12 +42,12 @@ ASGS=("slave" "gpu-slave" "public-slave" "captain" "bootstrap" "master" "bastion
 parse_args "$@"
 
 for i in "${ASGS[@]}"; do
-  #aws autoscaling resume-processes --auto-scaling-group-name "$OWNER-$ENVIRONMENT-$i-asg"
+  aws autoscaling resume-processes --auto-scaling-group-name "$OWNER-$ENVIRONMENT-$i-asg"
   echo "$OWNER-$ENVIRONMENT-$i-asg resumed"
   instance_ids=$(aws autoscaling describe-auto-scaling-groups --auto-scaling-group-names "$OWNER-$ENVIRONMENT-$i-asg" --query "AutoScalingGroups[].Instances[].InstanceId" --output text)
   for i in $instance_ids; do
     echo "starting instance $i"
-    #aws ec2 start-instances --instance-ids $i
+    aws ec2 start-instances --instance-ids $i
   done
 done
 

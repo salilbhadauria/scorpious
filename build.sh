@@ -108,13 +108,13 @@ if [[ "$DEPLOY_MODE" != "simple" ]];then
   echo "All IPs listed are the nodes that have already connected."
   echo "Terminate the unconnected nodes in AWS so the auto scaling group can deploy new ones."
   echo ""
-  NODES=0
+  NODES=$(dcos node | grep agent | wc -l)
   until [[ $NODES -eq $DCOS_NODES ]]; do
-    NODES=$(dcos node | grep agent | wc -l)
     echo "There are currently ${NODES} nodes connected. Waiting for $(( DCOS_NODES - NODES )) more node(s) to connect..."
     sleep 60
     COUNT=$((COUNT+1))
     echo "Nodes have been deploying for $COUNT minutes."
+    NODES=$(dcos node | grep agent | wc -l)
   done
   echo "All nodes connected."
   echo ""
@@ -126,16 +126,16 @@ if [[ "$DEPLOY_MODE" != "simple" ]];then
   echo "If there are no services being deployed, there is likely an issue with the captain node."
   echo "Terminate the captain node in AWS so the auto scaling group can deploy a new one."
   echo ""
-  SERVICES_DEPLOYING=0
-  SERVICES_RUNNING=0
+  SERVICES_DEPLOYING=$(dcos marathon app list | grep scale | wc -l)
+  SERVICES_RUNNING=$(dcos marathon app list | grep False | wc -l)
   until [[ $SERVICES_DEPLOYING -eq 0 ]] && [[ $SERVICES_RUNNING -eq $DCOS_SERVICES ]]; do
-    SERVICES_DEPLOYING=$(dcos marathon app list | grep scale | wc -l)
-    SERVICES_RUNNING=$(dcos marathon app list | grep False | wc -l)
     SERVICES_LEFT=$((DCOS_SERVICES - SERVICES_RUNNING))
     echo "There are currently $SERVICES_LEFT services still deploying..."
     sleep 60
     COUNT=$((COUNT+1))
     echo "Services have been deploying for $COUNT minutes."
+    SERVICES_DEPLOYING=$(dcos marathon app list | grep scale | wc -l)
+    SERVICES_RUNNING=$(dcos marathon app list | grep False | wc -l)
   done
   echo "All services deployed."
   echo ""
@@ -145,13 +145,30 @@ if [[ "$DEPLOY_MODE" != "simple" ]];then
   done
   echo "*** You can now access DeepCortex at: http://$BAILE_ELB"
 
+  if [[ "$GPU_ON_START" != "false" ]];then
+    echo "Starting up GPU node"
+    bash set_gpu.sh 1
+
+    COUNT=0
+    echo "Deploying gpu node."
+    echo "If step lasts longer than 30 minutes there may be an issue with the node."
+    echo "To attempt a fix, terminate the GPU node in AWS so the auto scaling group can deploy a new one."
+    echo ""
+    NODES=$(dcos node | grep agent | wc -l)
+    until [[ $NODES -eq $((DCOS_NODES + 1)) ]]; do
+      echo "Waiting for the GPU node to connect..."
+      sleep 60
+      COUNT=$((COUNT+1))
+      echo "GPU node has been deploying for $COUNT minutes."
+      NODES=$(dcos node | grep agent | wc -l)
+    done
+    echo "GPU node connected"
+  fi
+
   if [[ "$BOOTSTRAP_ON_START" != "false" ]];then
     echo "Shutting down bootstrap node"
     bash set_bootstrap.sh 0
   fi
 
-  if [[ "$GPU_ON_START" != "false" ]];then
-    echo "Starting up GPU node"
-    bash set_gpu.sh 1
-  fi
+  echo "*** Deployment complete"
 fi
