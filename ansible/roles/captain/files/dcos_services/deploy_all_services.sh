@@ -40,8 +40,6 @@ bash setup_dcos_cli.sh
 # Wait for all nodes to become online
 until [[ $(dcos node | grep agent | wc -l) == $DCOS_NODES ]]; do sleep 30; done
 
-sleep 60
-
 # Retrieve slave node IPs
 export MONGODB_HOSTS=$(aws ec2 describe-instances --filters "Name=tag:Role,Values=slave" "Name=tag:environment,Values=$ENVIRONMENT" --query "Reservations[].Instances[].PrivateIpAddress" --output text | sed -e 's/\s/,/g')
 echo "$(aws ec2 describe-instances --filters "Name=tag:Role,Values=slave" "Name=tag:environment,Values=$ENVIRONMENT" --query "Reservations[].Instances[].PrivateIpAddress" | jq -r '.[]')" > mongo_hosts.txt
@@ -61,7 +59,7 @@ dcos package install --cli mongodb-replicaset --yes
 while $(dcos marathon deployment list | grep -q scale); do sleep 30; done
 
 export PATH="/usr/local/lib/npm/bin:$PATH"
-sleep 60
+
 bash elasticsearch/scripts/elasticsearch_init.sh
 bash rabbitmq/rabbitmq_init.sh
 bash mongodb/mongo_init.sh

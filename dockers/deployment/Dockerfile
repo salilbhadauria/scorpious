@@ -31,6 +31,10 @@ RUN wget --quiet https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/t
     rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
     echo "terraform version - $(terraform --version)"
 
+RUN curl https://downloads.dcos.io/binaries/cli/linux/x86-64/dcos-1.10/dcos -o dcos && \
+    mv dcos /usr/local/bin && \
+    chmod +x /usr/local/bin/dcos
+
 WORKDIR /opt/deploy
 
 COPY ansible ansible
@@ -39,10 +43,9 @@ COPY scripts scripts
 COPY terraform terraform
 COPY build.sh build.sh
 COPY destroy.sh destroy.sh
-COPY build_platform.sh build_platform.sh
-COPY build_platform.sh build_platform.sh
-COPY build_wo_packer.sh build_wo_packer.sh
-COPY destroy_platform.sh destroy_platform.sh
+COPY suspend_dc.sh suspend_dc.sh
+COPY resume_dc.sh resume_dc.sh
+COPY set_capacity.sh set_capacity.sh
 COPY packer.sh packer.sh
 COPY terraform.sh terraform.sh
 COPY terraform_init_backend.sh terraform_init_backend.sh

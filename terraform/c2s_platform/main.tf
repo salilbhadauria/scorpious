@@ -243,7 +243,7 @@ module "bootstrap_asg" {
     lc_user_data            = "${data.template_file.bootstrap_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
 
-    asg_name                = "bootstrap-asg-${var.tag_owner}-${var.environment}"
+    asg_name                = "${var.tag_owner}-${var.environment}-bootstrap-asg"
     asg_subnet_ids          = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
     asg_desired_capacity    = "${var.bootstrap_asg_desired_capacity}"
     asg_min_size            = "${var.bootstrap_asg_min_size}"
@@ -251,7 +251,7 @@ module "bootstrap_asg" {
     asg_load_balancers      = [ "${module.bootstrap_elb.elb_id}" ]
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "bootstrap-asg-${var.tag_owner}-${var.environment}"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-bootstrap-asg"
     instance_name_tag = "${var.tag_owner}-${var.environment}-bootstrap"
     instance_role_tag = "bootstrap"
 }
@@ -522,7 +522,7 @@ module "master_asg" {
     lc_user_data            = "${data.template_file.master_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.master_instance_profile.id}"
 
-    asg_name                = "master-asg-${var.tag_owner}-${var.environment}"
+    asg_name                = "${var.tag_owner}-${var.environment}-master-asg"
     asg_subnet_ids          = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
     asg_desired_capacity    = "${var.master_asg_desired_capacity}"
     asg_min_size            = "${var.master_asg_min_size}"
@@ -530,7 +530,7 @@ module "master_asg" {
     asg_load_balancers      = [ "${module.master_elb.elb_id}", "${module.master_elb_internal.elb_id}" ]
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "master-asg-${var.tag_owner}-${var.environment}"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-master-asg"
     instance_name_tag = "${var.tag_owner}-${var.environment}-master"
     instance_role_tag = "master"
 }
@@ -609,14 +609,14 @@ module "slave_asg" {
     lc_user_data            = "${data.template_file.slave_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
 
-    asg_name                = "slave-asg-${var.tag_owner}-${var.environment}"
+    asg_name                = "${var.tag_owner}-${var.environment}-slave-asg"
     asg_subnet_ids          = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
     asg_desired_capacity    = "${var.slave_asg_desired_capacity}"
     asg_min_size            = "${var.slave_asg_min_size}"
     asg_max_size            = "${var.slave_asg_max_size}"
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "slave-asg-${var.tag_owner}-${var.environment}"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-slave-asg"
     instance_name_tag = "${var.tag_owner}-${var.environment}-slave"
     instance_role_tag = "slave"
 }
@@ -649,15 +649,14 @@ module "gpu_slave_asg" {
     lc_user_data            = "${data.template_file.gpu_slave_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
 
-    asg_name                = "gpu-slave-asg-${var.tag_owner}-${var.environment}"
+    asg_name                = "${var.tag_owner}-${var.environment}-gpu-slave-asg"
     asg_subnet_ids          = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
     asg_desired_capacity    = "${var.gpu_slave_asg_desired_capacity}"
     asg_min_size            = "${var.gpu_slave_asg_min_size}"
     asg_max_size            = "${var.gpu_slave_asg_max_size}"
-    asg_load_balancers      = [ "${module.baile_elb.elb_id}" ]
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "gpu-slave-asg-${var.tag_owner}-${var.environment}"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-gpu-slave-asg"
     instance_name_tag = "${var.tag_owner}-${var.environment}-gpu-slave"
     instance_role_tag = "gpu-slave"
 }
@@ -799,7 +798,7 @@ module "public_slave_asg" {
     lc_user_data            = "${data.template_file.public_slave_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
 
-    asg_name                = "public-slave-asg-${var.tag_owner}-${var.environment}"
+    asg_name                = "${var.tag_owner}-${var.environment}-public-slave-asg"
     asg_subnet_ids          = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
     asg_desired_capacity    = "${var.public_slave_asg_desired_capacity}"
     asg_min_size            = "${var.public_slave_asg_min_size}"
@@ -807,7 +806,7 @@ module "public_slave_asg" {
     asg_load_balancers      = [ "${module.baile_elb.elb_id}" ]
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "public-slave-asg-${var.tag_owner}-${var.environment}"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-public-slave-asg"
     instance_name_tag = "${var.tag_owner}-${var.environment}-public-slave"
     instance_role_tag = "public-slave"
 }
@@ -907,14 +906,14 @@ module "captain_asg" {
     lc_user_data            = "${data.template_file.captain_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.captain_instance_profile.id}"
 
-    asg_name                = "captain-asg-${var.tag_owner}-${var.environment}"
+    asg_name                = "${var.tag_owner}-${var.environment}-captain-asg"
     asg_subnet_ids          = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
     asg_desired_capacity    = "${var.captain_asg_desired_capacity}"
     asg_min_size            = "${var.captain_asg_min_size}"
     asg_max_size            = "${var.captain_asg_max_size}"
 
     tags_asg = "${local.tags_asg}"
-    asg_name_tag = "captain-asg-${var.tag_owner}-${var.environment}"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-captain-asg"
     instance_name_tag = "${var.tag_owner}-${var.environment}-captain"
     instance_role_tag = "captain"
 }
