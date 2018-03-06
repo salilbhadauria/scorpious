@@ -2,7 +2,6 @@
 set -e
 
 # optional arguments:
-# -r: remove dcos cli - remove DC/OS cluster from CLI
 # -s: stacks - a list of comma separated values to overwrite which terraform stacks to destroy
 
 usage() {

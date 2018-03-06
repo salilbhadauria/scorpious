@@ -34,4 +34,4 @@ OWNER=$(awk -F\" '/^tag_owner/{print $2}'  "environments/$CONFIG.tfvars")
 
 aws autoscaling set-desired-capacity --auto-scaling-group-name "$OWNER-$ENVIRONMENT-$MACHINE-asg" --desired-capacity "$DESIRED_CAPACITY"
 
-echo "Bootstrap desired capacity set to $DESIRED_CAPACITY"
+echo "$MACHINE desired capacity set to $DESIRED_CAPACITY"

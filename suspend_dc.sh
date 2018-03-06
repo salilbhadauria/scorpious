@@ -37,6 +37,8 @@ parse_args()
   done
 }
 
+bash set_capacity.sh gpu-slave 0
+
 ASGS=("slave" "gpu-slave" "public-slave" "captain" "bootstrap" "master" "bastion")
 
 parse_args "$@"

@@ -2,7 +2,7 @@
 set -e
 
 # optional arguments:
-# -b: boostrap on start - can be set to false to exclude destruction of the bootstrap node after the cluster deploys
+# -b: shutdown boostrap - can be set to true destroy bootstrap node after the cluster deploys
 # -g: gpu on start - can be set to false to exclude spinning up a gpu node after the cluster deploys
 # -m: deploy mode - can be set to simple to exclude download of DC/OS cli and extra output
 # -s: stacks - a list of comma separated values to overwrite which terraform stacks to build
@@ -30,7 +30,7 @@ parse_args()
 {
   while getopts ":b:d:g:m:p:s:" opt "$@"; do
     case "$opt" in
-      b) BOOTSTRAP_ON_START="$OPTARG" ;;
+      b) SHUTDOWN_BOOTSTRAP="$OPTARG" ;;
       g) GPU_ON_START="$OPTARG" ;;
       m) DEPLOY_MODE="$OPTARG" ;;
       p) PACKER="$OPTARG" ;;
@@ -165,7 +165,7 @@ if [[ "$DEPLOY_MODE" != "simple" ]];then
     echo "GPU node connected"
   fi
 
-  if [[ "$BOOTSTRAP_ON_START" != "false" ]];then
+  if [[ "$SHUTDOWN_BOOTSTRAP" == "true" ]];then
     echo "Shutting down bootstrap node"
     bash set_capacity.sh bootstrap 0
   fi

@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# -g: gpu on start - can be set to false to exclude gpu from restart
 # -s: stacks - a list of comma separated values to overwrite which asgs to resume
 
 usage() {
@@ -28,6 +29,7 @@ parse_args()
 {
   while getopts ":s:" opt "$@"; do
     case "$opt" in
+      g) GPU_ON_START="$OPTARG" ;;
       s) set -f
          IFS=,
          STACKS=($OPTARG) ;;
@@ -36,6 +38,11 @@ parse_args()
     esac
   done
 }
+
+if [[ "$GPU_ON_START" != "false" ]];then
+  bash set_capacity.sh gpu-slave 1
+  NUM_GPU_SLAVES=1
+fi
 
 ASGS=("slave" "gpu-slave" "public-slave" "captain" "bootstrap" "master" "bastion")
 
@@ -60,7 +67,6 @@ if [[ "$DEPLOY_MODE" != "simple" ]];then
   CLUSTER_NAME=$(awk -F\" '/^cluster_name/{print $2}'  "environments/$CONFIG.tfvars")
   NUM_SLAVES=$(awk -F\" '/^slave_asg_desired_capacity/{print $2}'  "environments/$CONFIG.tfvars")
   NUM_PUB_SLAVES=$(awk -F\" '/^public_slave_asg_desired_capacity/{print $2}'  "environments/$CONFIG.tfvars")
-  NUM_GPU_SLAVES=$(awk -F\" '/^gpu_slave_asg_desired_capacity/{print $2}'  "environments/$CONFIG.tfvars")
   DCOS_NODES=$((NUM_SLAVES + NUM_PUB_SLAVES + NUM_GPU_SLAVES))
   DCOS_SERVICES=$(awk -F\" '/^dcos_services/{print $2}'  "environments/$CONFIG.tfvars")
 
