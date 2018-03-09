@@ -19,13 +19,13 @@ arn                             = "aws-us-gov"
 s3_endpoint                     = "s3-us-gov-west-1.amazonaws.com"
 
 # the ami id for the machine that will serve as the bastion (can be CentOS or Amazon Linux)
-bastion_ami_id                  = "ami-128c0873"
+bastion_ami_id                  = "ami-0466e865"
 
 # the ami id for the machines that will run DeepCortex (should be a CentOS 7.4 ami)
-packer_base_ami                 = "ami-128c0873"
+packer_base_ami                 = "ami-0466e865"
 
 # the default ssh user for the above ami (likely centos for CentOS machines, but could be ec2-user so make sure to check the ami you are using)
-packer_ssh_user                 = "centos"
+packer_ssh_user                 = "ec2-user"
 
 # the VPC ID of the VPC you will launch DeepCortex into
 vpc_id                          = "vpc-7a51d11f"
@@ -78,7 +78,7 @@ dcos_version                    = "1.10.2"
 baile_access                    = "private"
 
 # enable online prediction (true/false)
-online_prediction               = "false"
+online_prediction               = "true"
 
 # true or false for downloading latest files (frontend and mstar) from S3 rather than using files in the docker container
 download_from_s3                = "true"

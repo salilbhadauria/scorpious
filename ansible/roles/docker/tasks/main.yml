@@ -48,6 +48,6 @@
 
 - name: allow the default user to use docker
   user:
-    name: "centos"
+    name: "{{main_user}}"
     groups: docker
     append: yes

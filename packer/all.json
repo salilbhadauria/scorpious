@@ -11,7 +11,8 @@
         "aws_vpc_id":        "{{env `PACKER_VPC_ID`}}",
         "aws_subnet_id":     "{{env `PACKER_SUBNET_ID`}}",
         "image_name":        "",
-        "ssh_username":      "{{env `SSH_USER`}}",
+        "ssh_username":      "{{env `MAIN_USER`}}",
+        "main_user":         "{{env `MAIN_USER`}}",
         "git_commit":        "",
         "build_author":      "{{env `USER`}}",
         "build_uuid":        "",
@@ -20,6 +21,7 @@
         "dcos_password":     "{{ env `DCOS_PASSWORD`}}",
         "dcos_download_url": "{{ env `DCOS_DOWNLOAD_URL`}}",
         "online_prediction": "{{ env `ONLINE_PREDICTION`}}",
+        "requirements_file": "{{ env `REQUIREMENTS_FILE`}}",
 
         "master_xvde_size":  "{{ env `MASTER_XVDE_SIZE`}}",
         "master_xvdf_size":  "{{ env `MASTER_XVDF_SIZE`}}",
@@ -314,14 +316,15 @@
         "type": "ansible-local",
         "playbook_file": "packer/playbook.yml",
         "playbook_dir": "./ansible/",
-        "galaxy_file": "./ansible/requirements.yml",
+        "galaxy_file": "{{user `requirements_file`}}",
         "extra_arguments": [
           "-i /etc/ansible/hosts",
           "--extra-vars \"customer_key={{ user `customer_key`}} \"",
           "-e \"dcos_username={{ user `dcos_username`}}\"",
           "-e \"dcos_password={{ user `dcos_password`}}\"",
           "-e \"dcos_download_url={{ user `dcos_download_url`}}\"",
-          "-e \"online_prediction={{ user `online_prediction`}}\""
+          "-e \"online_prediction={{ user `online_prediction`}}\"",
+          "-e \"main_user={{ user `main_user`}}\""
         ]
       },
       {

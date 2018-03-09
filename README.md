@@ -4,7 +4,7 @@
 #  scorpius
 Automated deployment for DeepCortex platform
 
-Prior to deployment you must make sure the Terms and Services for the CentOS 7.3 base image in the AWS marketplace have been accepted. You can do this by spinning up a temporary machine using this AMI from within the AWS console. This process will ask you to accept the Terms and Services. (note: this can currently only be done through the console and not the cli or other tool)
+Prior to deployment you must make sure the Terms and Services for the base image in the AWS marketplace have been accepted in necessary. You can do this by spinning up a temporary machine using this AMI from within the AWS console. This process will ask you to accept the Terms and Services. (note: this can currently only be done through the console and not the cli or other tool)
 
 ### Docker deployment
 
@@ -15,7 +15,7 @@ Prior to deployment you must make sure the Terms and Services for the CentOS 7.3
     * CONFIG - the name of the config file to use (should be template).
     * AWS_ACCESS_KEY_ID - the access key that should be used to deploy in AWS.
     * AWS_SECRET_ACCESS_KEY - the secret key that should be used to deploy in AWS.
-    * CUSTOMER_KEY - the DC/OS enterprise key 
+    * CUSTOMER_KEY - the DC/OS enterprise key
     * DCOS_USERNAME - the username you'd like to use to login to the DC/OS cluster
     * DCOS_PASSWORD - the password you'd like to use to login to the DC/OS cluster (avoid special characters used in bash such as "#", ";", "$", etc.)
 5. Run "docker pull deepcortex/scorpius-deploymnet:TAG" repalcing tag with the correct image tag.
