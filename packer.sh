@@ -27,6 +27,12 @@ export PACKER_VPC_ID=$(awk -F\" '/^vpc_id/{print $2}'  "environments/$CONFIG.tfv
 export PACKER_SUBNET_ID=$(awk -F\" '/^subnet_id_1/{print $2}'  "environments/$CONFIG.tfvars")
 export ONLINE_PREDICTION=$(awk -F\" '/^online_prediction/{print $2}'  "environments/$CONFIG.tfvars")
 
+if [ $ONLINE_PREDICTION = "true" ]; then
+  export REQUIREMENTS_FILE="./ansible/requirements.yml"
+else
+  export REQUIREMENTS_FILE="./ansible/requirements_wo_psql.yml"
+fi
+
 export DCOS_VERSION=$(awk -F\" '/^dcos_version/{print $2}'  "environments/$CONFIG.tfvars")
 
 if [ -z "$DCOS_VERSION" ];then
