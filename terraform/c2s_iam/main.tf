@@ -18,31 +18,6 @@ resource "aws_iam_access_key" "app" {
   user = "${aws_iam_user.app.name}"
 }
 
-resource "aws_iam_user_policy" "app_s3" {
-  name = "${var.environment}-app-user-policy"
-  user = "${aws_iam_user.app.name}"
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "s3:*"
-      ],
-      "Effect": "Allow",
-      "Resource": [
-        "arn:${var.arn}:s3:::${var.dcos_apps_bucket}",
-        "arn:${var.arn}:s3:::${var.dcos_apps_bucket}/*",
-        "arn:${var.arn}:s3:::${var.online_prediction_bucket}",
-        "arn:${var.arn}:s3:::${var.online_prediction_bucket}/*"
-      ]
-    }
-  ]
-}
-EOF
-}
-
 #########################################################
 # IAM Roles
 ## Role and Policies

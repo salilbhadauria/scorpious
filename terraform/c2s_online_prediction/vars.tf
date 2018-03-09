@@ -2,10 +2,10 @@
 
 variable "aws_region" {}
 variable "environment" {}
-variable "online_prediction_bucket" {}
+variable "tf_bucket" {}
 variable "tag_owner" {}
 variable "tag_usage" {}
-variable "arn" {}
+variable "arn" { default = "aws"}
 
 locals {
     tags = {

@@ -20,8 +20,7 @@
         { "key": "env", "value": "ELASTIC_PORT=${ELASTIC_PORT}" },
         { "key": "env", "value": "ELASTIC_SSL=${ELASTIC_SSL}" },
         { "key": "env", "value": "ELASTIC_CONFIG_SETTING_INDEX=${ELASTIC_CONFIG_SETTING_INDEX}" },
-        { "key": "env", "value": "ELASTIC_SSL=${ELASTIC_SSL}" },
-        { "key": "env", "value": "AKKA_LOGLEVEL=${AKKA_LOGLEVEL}" }
+        { "key": "env", "value": "ELASTIC_SSL=${ELASTIC_SSL}" }
       ],
       "forcePullImage": true
     }
@@ -48,5 +47,9 @@
     "gracePeriodSeconds": 10,
     "intervalSeconds": 2,
     "maxConsecutiveFailures": 10
-  }]
+  }],
+  "upgradeStrategy": {
+    "maximumOverCapacity": 1,
+    "minimumHealthCapacity": 0.5
+  }
 }

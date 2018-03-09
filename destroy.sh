@@ -46,9 +46,6 @@ export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$C
 AWS_DCOS_STACK_BUCKET=$(awk -F\" '/^dcos_stack_bucket/{print $2}'  "environments/$CONFIG.tfvars")
 AWS_DCOS_APPS_BUCKET=$(awk -F\" '/^dcos_apps_bucket/{print $2}'  "environments/$CONFIG.tfvars")
 
-aws s3 rm "s3://$AWS_DCOS_STACK_BUCKET" --recursive
-aws s3 rm "s3://$AWS_DCOS_APPS_BUCKET" --recursive
-
 if aws s3 ls "s3://$AWS_DCOS_STACK_BUCKET" 2>&1 | grep -q 'NoSuchBucket'
   then
     echo "No bucket to delete"
@@ -66,7 +63,7 @@ else
 fi
 
 PREFIX=$(awk -F\" '/^prefix/{print $2}'  "environments/$CONFIG.tfvars")
-STACKS=("iam" "vpc" "redshift" "online_prediction" "platform")
+STACKS=("iam" "vpc" "redshift" "platform" "online_prediction")
 
 parse_args "$@"
 

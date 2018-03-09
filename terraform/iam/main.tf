@@ -18,31 +18,6 @@ resource "aws_iam_access_key" "app" {
   user = "${aws_iam_user.app.name}"
 }
 
-resource "aws_iam_user_policy" "app_s3" {
-  name = "${var.environment}-app-user-policy"
-  user = "${aws_iam_user.app.name}"
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "s3:*"
-      ],
-      "Effect": "Allow",
-      "Resource": [
-        "arn:${local.arn}:s3:::${var.dcos_apps_bucket}",
-        "arn:${local.arn}:s3:::${var.dcos_apps_bucket}/*",
-        "arn:${var.arn}:s3:::${var.online_prediction_bucket}",
-        "arn:${var.arn}:s3:::${var.online_prediction_bucket}/*"
-      ]
-    }
-  ]
-}
-EOF
-}
-
 #########################################################
 # IAM Roles
 ## Role and Policies
@@ -71,7 +46,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "bastion_ssm_attach" {
     role       = "${aws_iam_role.bastion_role.name}"
-    policy_arn = "arn:${local.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+    policy_arn = "arn:${var.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_role" "nat_instance_role" {
@@ -98,7 +73,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "nat_instance_ssm_attach" {
     role       = "${aws_iam_role.nat_instance_role.name}"
-    policy_arn = "arn:${local.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+    policy_arn = "arn:${var.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_role_policy" "nat_instance_policy" {
@@ -149,7 +124,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "bootstrap_ssm_attach" {
     role       = "${aws_iam_role.bootstrap_role.name}"
-    policy_arn = "arn:${local.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+    policy_arn = "arn:${var.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_role_policy" "bootstrap_policy" {
@@ -195,7 +170,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "master_ssm_attach" {
     role       = "${aws_iam_role.master_role.name}"
-    policy_arn = "arn:${local.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+    policy_arn = "arn:${var.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_role_policy" "master_policy" {
@@ -241,7 +216,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "slave_ssm_attach" {
     role       = "${aws_iam_role.slave_role.name}"
-    policy_arn = "arn:${local.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+    policy_arn = "arn:${var.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_role_policy" "slave_policy" {
@@ -287,7 +262,7 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "captain_ssm_attach" {
     role       = "${aws_iam_role.captain_role.name}"
-    policy_arn = "arn:${local.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+    policy_arn = "arn:${var.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_role_policy" "captain_policy" {

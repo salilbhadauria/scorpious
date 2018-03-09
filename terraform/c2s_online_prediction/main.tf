@@ -6,25 +6,35 @@ terraform {
 }
 
 #########################################################
-# S3 Bucket
 
-resource "aws_s3_bucket" "online_prediction_bucket" {
-  bucket = "${var.online_prediction_bucket}"
-  acl    = "private"
-  tags   = "${merge(local.tags, map("name", "${var.online_prediction_bucket}"))}"
-  lifecycle {
-      prevent_destroy = false
+# Retrieve IAM data
+data "terraform_remote_state" "iam" {
+  backend = "s3"
+  config {
+    bucket = "${var.tf_bucket}"
+    key    = "${var.aws_region}/${var.environment}/c2s_iam/terraform.tfstate"
+    region = "${var.aws_region}"
+  }
+}
+
+# Retrieve Platform data
+data "terraform_remote_state" "platform" {
+  backend = "s3"
+  config {
+    bucket = "${var.tf_bucket}"
+    key    = "${var.aws_region}/${var.environment}/c2s_platform/terraform.tfstate"
+    region = "${var.aws_region}"
   }
 }
 
 # SNS
 
-resource "aws_sns_topic" "online-prediction" {
-  name = "online-prediction-${var.owner}-${var.environment}"
+resource "aws_sns_topic" "online_prediction" {
+  name = "online-prediction-${var.tag_owner}-${var.environment}"
 }
 
-resource "aws_sns_topic_policy" "online-prediction" {
-  arn = "${aws_sns_topic.test.arn}"
+resource "aws_sns_topic_policy" "online_prediction" {
+  arn = "${aws_sns_topic.online_prediction.arn}"
 
   policy = <<EOF
 {
@@ -34,10 +44,10 @@ resource "aws_sns_topic_policy" "online-prediction" {
             "Effect": "Allow",
             "Principal": { "AWS" : "*" },
             "Action": [ "SNS:Publish" ],
-            "Resource": "${aws_sns_topic.online-prediction.arn}",
+            "Resource": "${aws_sns_topic.online_prediction.arn}",
             "Condition": {
                 "ArnLike": {
-                    "aws:SourceArn": "arn:${var.arn}:s3:*:*:${var.online_prediction_bucket}"
+                    "aws:SourceArn": "${data.terraform_remote_state.platform.apps_s3_bucket_arn}"
                 }
             }
     }]
@@ -46,22 +56,21 @@ EOF
 }
 
 resource "aws_s3_bucket_notification" "online_prediction" {
-  bucket = "${var.online_prediction_bucket}"
+  bucket = "${data.terraform_remote_state.platform.apps_s3_bucket}"
 
   topic {
-    topic_arn     = "${aws_sns_topic.online-prediction.arn}"
+    topic_arn     = "${aws_sns_topic.online_prediction.arn}"
     events        = ["s3:ObjectCreated:*"]
+    filter_prefix = "images/"
   }
 }
 
 # SQS
 
 resource "aws_sqs_queue" "online_prediction" {
-  name = "online-prediction-${var.owner}-${var.environment}"
+  name = "online-prediction-${var.tag_owner}-${var.environment}"
   receive_wait_time_seconds = 20
   visibility_timeout_seconds = 300
-
-  tags = "${merge(local.tags, map("name", "online-prediction"))}"
 }
 
 resource "aws_sqs_queue_policy" "online_prediction" {
@@ -78,7 +87,7 @@ resource "aws_sqs_queue_policy" "online_prediction" {
         "Resource":"${aws_sqs_queue.online_prediction.arn}",
         "Condition":{
           "ArnEquals":{
-            "aws:SourceArn":"${aws_sns_topic.online-prediction.arn}"
+            "aws:SourceArn":"${aws_sns_topic.online_prediction.arn}"
           }
         }
       }
@@ -88,8 +97,47 @@ EOF
 }
 
 resource "aws_sns_topic_subscription" "user_updates_sqs_target" {
-  topic_arn = "${aws_sns_topic.online-prediction.arn}"
+  topic_arn = "${aws_sns_topic.online_prediction.arn}"
   protocol  = "sqs"
   endpoint  = "${aws_sqs_queue.online_prediction.arn}"
 }
 
+# Add IAM policy to app user for S3, SQS, SNS
+
+resource "aws_iam_user_policy" "online_prediction" {
+  name = "${var.environment}-app-user-op-policy"
+  user = "${data.terraform_remote_state.iam.app_user_name}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "sns:*"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${aws_sns_topic.online_prediction.arn}"
+      ]
+    },
+    {
+      "Action": [
+        "sqs:*"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${aws_sqs_queue.online_prediction.arn}"
+      ]
+    },
+    {
+      "Action": [
+        "sqs:ListQueues"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}

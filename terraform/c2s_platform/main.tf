@@ -81,6 +81,32 @@ resource "aws_s3_bucket_policy" "dcos_apps_bucket_policy" {
   ]
 }
 
+
+# IAM S3 policy for app user
+
+resource "aws_iam_user_policy" "app_s3" {
+  name = "${var.environment}-app-user-policy"
+  user = "${data.terraform_remote_state.iam.app_user_name}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:*"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${aws_s3_bucket.dcos_apps_bucket.arn}",
+        "${aws_s3_bucket.dcos_apps_bucket.arn}/*"
+      ]
+    }
+  ]
+}
+EOF
+}
+
 #########################################################
 # Security Groups
 
@@ -850,7 +876,7 @@ data "template_file" "captain_userdata" {
     dcos_master_url = "${module.master_elb_internal.elb_dns_name}"
     dcos_apps_bucket = "${aws_s3_bucket.dcos_apps_bucket.id}"
     dcos_apps_bucket_domain = "${aws_s3_bucket.dcos_apps_bucket.id}.${var.s3_endpoint}"
-    online_prediction_bucket = "${var.online_prediction_bucket}"
+    online_prediction_sqs_queue = "online-prediction-${var.tag_owner}-${var.environment}"
     aws_region = "${var.aws_region}"
     redshift_user = "${data.terraform_remote_state.redshift.redshift_master_username}"
     redshift_password = "${data.terraform_remote_state.redshift.redshift_master_password}"
@@ -863,10 +889,12 @@ data "template_file" "captain_userdata" {
     rabbit_password = "${random_string.rabbit_password.result}"
     aries_http_search_user_password = "${random_string.aries_http_search_user_password.result}"
     aries_http_command_user_password = "${random_string.aries_http_command_user_password.result}"
-    baile_password = "${random_string.baile_password.result}"
+    argo_http_auth_user_password = "${random_string.argo_http_auth_user_password.result}"
     cortex_http_search_user_password = "${random_string.cortex_http_search_user_password.result}"
+    online_prediction_password = "${random_string.online_prediction_password.result}"
+    online_prediction_stream_id = "${uuid()}"
     orion_http_search_user_password = "${random_string.orion_http_search_user_password.result}"
-    pegasus_password = "${random_string.pegaus_password.result}"
+    pegasus_http_auth_user_password = "${random_string.pegasus_http_auth_user_password.result}"
     argo_docker_image_version = "${var.argo_docker_image_version}"
     aries_docker_image_version = "${var.aries_docker_image_version}"
     baile_docker_image_version = "${var.baile_docker_image_version}"

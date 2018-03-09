@@ -166,6 +166,8 @@ if [[ "$DEPLOY_MODE" != "simple" ]];then
   dcos marathon app restart baile
   dcos marathon app restart orion-api-rest
   dcos marathon app restart cortex-api-rest
+  dcos marathon app restart pegasus-api-rest
+  dcos marathon app restart taurus
 
   RESTARTED_SERVICES=3
   SERVICES_DEPLOYING=$(dcos marathon app list | grep restart | wc -l)

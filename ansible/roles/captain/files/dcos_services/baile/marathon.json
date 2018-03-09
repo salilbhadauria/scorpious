@@ -32,7 +32,15 @@
         { "key": "env", "value": "ARIES_SEARCH_PASSWORD=${ARIES_SEARCH_PASSWORD}" },
         { "key": "env", "value": "ARIES_HOST=${ARIES_HOST}" },
         { "key": "env", "value": "ARIES_PORT=${ARIES_PORT}" },
-        { "key": "env", "value": "ARIES_REST_VERSION=${ARIES_REST_VERSION}" }
+        { "key": "env", "value": "ARIES_REST_VERSION=${ARIES_REST_VERSION}" },
+        { "key": "env", "value": "ARGO_HTTP_USER=${ARGO_HTTP_USER}" },
+        { "key": "env", "value": "ARGO_HTTP_PASSWORD=${ARGO_HTTP_PASSWORD}" },
+        { "key": "env", "value": "ARGO_HOST=${ARGO_HOST}" },
+        { "key": "env", "value": "ARGO_PORT=${ARGO_PORT}" },
+        { "key": "env", "value": "ARGO_REST_VERSION=${ARGO_REST_VERSION}" },
+        { "key": "env", "value": "ONLINE_PREDICTION_USERNAME=${ONLINE_PREDICTION_USERNAME}" },
+        { "key": "env", "value": "ONLINE_PREDICTION_PASSWORD=${ONLINE_PREDICTION_PASSWORD}" },
+        { "key": "env", "value": "ONLINE_PREDICTION_STREAM_ID=${ONLINE_PREDICTION_STREAM_ID}" }
       ],
       "forcePullImage": true
     }

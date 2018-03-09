@@ -2,6 +2,7 @@
 
 export RABBITMQ_USER="$RABBIT_USERNAME"
 export RABBITMQ_PASSWORD="$RABBIT_PASSWORD"
+export DCOS_MASTER_PRIVATE_IP=$(aws ec2 describe-instances --filter Name=tag-key,Values=Name Name=tag-value,Values=$MASTER_INSTANCE_NAME --query "Reservations[*].Instances[*].PrivateIpAddress" --output=text)
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 

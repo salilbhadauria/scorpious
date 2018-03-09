@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set +e
 
 # optional arguments:
 # -b: shutdown boostrap - can be set to true destroy bootstrap node after the cluster deploys
@@ -49,7 +49,7 @@ export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$C
 sh terraform_init_backend.sh $CONFIG
 
 PREFIX=$(awk -F\" '/^prefix/{print $2}'  "environments/$CONFIG.tfvars")
-STACKS=("iam" "vpc" "redshift" "online_prediction" "platform")
+STACKS=("iam" "vpc" "redshift" "platform" "online_prediction")
 
 parse_args "$@"
 

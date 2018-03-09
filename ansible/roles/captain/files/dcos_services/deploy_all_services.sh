@@ -2,12 +2,12 @@
 
 cd /opt/dcos_services/
 
-# Stop mongo if running
+# Stop mongo and postgres servers if running
 service mongod stop
+service postgresql stop
 
 # Add S3 bucket encryption
 aws s3api put-bucket-encryption --bucket "${AWS_S3_BUCKET}" --server-side-encryption-configuration '{"Rules": [{"ApplyServerSideEncryptionByDefault": {"SSEAlgorithm": "AES256"}}]}'
-aws s3api put-bucket-encryption --bucket "${ONLINE_PREDICTION_S3_BUCKET}" --server-side-encryption-configuration '{"Rules": [{"ApplyServerSideEncryptionByDefault": {"SSEAlgorithm": "AES256"}}]}'
 
 # Upload front end files to S3
 aws s3 ls "s3://${AWS_S3_BUCKET}/static-content/dev/"
@@ -64,8 +64,11 @@ bash elasticsearch/scripts/elasticsearch_init.sh
 bash rabbitmq/rabbitmq_init.sh
 bash mongodb/mongo_init.sh
 
+bash postgres/postgres_init.sh
+
 # Deploy custom services and frameworkds
 bash deploy_service.sh aries/marathon.json aries/env_vars.sh
+bash deploy_service.sh argo/marathon.json argo/env_vars.sh
 bash deploy_service.sh baile/marathon.json baile/env_vars.sh
 bash deploy_service.sh baile-haproxy/marathon.json baile-haproxy/env_vars.sh
 bash deploy_service.sh cortex/marathon.json cortex/env_vars.sh
