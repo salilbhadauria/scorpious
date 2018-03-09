@@ -41,6 +41,7 @@ environment:
   salsa_version: ${salsa_version}
   upload_datasets: "${upload_datasets}"
   download_from_s3: "${download_from_s3}"
+  online_prediction: "${online_prediction}"
 manage_resolv_conf: false
 preserve_hostname: true
 runcmd:

@@ -25,6 +25,7 @@ export OWNER=$(awk -F\" '/^tag_owner/{print $2}'  "environments/$CONFIG.tfvars")
 
 export PACKER_VPC_ID=$(awk -F\" '/^vpc_id/{print $2}'  "environments/$CONFIG.tfvars")
 export PACKER_SUBNET_ID=$(awk -F\" '/^subnet_id_1/{print $2}'  "environments/$CONFIG.tfvars")
+export ONLINE_PREDICTION=$(awk -F\" '/^online_prediction/{print $2}'  "environments/$CONFIG.tfvars")
 
 export DCOS_VERSION=$(awk -F\" '/^dcos_version/{print $2}'  "environments/$CONFIG.tfvars")
 

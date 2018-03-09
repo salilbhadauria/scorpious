@@ -77,6 +77,9 @@ dcos_version                    = "1.10.2"
 # public vs private baile
 baile_access                    = "private"
 
+# enable online prediction (true/false)
+online_prediction               = "false"
+
 # true or false for downloading latest files (frontend and mstar) from S3 rather than using files in the docker container
 download_from_s3                = "true"
 

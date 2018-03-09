@@ -74,6 +74,7 @@ variable "um_docker_image_version" {}
 variable "salsa_version" { default = "falcon" }
 variable "upload_datasets" { default = "false"}
 variable "download_from_s3" { default = "false" }
+variable "online_prediction" { default = "true" }
 
 locals {
     create_deploy_sgs = "${var.access_cidr == var.deploy_cidr ? 0 : 1}"

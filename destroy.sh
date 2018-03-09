@@ -63,7 +63,12 @@ else
 fi
 
 PREFIX=$(awk -F\" '/^prefix/{print $2}'  "environments/$CONFIG.tfvars")
-STACKS=("iam" "vpc" "redshift" "platform" "online_prediction")
+STACKS=("online_prediction" "platform" "redshift" "vpc" "iam")
+
+ONLINE_PREDICTION=$(awk -F\" '/^online_prediction/{print $2}'  "environments/$CONFIG.tfvars")
+if [[ "$ONLINE_PREDICTION" != "true" ]];then
+  STACKS=("platform" "redshift" "vpc" "iam")
+fi
 
 parse_args "$@"
 

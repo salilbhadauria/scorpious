@@ -19,6 +19,7 @@
         "dcos_username":     "{{ env `DCOS_USERNAME`}}",
         "dcos_password":     "{{ env `DCOS_PASSWORD`}}",
         "dcos_download_url": "{{ env `DCOS_DOWNLOAD_URL`}}",
+        "online_prediction": "{{ env `ONLINE_PREDICTION`}}",
 
         "master_xvde_size":  "{{ env `MASTER_XVDE_SIZE`}}",
         "master_xvdf_size":  "{{ env `MASTER_XVDF_SIZE`}}",
@@ -319,7 +320,8 @@
           "--extra-vars \"customer_key={{ user `customer_key`}} \"",
           "-e \"dcos_username={{ user `dcos_username`}}\"",
           "-e \"dcos_password={{ user `dcos_password`}}\"",
-          "-e \"dcos_download_url={{ user `dcos_download_url`}}\""
+          "-e \"dcos_download_url={{ user `dcos_download_url`}}\"",
+          "-e \"online_prediction={{ user `online_prediction`}}\""
         ]
       },
       {

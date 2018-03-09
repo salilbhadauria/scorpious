@@ -51,6 +51,11 @@ sh terraform_init_backend.sh $CONFIG
 PREFIX=$(awk -F\" '/^prefix/{print $2}'  "environments/$CONFIG.tfvars")
 STACKS=("iam" "vpc" "redshift" "platform" "online_prediction")
 
+ONLINE_PREDICTION=$(awk -F\" '/^online_prediction/{print $2}'  "environments/$CONFIG.tfvars")
+if [[ "$ONLINE_PREDICTION" != "true" ]];then
+  STACKS=("iam" "vpc" "redshift" "platform")
+fi
+
 parse_args "$@"
 
 if [[ "$PACKER" != "false" ]];then
