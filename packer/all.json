@@ -330,7 +330,11 @@
       {
         "type": "ansible-local",
         "playbook_file": "packer/cleanup.yml",
-        "playbook_dir": "./ansible/"
+        "playbook_dir": "./ansible/",
+        "extra_arguments": [
+          "-i /etc/ansible/hosts",
+          "--extra-vars \"main_user={{ user `main_user`}}\""
+        ]
       }
     ]
 }
