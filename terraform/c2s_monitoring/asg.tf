@@ -76,6 +76,25 @@ resource "aws_cloudwatch_metric_alarm" "slave_asg_low_running_nodes" {
   ok_actions                = [ "${aws_sns_topic.alerts.arn}" ]
 }
 
+resource "aws_cloudwatch_metric_alarm" "gpu_slave_asg_low_running_nodes" {
+  alarm_name                = "gpu_slave_asg_low_running_nodes"
+  comparison_operator       = "LessThanThreshold"
+  evaluation_periods        = "2"
+  metric_name               = "GroupInServiceInstances"
+  namespace                 = "AWS/AutoScaling"
+  period                    = "60"
+  statistic                 = "Average"
+  threshold                 = "${var.gpu_slave_asg_desired_capacity}"
+
+  dimensions {
+    AutoScalingGroupName = "${data.terraform_remote_state.platform.gpu_slave_asg_name}"
+  }
+
+  alarm_description         = "This metric monitors amount of nodes on GPU Slave ASG"
+  alarm_actions             = [ "${aws_sns_topic.alerts.arn}" ]
+  ok_actions                = [ "${aws_sns_topic.alerts.arn}" ]
+}
+
 resource "aws_cloudwatch_metric_alarm" "bastion_asg_low_running_nodes" {
   alarm_name                = "dc_bastion_asg_low_running_nodes"
   comparison_operator       = "LessThanThreshold"

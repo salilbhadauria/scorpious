@@ -26,6 +26,8 @@ tag_usage                       = "falcon"
 # the name of the redshfit cluster
 redshift_cluster_name           = "falcon-deepcortex-test-redshift"
 
+# specify if Public MSTAR data should be uploaded to DeepCortex S3 Bucket
+upload_datasets                 = "true"
 
 ### DO NOT CHANGE ANYTHING BELOW THIS LINE
 
@@ -58,31 +60,43 @@ cluster_name                    = "deepcortex"
 master_asg_desired_capacity     = "1"
 master_asg_min_size             = "1"
 master_asg_max_size             = "1"
-master_elb_dns_name             = "master"
 
-# mesos, docker, volume0, log
+# mesos, docker, log
 master_xvde_size                = "50"
-master_xvdf_size                = "50"
-master_xvdg_size                = "50"
+master_xvdf_size                = "20"
 master_xvdh_size                = "50"
 
-slave_asg_desired_capacity     = "3"
-slave_asg_min_size             = "1"
-slave_asg_max_size             = "3"
+slave_asg_desired_capacity      = "3"
+slave_asg_min_size              = "1"
+slave_asg_max_size              = "3"
 
 # mesos, docker, volume0, log
-slave_xvde_size                = "250"
-slave_xvdf_size                = "100"
-slave_xvdg_size                = "100"
-slave_xvdh_size                = "60"
+slave_xvde_size                 = "150"
+slave_xvdf_size                 = "100"
+slave_xvdg_size                 = "100"
+slave_xvdh_size                 = "50"
+
+gpu_slave_asg_desired_capacity  = "1"
+gpu_slave_asg_min_size          = "1"
+gpu_slave_asg_max_size          = "1"
+
+# mesos, docker, log
+gpu_slave_xvde_size             = "50"
+gpu_slave_xvdf_size             = "50"
+gpu_slave_xvdh_size             = "50"
 
 public_slave_asg_desired_capacity  = "1"
 public_slave_asg_min_size          = "1"
 public_slave_asg_max_size          = "1"
 
-captain_asg_desired_capacity  = "1"
-captain_asg_min_size          = "1"
-captain_asg_max_size          = "1"
+# mesos, docker, log
+public_slave_xvde_size             = "50"
+public_slave_xvdf_size             = "50"
+public_slave_xvdh_size             = "50"
+
+captain_asg_desired_capacity       = "1"
+captain_asg_min_size               = "1"
+captain_asg_max_size               = "1"
 
 
 # Redshift
@@ -96,12 +110,12 @@ redshift_encrypted = false
 redshift_skip_final_snapshot = true
 
 # Application Docker Image Versions
-aries_docker_image_version = "0.0.0-ef21aeb1bd0eb01dca146d29c101994541cc3d81"
-baile_docker_image_version = "testv6"
-baile_nginx_docker_image_version = "latest"
-cortex_docker_image_version = "0.0.0-f0f882e6cb2d80621f57766c12dfc7a4321bf258"
+aries_docker_image_version = "0.0.0-d7d4808443dccd85278492a35614894e6051ae23"
+baile_docker_image_version = "v1.0.0"
+baile_haproxy_docker_image_version = "latest"
+cortex_docker_image_version = "0.0.0-7f2913f624a1260cf2ed15852c1857ac0e50bbbf"
 logstash_docker_image_version = "latest"
-orion_docker_image_version = "0.0.0-c12e95e9784037e5ab452183c5bf900ab61cf6dd"
-job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-4-g3a424df"
+orion_docker_image_version = "0.0.0-77ec7b0ac9a37becf35606e404e09c30324da6cb"
+job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-194-ga95f9d9"
 rmq_docker_image_version = "latest"
 um_docker_image_version = "v1.0"

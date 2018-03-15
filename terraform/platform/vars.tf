@@ -7,6 +7,7 @@ variable "account" {}
 variable "access_cidr" {}
 variable "deploy_cidr" {}
 variable "baile_access" {}
+variable "s3_endpoint" {}
 
 # Bootstrap vars
 
@@ -25,13 +26,18 @@ variable "dcos_password" {}
 variable "master_asg_desired_capacity" {}
 variable "master_asg_min_size" {}
 variable "master_asg_max_size" {}
-variable "master_elb_dns_name" {}
 
 # Slave vars
 
 variable "slave_asg_desired_capacity" {}
 variable "slave_asg_min_size" {}
 variable "slave_asg_max_size" {}
+
+# GPU slave vars
+
+variable "gpu_slave_asg_desired_capacity" {}
+variable "gpu_slave_asg_min_size" {}
+variable "gpu_slave_asg_max_size" {}
 
 # Public slave vars
 
@@ -50,13 +56,15 @@ variable "tag_usage" {}
 
 variable "aries_docker_image_version" {}
 variable "baile_docker_image_version" {}
-variable "baile_nginx_docker_image_version" {}
+variable "baile_haproxy_docker_image_version" {}
 variable "cortex_docker_image_version" {}
 variable "logstash_docker_image_version" {}
 variable "orion_docker_image_version" {}
 variable "job_master_docker_image" {}
 variable "rmq_docker_image_version" {}
 variable "um_docker_image_version" {}
+variable "upload_datasets" { default = "false"}
+variable "download_from_s3" { default = "true" }
 
 locals {
     create_deploy_sgs = "${var.access_cidr == var.deploy_cidr ? 0 : 1}"

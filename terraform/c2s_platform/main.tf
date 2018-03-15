@@ -89,7 +89,7 @@ module "dcos_stack_sg" {
 
     vpc_id = "${var.vpc_id}"
 
-    sg_name = "dc-dcos-stack"
+    sg_name = "dcos-stack-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_self = [
@@ -130,7 +130,7 @@ module "bootstrap_sg" {
 
     vpc_id = "${var.vpc_id}"
 
-    sg_name = "dc-bootstrap"
+    sg_name = "bootstrap-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 2
@@ -165,7 +165,7 @@ module "bootstrap_elb_sg" {
 
     vpc_id = "${var.vpc_id}"
 
-    sg_name = "dc-bootstrap-elb"
+    sg_name = "bootstrap-elb-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 1
@@ -236,7 +236,7 @@ module "bootstrap_asg" {
 
     ami_name                = "bootstrap-${var.tag_owner}-${var.environment}*"
     lc_name_prefix          = "${var.environment}-bootstrap-"
-    lc_instance_type        = "m4.xlarge"
+    lc_instance_type        = "t2.medium"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.bootstrap_sg.id}", "${module.dcos_stack_sg.id}" ]
@@ -263,7 +263,7 @@ module "master_sg" {
 
     vpc_id = "${var.vpc_id}"
 
-    sg_name = "dc-master"
+    sg_name = "master-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 13
@@ -364,7 +364,7 @@ module "master_elb_sg" {
 
     vpc_id = "${var.vpc_id}"
 
-    sg_name = "dc-master-elb"
+    sg_name = "master-elb-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -416,7 +416,7 @@ module "master_elb_internal_sg" {
 
     vpc_id = "${var.vpc_id}"
 
-    sg_name = "dc-master-elb-internal"
+    sg_name = "master-elb-in-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 6
@@ -542,7 +542,7 @@ module "slave_sg" {
 
     vpc_id = "${var.vpc_id}"
 
-    sg_name = "dc-slave"
+    sg_name = "slave-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 3
@@ -621,6 +621,46 @@ module "slave_asg" {
     instance_role_tag = "slave"
 }
 
+#GPU Slave
+
+data "template_file" "gpu_slave_userdata" {
+  template = "${file("../../terraform/templates/gpu_slave_userdata.tpl")}"
+
+  vars {
+    environment = "${var.environment}"
+    aws_region = "${var.aws_region}"
+    bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
+  }
+
+  depends_on = [
+    "module.bootstrap_elb"
+  ]
+}
+
+module "gpu_slave_asg" {
+    source = "../../terraform/modules/autoscaling_group"
+
+    ami_name                = "gpu-slave-${var.tag_owner}-${var.environment}*"
+    lc_name_prefix          = "${var.environment}-gpu-slave-"
+    lc_instance_type        = "p2.xlarge"
+    lc_ebs_optimized        = "false"
+    lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
+    lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}" ]
+    lc_user_data            = "${data.template_file.gpu_slave_userdata.rendered}"
+    lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
+
+    asg_name                = "${var.tag_owner}-${var.environment}-gpu-slave-asg"
+    asg_subnet_ids          = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
+    asg_desired_capacity    = "${var.gpu_slave_asg_desired_capacity}"
+    asg_min_size            = "${var.gpu_slave_asg_min_size}"
+    asg_max_size            = "${var.gpu_slave_asg_max_size}"
+
+    tags_asg = "${local.tags_asg}"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-gpu-slave-asg"
+    instance_name_tag = "${var.tag_owner}-${var.environment}-gpu-slave"
+    instance_role_tag = "gpu-slave"
+}
+
 #########################################################
 # Baile ELB
 module "baile_elb_sg" {
@@ -628,7 +668,7 @@ module "baile_elb_sg" {
 
     vpc_id = "${var.vpc_id}"
 
-    sg_name = "dc-baile-elb"
+    sg_name = "baile-elb-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -696,7 +736,7 @@ module "public_slave_sg" {
 
     vpc_id = "${var.vpc_id}"
 
-    sg_name = "dc-public-slave"
+    sg_name = "public-slave-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 3
@@ -749,9 +789,9 @@ data "template_file" "public_slave_userdata" {
 module "public_slave_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
-    ami_name                = "slave-${var.tag_owner}-${var.environment}*"
+    ami_name                = "public-slave-${var.tag_owner}-${var.environment}*"
     lc_name_prefix          = "${var.environment}-public-slave-"
-    lc_instance_type        = "m4.xlarge"
+    lc_instance_type        = "t2.medium"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.public_slave_sg.id}", "${module.dcos_stack_sg.id}" ]
@@ -778,7 +818,7 @@ module "captain_sg" {
 
     vpc_id = "${var.vpc_id}"
 
-    sg_name = "dc-captain"
+    sg_name = "captain-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 1
@@ -809,13 +849,13 @@ data "template_file" "captain_userdata" {
     environment = "${var.environment}"
     dcos_master_url = "${module.master_elb_internal.elb_dns_name}"
     dcos_apps_bucket = "${aws_s3_bucket.dcos_apps_bucket.id}"
-    dcos_apps_bucket_domain = "${aws_s3_bucket.dcos_apps_bucket.id}.s3-${aws_s3_bucket.dcos_apps_bucket.region}.amazonaws.com"
+    dcos_apps_bucket_domain = "${aws_s3_bucket.dcos_apps_bucket.id}.${var.s3_endpoint}"
     aws_region = "${var.aws_region}"
     redshift_user = "${data.terraform_remote_state.redshift.redshift_master_username}"
     redshift_password = "${data.terraform_remote_state.redshift.redshift_master_password}"
     redshift_host = "${data.terraform_remote_state.redshift.redshift_url}"
     baile_lb_url = "${module.baile_elb.elb_dns_name}"
-    dcos_nodes = "${var.slave_asg_max_size + var.public_slave_asg_max_size}"
+    dcos_nodes = "${var.slave_asg_desired_capacity + var.public_slave_asg_desired_capacity + var.gpu_slave_asg_desired_capacity}"
     master_instance_name = "${var.tag_owner}-${var.environment}-master"
     apps_aws_access_key = "${data.terraform_remote_state.iam.app_access_key}"
     apps_aws_secret_key = "${data.terraform_remote_state.iam.app_secret_key}"
@@ -826,13 +866,16 @@ data "template_file" "captain_userdata" {
     orion_http_search_user_password = "${random_string.orion_http_search_user_password.result}"
     aries_docker_image_version = "${var.aries_docker_image_version}"
     baile_docker_image_version = "${var.baile_docker_image_version}"
-    baile_nginx_docker_image_version = "${var.baile_nginx_docker_image_version}"
+    baile_haproxy_docker_image_version = "${var.baile_haproxy_docker_image_version}"
     cortex_docker_image_version = "${var.cortex_docker_image_version}"
     logstash_docker_image_version = "${var.logstash_docker_image_version}"
     orion_docker_image_version = "${var.orion_docker_image_version}"
     job_master_docker_image = "${var.job_master_docker_image}"
     rmq_docker_image_version = "${var.rmq_docker_image_version}"
     um_docker_image_version = "${var.um_docker_image_version}"
+    salsa_version = "${var.salsa_version}"
+    upload_datasets = "${var.upload_datasets}"
+    download_from_s3 = "${var.download_from_s3}"
   }
 
   depends_on = [

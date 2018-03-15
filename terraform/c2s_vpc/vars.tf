@@ -14,21 +14,6 @@ variable "azs" {
     type    = "list"
 }
 
-variable "public_subnets" {
-    description = "Array of public subnet CIDR. Must match number of AVZs"
-    type        = "list"
-}
-
-variable "private_subnets" {
-    description = "Array of private subnet CIDR. Must match number of AVZs"
-    type    = "list"
-}
-
-variable "private_subnets_egress" {
-    description = "Array of private egress subnet CIDR. Must match number of AVZs"
-    type    = "list"
-}
-
 variable "tag_owner" {}
 variable "tag_usage" {}
 
@@ -66,5 +51,4 @@ locals {
 variable "ssh_public_key" {}
 variable "bastion_ami_id" {}
 
-variable "nat_ami_id" {}
 variable "access_cidr" {}

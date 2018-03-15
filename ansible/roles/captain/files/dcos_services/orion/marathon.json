@@ -49,6 +49,11 @@
       [
         "hostname",
         "UNIQUE"
+      ],
+      [
+        "cluster",
+        "UNLIKE",
+        "gpu"
       ]
     ],
   "healthChecks": [{
@@ -59,5 +64,9 @@
     "gracePeriodSeconds": 10,
     "intervalSeconds": 2,
     "maxConsecutiveFailures": 10
-  }]
+  }],
+  "upgradeStrategy": {
+    "maximumOverCapacity": 1,
+    "minimumHealthCapacity": 0.5
+  }
 }

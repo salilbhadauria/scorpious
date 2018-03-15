@@ -12,3 +12,5 @@
     tags: common_disk
   - import_tasks: logs.yml
     tags: common_logs
+  - name: Add ntpd cron on restart
+    shell: (crontab -l ; echo "@reboot ( sleep 90; /sbin/service ntpd restart )") | crontab -

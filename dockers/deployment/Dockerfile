@@ -1,9 +1,5 @@
 FROM deepcortex/scala-python3:latest
 
-ARG BUILD_DATE
-ARG VCS_REF
-ARG IMAGE_VERSION
-
 ENV PACKER_VERSION=1.0.4
 ENV PACKER_SHA256SUM=646da085cbcb8c666474d500a44d933df533cf4f1ff286193d67b51372c3c59e
 
@@ -14,10 +10,10 @@ RUN apt-get update && \
     apt-get install -y rsync && \
     apt-get install -y curl
 
-RUN pip install awscli --upgrade   
+RUN pip install awscli --upgrade
 
-ADD https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip ./
-ADD https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_SHA256SUMS ./
+RUN wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip
+RUN wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_SHA256SUMS
 
 RUN sed -i '/.*linux_amd64.zip/!d' packer_${PACKER_VERSION}_SHA256SUMS && \
     sha256sum -c --strict packer_${PACKER_VERSION}_SHA256SUMS && \
@@ -35,6 +31,10 @@ RUN wget --quiet https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/t
     rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
     echo "terraform version - $(terraform --version)"
 
+RUN curl https://downloads.dcos.io/binaries/cli/linux/x86-64/dcos-1.10/dcos -o dcos && \
+    mv dcos /usr/local/bin && \
+    chmod +x /usr/local/bin/dcos
+
 WORKDIR /opt/deploy
 
 COPY ansible ansible
@@ -43,11 +43,23 @@ COPY scripts scripts
 COPY terraform terraform
 COPY build.sh build.sh
 COPY destroy.sh destroy.sh
+COPY suspend_dc.sh suspend_dc.sh
+COPY resume_dc.sh resume_dc.sh
+COPY set_capacity.sh set_capacity.sh
 COPY packer.sh packer.sh
 COPY terraform.sh terraform.sh
 COPY terraform_init_backend.sh terraform_init_backend.sh
 
+ENV SALSA_VERSION=falcon
+
+RUN wget https://s3.amazonaws.com/dev.deepcortex.ai/deployment_downloads/${SALSA_VERSION}/front-end.tar.gz -P ansible/roles/captain/files/dcos_services/
+RUN wget https://s3.amazonaws.com/dev.deepcortex.ai/deployment_downloads/Datasets.tar.gz -P ansible/roles/captain/files/dcos_services/
+
 ENTRYPOINT ["/bin/bash", "/opt/deploy/build.sh"]
+
+ARG BUILD_DATE=""
+ARG VCS_REF=""
+ARG IMAGE_VERSION=""
 
 LABEL maintainer="sergey.semichev@sentrana.com" \
       org.label-schema.build-date=$BUILD_DATE \

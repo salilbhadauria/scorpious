@@ -27,13 +27,16 @@ environment:
   orion_http_search_user_password: ${orion_http_search_user_password}
   aries_docker_image_version: ${aries_docker_image_version}
   baile_docker_image_version: ${baile_docker_image_version}
-  baile_nginx_docker_image_version: ${baile_nginx_docker_image_version}
+  baile_haproxy_docker_image_version: ${baile_haproxy_docker_image_version}
   cortex_docker_image_version: ${cortex_docker_image_version}
   logstash_docker_image_version: ${logstash_docker_image_version}
   orion_docker_image_version: ${orion_docker_image_version}
   job_master_docker_image: ${job_master_docker_image}
   rmq_docker_image_version: ${rmq_docker_image_version}
   um_docker_image_version: ${um_docker_image_version}
+  salsa_version: ${salsa_version}
+  upload_datasets: "${upload_datasets}"
+  download_from_s3: "${download_from_s3}"
 manage_resolv_conf: false
 preserve_hostname: true
 runcmd:

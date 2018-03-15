@@ -18,16 +18,25 @@
         "customer_key":      "{{ env `CUSTOMER_KEY`}}",
         "dcos_username":     "{{ env `DCOS_USERNAME`}}",
         "dcos_password":     "{{ env `DCOS_PASSWORD`}}",
+        "dcos_download_url": "{{ env `DCOS_DOWNLOAD_URL`}}",
 
         "master_xvde_size":  "{{ env `MASTER_XVDE_SIZE`}}",
         "master_xvdf_size":  "{{ env `MASTER_XVDF_SIZE`}}",
-        "master_xvdg_size":  "{{ env `MASTER_XVDG_SIZE`}}",
         "master_xvdh_size":  "{{ env `MASTER_XVDH_SIZE`}}",
 
         "slave_xvde_size":   "{{ env `SLAVE_XVDE_SIZE`}}",
         "slave_xvdf_size":   "{{ env `SLAVE_XVDF_SIZE`}}",
         "slave_xvdg_size":   "{{ env `SLAVE_XVDG_SIZE`}}",
-        "slave_xvdh_size":   "{{ env `SLAVE_XVDH_SIZE`}}"
+        "slave_xvdh_size":   "{{ env `SLAVE_XVDH_SIZE`}}",
+
+        "public_slave_xvde_size":   "{{ env `PUBLIC_SLAVE_XVDE_SIZE`}}",
+        "public_slave_xvdf_size":   "{{ env `PUBLIC_SLAVE_XVDF_SIZE`}}",
+        "public_slave_xvdh_size":   "{{ env `PUBLIC_SLAVE_XVDH_SIZE`}}",
+
+        "gpu_slave_xvde_size":   "{{ env `GPU_SLAVE_XVDE_SIZE`}}",
+        "gpu_slave_xvdf_size":   "{{ env `GPU_SLAVE_XVDF_SIZE`}}",
+        "gpu_slave_xvdh_size":   "{{ env `GPU_SLAVE_XVDH_SIZE`}}"
+
     },
     "builders": [
       {
@@ -46,7 +55,7 @@
         "launch_block_device_mappings": [
           {
             "device_name": "/dev/sda1",
-            "volume_size": 12,
+            "volume_size": 30,
             "volume_type": "gp2",
             "delete_on_termination": true
           }
@@ -77,7 +86,7 @@
         "launch_block_device_mappings": [
           {
             "device_name": "/dev/sda1",
-            "volume_size": 16,
+            "volume_size": 30,
             "volume_type": "gp2",
             "delete_on_termination": true
           },
@@ -90,12 +99,6 @@
           {
             "device_name": "/dev/xvdf",
             "volume_size": "{{ user `master_xvdf_size`}}",
-            "volume_type": "gp2",
-            "delete_on_termination": true
-          },
-          {
-            "device_name": "/dev/xvdg",
-            "volume_size": "{{ user `master_xvdg_size`}}",
             "volume_type": "gp2",
             "delete_on_termination": true
           },
@@ -132,7 +135,7 @@
         "launch_block_device_mappings": [
           {
             "device_name": "/dev/sda1",
-            "volume_size": 16,
+            "volume_size": 30,
             "volume_type": "gp2",
             "delete_on_termination": true
           },
@@ -172,6 +175,104 @@
         }
       },
       {
+        "name": "public-slave",
+        "type": "amazon-ebs",
+        "access_key":    "{{user `aws_access_key`}}",
+        "secret_key":    "{{user `aws_secret_key`}}",
+        "region":        "{{user `aws_region`}}",
+        "source_ami":    "{{user `aws_source_ami`}}",
+        "vpc_id":        "{{user `aws_vpc_id`}}",
+        "instance_type": "{{user `aws_instance_type`}}",
+        "subnet_id":     "{{user `aws_subnet_id`}}",
+        "ssh_username":  "{{user `ssh_username`}}",
+        "ami_name":      "public-slave-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
+        "ami_regions":   "{{user `aws_build_regions`}}",
+        "launch_block_device_mappings": [
+          {
+            "device_name": "/dev/sda1",
+            "volume_size": 30,
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          },
+          {
+            "device_name": "/dev/xvde",
+            "volume_size": "{{ user `public_slave_xvde_size`}}",
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          },
+          {
+            "device_name": "/dev/xvdf",
+            "volume_size": "{{ user `public_slave_xvdf_size`}}",
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          },
+          {
+            "device_name": "/dev/xvdh",
+            "volume_size": "{{ user `public_slave_xvdh_size`}}",
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          }
+        ],
+        "ssh_pty": "true",
+        "tags": {
+          "Name": "public-slave-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
+          "Role": "slave",
+          "BuildDate": "{{isotime}}",
+          "BuildAuthor": "{{user `build_author`}}",
+          "BuildUUID": "{{user `build_uuid`}}",
+          "GitCommit": "{{user `git_commit`}}"
+        }
+      },
+      {
+        "name": "gpu-slave",
+        "type": "amazon-ebs",
+        "access_key":    "{{user `aws_access_key`}}",
+        "secret_key":    "{{user `aws_secret_key`}}",
+        "region":        "{{user `aws_region`}}",
+        "source_ami":    "{{user `aws_source_ami`}}",
+        "vpc_id":        "{{user `aws_vpc_id`}}",
+        "instance_type": "{{user `aws_instance_type`}}",
+        "subnet_id":     "{{user `aws_subnet_id`}}",
+        "ssh_username":  "{{user `ssh_username`}}",
+        "ami_name":      "gpu-slave-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
+        "ami_regions":   "{{user `aws_build_regions`}}",
+        "launch_block_device_mappings": [
+          {
+            "device_name": "/dev/sda1",
+            "volume_size": 30,
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          },
+          {
+            "device_name": "/dev/xvde",
+            "volume_size": "{{ user `gpu_slave_xvde_size`}}",
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          },
+          {
+            "device_name": "/dev/xvdf",
+            "volume_size": "{{ user `gpu_slave_xvdf_size`}}",
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          },
+          {
+            "device_name": "/dev/xvdh",
+            "volume_size": "{{ user `gpu_slave_xvdh_size`}}",
+            "volume_type": "gp2",
+            "delete_on_termination": true
+          }
+        ],
+        "ssh_pty": "true",
+        "tags": {
+          "Name": "gpu-slave-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
+          "Role": "gpu-slave",
+          "BuildDate": "{{isotime}}",
+          "BuildAuthor": "{{user `build_author`}}",
+          "BuildUUID": "{{user `build_uuid`}}",
+          "GitCommit": "{{user `git_commit`}}"
+        }
+      },
+      {
         "name": "captain",
         "type": "amazon-ebs",
         "access_key":    "{{user `aws_access_key`}}",
@@ -187,7 +288,7 @@
         "launch_block_device_mappings": [
           {
             "device_name": "/dev/sda1",
-            "volume_size": 16,
+            "volume_size": 30,
             "volume_type": "gp2",
             "delete_on_termination": true
           }
@@ -217,7 +318,8 @@
           "-i /etc/ansible/hosts",
           "--extra-vars \"customer_key={{ user `customer_key`}} \"",
           "-e \"dcos_username={{ user `dcos_username`}}\"",
-          "-e \"dcos_password={{ user `dcos_password`}}\""
+          "-e \"dcos_password={{ user `dcos_password`}}\"",
+          "-e \"dcos_download_url={{ user `dcos_download_url`}}\""
         ]
       },
       {

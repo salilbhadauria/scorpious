@@ -27,5 +27,5 @@ runcmd:
   - sed -i "s/aws_region_via_user_data/${aws_region}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
   - cd /var/lib/dcos-bootstrap; bash dcos_generate_config.sh --set-superuser-password ${dcos_password}
   - cd /var/lib/dcos-bootstrap; bash dcos_generate_config.sh
-  - docker pull nginx
-  - docker run --name dcos_nginx -p 8080:80 -v /var/lib/dcos-bootstrap/genconf/serve:/usr/share/nginx/html:ro nginx
+  - docker pull httpd:2.4.23
+  - docker run --name dcos_haproxy -p 8080:80 -v /var/lib/dcos-bootstrap/genconf/serve:/usr/local/apache2/htdocs/:ro httpd:2.4.23

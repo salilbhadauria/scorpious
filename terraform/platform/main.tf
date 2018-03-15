@@ -222,7 +222,7 @@ module "bootstrap_asg" {
 
     ami_name                = "bootstrap*"
     lc_name_prefix          = "${var.environment}-bootstrap-"
-    lc_instance_type        = "m4.xlarge"
+    lc_instance_type        = "t2.medium"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.bootstrap_sg.id}", "${module.dcos_stack_sg.id}" ]
@@ -606,6 +606,46 @@ module "slave_asg" {
     instance_role_tag = "slave"
 }
 
+#GPU Slave
+
+data "template_file" "gpu_slave_userdata" {
+  template = "${file("../../terraform/templates/gpu_slave_userdata.tpl")}"
+
+  vars {
+    environment = "${var.environment}"
+    aws_region = "${var.aws_region}"
+    bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
+  }
+
+  depends_on = [
+    "module.bootstrap_elb"
+  ]
+}
+
+module "gpu_slave_asg" {
+    source = "../../terraform/modules/autoscaling_group"
+
+    ami_name                = "gpu-slave*"
+    lc_name_prefix          = "${var.environment}-gpu-slave-"
+    lc_instance_type        = "p2.xlarge"
+    lc_ebs_optimized        = "false"
+    lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
+    lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}", "${data.terraform_remote_state.vpc.sg_private_egress_subnet_id}" ]
+    lc_user_data            = "${data.template_file.gpu_slave_userdata.rendered}"
+    lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
+
+    asg_name                = "${var.tag_owner}-${var.environment}-gpu-slave-asg"
+    asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
+    asg_desired_capacity    = "${var.gpu_slave_asg_desired_capacity}"
+    asg_min_size            = "${var.gpu_slave_asg_min_size}"
+    asg_max_size            = "${var.gpu_slave_asg_max_size}"
+
+    tags_asg = "${local.tags_asg}"
+    asg_name_tag = "${var.tag_owner}-${var.environment}-gpu-slave-asg"
+    instance_name_tag = "${var.tag_owner}-${var.environment}-gpu-slave"
+    instance_role_tag = "gpu-slave"
+}
+
 #########################################################
 # Baile ELB
 module "baile_elb_sg" {
@@ -734,9 +774,9 @@ data "template_file" "public_slave_userdata" {
 module "public_slave_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
-    ami_name                = "slave*"
+    ami_name                = "public-slave*"
     lc_name_prefix          = "${var.environment}-public-slave-"
-    lc_instance_type        = "m4.xlarge"
+    lc_instance_type        = "t2.medium"
     lc_ebs_optimized        = "false"
     lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
     lc_security_groups      = [ "${module.public_slave_sg.id}", "${module.dcos_stack_sg.id}" ]
@@ -800,7 +840,7 @@ data "template_file" "captain_userdata" {
     redshift_password = "${data.terraform_remote_state.redshift.redshift_master_password}"
     redshift_host = "${data.terraform_remote_state.redshift.redshift_url}"
     baile_lb_url = "${module.baile_elb.elb_dns_name}"
-    dcos_nodes = "${var.slave_asg_max_size + var.public_slave_asg_max_size}"
+    dcos_nodes = "${var.slave_asg_desired_capacity + var.public_slave_asg_desired_capacity + var.gpu_slave_asg_desired_capacity}"
     master_instance_name = "${var.tag_owner}-${var.environment}-master"
     apps_aws_access_key = "${data.terraform_remote_state.iam.app_access_key}"
     apps_aws_secret_key = "${data.terraform_remote_state.iam.app_secret_key}"
@@ -811,13 +851,16 @@ data "template_file" "captain_userdata" {
     orion_http_search_user_password = "${random_string.orion_http_search_user_password.result}"
     aries_docker_image_version = "${var.aries_docker_image_version}"
     baile_docker_image_version = "${var.baile_docker_image_version}"
-    baile_nginx_docker_image_version = "${var.baile_nginx_docker_image_version}"
+    baile_haproxy_docker_image_version = "${var.baile_haproxy_docker_image_version}"
     cortex_docker_image_version = "${var.cortex_docker_image_version}"
     logstash_docker_image_version = "${var.logstash_docker_image_version}"
     orion_docker_image_version = "${var.orion_docker_image_version}"
     job_master_docker_image = "${var.job_master_docker_image}"
     rmq_docker_image_version = "${var.rmq_docker_image_version}"
     um_docker_image_version = "${var.um_docker_image_version}"
+    salsa_version = "${var.salsa_version}"
+    upload_datasets = "${var.upload_datasets}"
+    download_from_s3 = "${var.download_from_s3}"
   }
 
   depends_on = [

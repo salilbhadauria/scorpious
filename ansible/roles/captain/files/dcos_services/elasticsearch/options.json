@@ -3,12 +3,16 @@
     "name": "elastic"
   },
   "master_nodes": {
-    "placement": "hostname:unique"
+    "placement": "hostname:unique,cluster:UNLIKE:gpu"
   },
   "data_nodes": {
     "count": 3,
     "disk": 90000,
     "disk_type": "MOUNT",
-    "placement": "hostname:unique"
+    "placement": "hostname:unique,cluster:UNLIKE:gpu"
+  },
+  "coordinator_nodes": {
+    "count": 3,
+    "placement": "hostname:unique,cluster:UNLIKE:gpu"
   }
 }
