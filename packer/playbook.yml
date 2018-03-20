@@ -86,6 +86,7 @@
 - hosts: captain
   become: yes
   vars:
+    online_prediction: "{{online_prediction}}"
     java_packages:
         - java-1.8.0-openjdk
     nodejs_install_npm_user: root
@@ -96,6 +97,10 @@
         version: 0.5.7
       - name: east-mongo
         version: 0.3.3
+  tasks:
+    - include_role:
+        name: postgresql
+      when: "online_prediction == 'true'"
   roles:
     - captain
     - deployer

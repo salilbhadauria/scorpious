@@ -1,0 +1,55 @@
+{
+  "id": "argo-api-rest",
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "deepcortex/argo-api-rest:${DOCKER_IMAGE_VERSION}",
+      "network": "BRIDGE",
+      "portMappings": [
+        { "hostPort": 0,
+          "containerPort": 9000,
+          "labels": {
+            "VIP_0": "/argo-api-rest:9000"
+          }
+        }
+      ],
+      "parameters": [
+        { "key": "env", "value": "HTTP_AUTH_USER_NAME=${HTTP_AUTH_USER_NAME}" },
+        { "key": "env", "value": "HTTP_AUTH_USER_PASSWORD=${HTTP_AUTH_USER_PASSWORD}" },
+        { "key": "env", "value": "ELASTIC_HOST=${ELASTIC_HOST}" },
+        { "key": "env", "value": "ELASTIC_PORT=${ELASTIC_PORT}" },
+        { "key": "env", "value": "ELASTIC_SSL=${ELASTIC_SSL}" },
+        { "key": "env", "value": "ELASTIC_CONFIG_SETTING_INDEX=${ELASTIC_CONFIG_SETTING_INDEX}" },
+        { "key": "env", "value": "ELASTIC_SSL=${ELASTIC_SSL}" }
+      ],
+      "forcePullImage": true
+    }
+  },
+  "instances": ${SRV_INSTANCES},
+  "cpus": ${SRV_CPUS},
+  "mem": ${SRV_MEM},
+  "constraints": [
+      [
+        "hostname",
+        "UNIQUE"
+      ],
+      [
+        "cluster",
+        "UNLIKE",
+        "gpu"
+      ]
+    ],
+  "healthChecks": [{
+    "protocol": "HTTP",
+    "path": "/v1/health",
+    "portIndex": 0,
+    "timeoutSeconds": 10,
+    "gracePeriodSeconds": 10,
+    "intervalSeconds": 2,
+    "maxConsecutiveFailures": 10
+  }],
+  "upgradeStrategy": {
+    "maximumOverCapacity": 1,
+    "minimumHealthCapacity": 0.5
+  }
+}

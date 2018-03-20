@@ -81,6 +81,32 @@ resource "aws_s3_bucket_policy" "dcos_apps_bucket_policy" {
   ]
 }
 
+
+# IAM S3 policy for app user
+
+resource "aws_iam_user_policy" "app_s3" {
+  name = "${var.environment}-app-user-policy"
+  user = "${data.terraform_remote_state.iam.app_user_name}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:*"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${aws_s3_bucket.dcos_apps_bucket.arn}",
+        "${aws_s3_bucket.dcos_apps_bucket.arn}/*"
+      ]
+    }
+  ]
+}
+EOF
+}
+
 #########################################################
 # Security Groups
 
@@ -850,6 +876,7 @@ data "template_file" "captain_userdata" {
     dcos_master_url = "${module.master_elb_internal.elb_dns_name}"
     dcos_apps_bucket = "${aws_s3_bucket.dcos_apps_bucket.id}"
     dcos_apps_bucket_domain = "${aws_s3_bucket.dcos_apps_bucket.id}.${var.s3_endpoint}"
+    online_prediction_sqs_queue = "online-prediction-${var.tag_owner}-${var.environment}"
     aws_region = "${var.aws_region}"
     redshift_user = "${data.terraform_remote_state.redshift.redshift_master_username}"
     redshift_password = "${data.terraform_remote_state.redshift.redshift_master_password}"
@@ -862,8 +889,13 @@ data "template_file" "captain_userdata" {
     rabbit_password = "${random_string.rabbit_password.result}"
     aries_http_search_user_password = "${random_string.aries_http_search_user_password.result}"
     aries_http_command_user_password = "${random_string.aries_http_command_user_password.result}"
+    argo_http_auth_user_password = "${random_string.argo_http_auth_user_password.result}"
     cortex_http_search_user_password = "${random_string.cortex_http_search_user_password.result}"
+    online_prediction_password = "${random_string.online_prediction_password.result}"
+    online_prediction_stream_id = "${uuid()}"
     orion_http_search_user_password = "${random_string.orion_http_search_user_password.result}"
+    pegasus_http_auth_user_password = "${random_string.pegasus_http_auth_user_password.result}"
+    argo_docker_image_version = "${var.argo_docker_image_version}"
     aries_docker_image_version = "${var.aries_docker_image_version}"
     baile_docker_image_version = "${var.baile_docker_image_version}"
     baile_haproxy_docker_image_version = "${var.baile_haproxy_docker_image_version}"
@@ -871,11 +903,14 @@ data "template_file" "captain_userdata" {
     logstash_docker_image_version = "${var.logstash_docker_image_version}"
     orion_docker_image_version = "${var.orion_docker_image_version}"
     job_master_docker_image = "${var.job_master_docker_image}"
+    pegasus_docker_image_version = "${var.pegasus_docker_image_version}"
     rmq_docker_image_version = "${var.rmq_docker_image_version}"
+    taurus_docker_image_version = "${var.taurus_docker_image_version}"
     um_docker_image_version = "${var.um_docker_image_version}"
     salsa_version = "${var.salsa_version}"
     upload_datasets = "${var.upload_datasets}"
     download_from_s3 = "${var.download_from_s3}"
+    online_prediction = "${var.online_prediction"
   }
 
   depends_on = [

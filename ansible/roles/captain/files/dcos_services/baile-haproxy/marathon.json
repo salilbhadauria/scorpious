@@ -6,7 +6,13 @@
       "image": "deepcortex/baile-haproxy:${DOCKER_IMAGE_VERSION}",
       "network": "BRIDGE",
       "portMappings": [
-        { "hostPort": 0, "containerPort": 80, "servicePort": 10000 }
+        { "hostPort": 0,
+          "containerPort": 80,
+          "servicePort": 10000,
+          "labels": {
+            "VIP_0": "/baile-haproxy:80"
+          }
+        }
       ],
       "parameters": [
         { "key": "env", "value": "S3_BUCKET=${S3_BUCKET}" },

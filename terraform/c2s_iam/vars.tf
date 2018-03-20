@@ -4,4 +4,4 @@ variable "aws_region" {}
 variable "environment" {}
 variable "dcos_apps_bucket" {}
 variable "tag_owner" {}
-variable "arn" {}
+variable "arn" { default = "aws"}

@@ -50,7 +50,7 @@ access_cidr                     = "205.251.70.6/32"
 deploy_cidr                     = "205.251.70.6/32"
 
 # specify if Public MSTAR data should be uploaded to the default DeepCortex S3 bucket
-upload_datasets                 = "true"
+upload_datasets                 = "false"
 
 ### You may change any of the below names if you choose, otherwise the defaults we be used.
 
@@ -76,6 +76,9 @@ dcos_version                    = "1.10.2"
 
 # public vs private baile
 baile_access                    = "private"
+
+# enable online prediction (true/false)
+online_prediction               = "false"
 
 # true or false for downloading latest files (frontend and mstar) from S3 rather than using files in the docker container
 download_from_s3                = "true"
@@ -144,16 +147,19 @@ redshift_encrypted = false
 redshift_skip_final_snapshot = true
 
 # Application Docker Image Versions
-aries_docker_image_version = "0.0.0-d7d4808443dccd85278492a35614894e6051ae23"
-baile_docker_image_version = "v1.0.6"
+argo_docker_image_version = "0.0.0-b34df4c2677e03352ec02ddad2a666e912229f27"
+aries_docker_image_version = "0.0.0-2171e30b5811cd4fab6626fe97d4e20575803a11"
+baile_docker_image_version = "v1.0.8"
 baile_haproxy_docker_image_version = "v1.0"
-cortex_docker_image_version = "0.0.0-7f2913f624a1260cf2ed15852c1857ac0e50bbbf"
+cortex_docker_image_version = "1.0.26-3-g73e1b00"
 logstash_docker_image_version = "latest"
-orion_docker_image_version = "0.0.0-1ed179f8beed4f129d6fa105250c8ee3246af718"
-job_master_docker_image = "deepcortex/cortex-job-master:0.10.0-3-gcdcbf13-SNAPSHOT"
+orion_docker_image_version = "0.0.0-e53741dfd2840966a6090af62273b866e43ea175"
+job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-285-gd21efc4-SNAPSHOT"
+pegasus_docker_image_version = "0.0.1-SNAPSHOT-20-ga19254e"
 rmq_docker_image_version = "latest"
+taurus_docker_image_version = "0.0.0-4ee5f7015ea9cd60d875f2db9eeb4ccb7a30732c"
 um_docker_image_version = "v1.0"
 salsa_version = "falcon"
 
 # Number of total DC/OS services
-dcos_services = "12"
+dcos_services = "15"

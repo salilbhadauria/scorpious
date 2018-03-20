@@ -70,6 +70,10 @@ if [[ "$DEPLOY_MODE" != "simple" ]];then
   DCOS_NODES=$((NUM_SLAVES + NUM_PUB_SLAVES + NUM_GPU_SLAVES))
   DCOS_SERVICES=$(awk -F\" '/^dcos_services/{print $2}'  "environments/$CONFIG.tfvars")
 
+  if [[ "$ONLINE_PREDICTION" != "true" ]];then
+    DCOS_SERVICES=$((DCOS_SERVICES - 3))
+  fi
+
   DCOS_MASTER_ELB=$(aws elb describe-load-balancers --load-balancer-names=$OWNER-$ENVIRONMENT-master-elb --output=text --query "LoadBalancerDescriptions[*].DNSName")
   BAILE_ELB=$(aws elb describe-load-balancers --load-balancer-names=$OWNER-$ENVIRONMENT-baile-elb --output=text --query "LoadBalancerDescriptions[*].DNSName")
 
@@ -166,6 +170,8 @@ if [[ "$DEPLOY_MODE" != "simple" ]];then
   dcos marathon app restart baile
   dcos marathon app restart orion-api-rest
   dcos marathon app restart cortex-api-rest
+  dcos marathon app restart pegasus-api-rest
+  dcos marathon app restart taurus
 
   RESTARTED_SERVICES=3
   SERVICES_DEPLOYING=$(dcos marathon app list | grep restart | wc -l)

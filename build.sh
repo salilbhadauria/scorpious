@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set +e
 
 # optional arguments:
 # -b: shutdown boostrap - can be set to true destroy bootstrap node after the cluster deploys
@@ -49,7 +49,12 @@ export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$C
 sh terraform_init_backend.sh $CONFIG
 
 PREFIX=$(awk -F\" '/^prefix/{print $2}'  "environments/$CONFIG.tfvars")
-STACKS=("iam" "vpc" "redshift" "platform")
+STACKS=("iam" "vpc" "redshift" "platform" "online_prediction")
+
+ONLINE_PREDICTION=$(awk -F\" '/^online_prediction/{print $2}'  "environments/$CONFIG.tfvars")
+if [[ "$ONLINE_PREDICTION" != "true" ]];then
+  STACKS=("iam" "vpc" "redshift" "platform")
+fi
 
 parse_args "$@"
 
@@ -73,6 +78,10 @@ if [[ "$DEPLOY_MODE" != "simple" ]];then
   NUM_GPU_SLAVES=$(awk -F\" '/^gpu_slave_asg_desired_capacity/{print $2}'  "environments/$CONFIG.tfvars")
   DCOS_NODES=$((NUM_SLAVES + NUM_PUB_SLAVES + NUM_GPU_SLAVES))
   DCOS_SERVICES=$(awk -F\" '/^dcos_services/{print $2}'  "environments/$CONFIG.tfvars")
+
+  if [[ "$ONLINE_PREDICTION" != "true" ]];then
+    DCOS_SERVICES=$((DCOS_SERVICES - 3))
+  fi
 
   DCOS_MASTER_ELB=$(aws elb describe-load-balancers --load-balancer-names=$OWNER-$ENVIRONMENT-master-elb --output=text --query "LoadBalancerDescriptions[*].DNSName")
   BAILE_ELB=$(aws elb describe-load-balancers --load-balancer-names=$OWNER-$ENVIRONMENT-baile-elb --output=text --query "LoadBalancerDescriptions[*].DNSName")

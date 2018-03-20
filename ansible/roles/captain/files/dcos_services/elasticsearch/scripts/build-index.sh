@@ -23,7 +23,7 @@ if [ ${is_index_exist} -eq 200 ]; then
         echo "Deleted"; echo
     else
         exit 0
-    fi        
+    fi
 fi
 
 echo "Creating index $idx ..."

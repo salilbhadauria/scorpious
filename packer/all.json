@@ -19,6 +19,8 @@
         "dcos_username":     "{{ env `DCOS_USERNAME`}}",
         "dcos_password":     "{{ env `DCOS_PASSWORD`}}",
         "dcos_download_url": "{{ env `DCOS_DOWNLOAD_URL`}}",
+        "online_prediction": "{{ env `ONLINE_PREDICTION`}}",
+        "requirements_file": "{{ env `REQUIREMENTS_FILE`}}",
 
         "master_xvde_size":  "{{ env `MASTER_XVDE_SIZE`}}",
         "master_xvdf_size":  "{{ env `MASTER_XVDF_SIZE`}}",
@@ -313,13 +315,14 @@
         "type": "ansible-local",
         "playbook_file": "packer/playbook.yml",
         "playbook_dir": "./ansible/",
-        "galaxy_file": "./ansible/requirements.yml",
+        "galaxy_file": "{{user `requirements_file`}}",
         "extra_arguments": [
           "-i /etc/ansible/hosts",
           "--extra-vars \"customer_key={{ user `customer_key`}} \"",
           "-e \"dcos_username={{ user `dcos_username`}}\"",
           "-e \"dcos_password={{ user `dcos_password`}}\"",
-          "-e \"dcos_download_url={{ user `dcos_download_url`}}\""
+          "-e \"dcos_download_url={{ user `dcos_download_url`}}\"",
+          "-e \"online_prediction={{ user `online_prediction`}}\""
         ]
       },
       {

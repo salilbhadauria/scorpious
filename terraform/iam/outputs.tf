@@ -24,3 +24,6 @@ output "app_access_key" {
 output "app_secret_key" {
     value = "${aws_iam_access_key.app.secret}"
 }
+output "app_user_name" {
+    value = "${aws_iam_user.app.name}"
+}

@@ -59,6 +59,7 @@ variable "captain_asg_max_size" {}
 variable "tag_owner" {}
 variable "tag_usage" {}
 
+variable "argo_docker_image_version" {}
 variable "aries_docker_image_version" {}
 variable "baile_docker_image_version" {}
 variable "baile_haproxy_docker_image_version" {}
@@ -66,11 +67,14 @@ variable "cortex_docker_image_version" {}
 variable "logstash_docker_image_version" {}
 variable "orion_docker_image_version" {}
 variable "job_master_docker_image" {}
+variable "pegasus_docker_image_version" {}
 variable "rmq_docker_image_version" {}
+variable "taurus_docker_image_version" {}
 variable "um_docker_image_version" {}
 variable "salsa_version" { default = "falcon" }
 variable "upload_datasets" { default = "false"}
 variable "download_from_s3" { default = "false" }
+variable "online_prediction" { default = "true" }
 
 locals {
     create_deploy_sgs = "${var.access_cidr == var.deploy_cidr ? 0 : 1}"

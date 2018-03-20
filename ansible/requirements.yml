@@ -18,4 +18,8 @@
 
 - src: geerlingguy.java
   name: java
-  version: 1.7.4 
+  version: 1.7.4
+
+- src: geerlingguy.postgresql
+  name: postgresql
+  version: 1.3.1
