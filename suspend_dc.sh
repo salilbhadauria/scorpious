@@ -38,6 +38,7 @@ parse_args()
 }
 
 bash set_capacity.sh gpu-slave 0
+bash set_capacity.sh bootstrap 0
 
 ASGS=("slave" "gpu-slave" "public-slave" "captain" "bootstrap" "master" "bastion")
 

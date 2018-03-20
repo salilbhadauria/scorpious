@@ -24,6 +24,9 @@ bastion_ami_id                  = "ami-128c0873"
 # the ami id for the machines that will run DeepCortex (should be a CentOS 7.4 ami)
 packer_base_ami                 = "ami-128c0873"
 
+# operating system for DeepCortex machines (centos or rhel)
+machine_os                      = "centos"
+
 # the default ssh user for the above ami (likely centos for CentOS machines, but could be ec2-user so make sure to check the ami you are using)
 packer_ssh_user                 = "centos"
 
@@ -148,13 +151,13 @@ redshift_skip_final_snapshot = true
 
 # Application Docker Image Versions
 argo_docker_image_version = "0.0.0-b34df4c2677e03352ec02ddad2a666e912229f27"
-aries_docker_image_version = "0.0.0-2171e30b5811cd4fab6626fe97d4e20575803a11"
-baile_docker_image_version = "v1.0.8"
+aries_docker_image_version = "0.0.0-d7d4808443dccd85278492a35614894e6051ae23"
+baile_docker_image_version = "v1.0.6"
 baile_haproxy_docker_image_version = "v1.0"
-cortex_docker_image_version = "1.0.26-3-g73e1b00"
+cortex_docker_image_version = "0.0.0-7f2913f624a1260cf2ed15852c1857ac0e50bbbf"
 logstash_docker_image_version = "latest"
 orion_docker_image_version = "0.0.0-e53741dfd2840966a6090af62273b866e43ea175"
-job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-285-gd21efc4-SNAPSHOT"
+job_master_docker_image = "deepcortex/cortex-job-master:0.10.0-5-gefa67ab-SNAPSHOT"
 pegasus_docker_image_version = "0.0.1-SNAPSHOT-20-ga19254e"
 rmq_docker_image_version = "latest"
 taurus_docker_image_version = "0.0.0-4ee5f7015ea9cd60d875f2db9eeb4ccb7a30732c"

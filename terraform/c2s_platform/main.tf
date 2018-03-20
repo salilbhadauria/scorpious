@@ -910,7 +910,7 @@ data "template_file" "captain_userdata" {
     salsa_version = "${var.salsa_version}"
     upload_datasets = "${var.upload_datasets}"
     download_from_s3 = "${var.download_from_s3}"
-    online_prediction = "${var.online_prediction"
+    online_prediction = "${var.online_prediction}"
   }
 
   depends_on = [
