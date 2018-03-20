@@ -19,7 +19,7 @@ DCOS_PASSWORD - the password you'd like to use to login to the DC/OS cluster (av
 
 5) Run "docker login -u falcondeepcortex" and enter the password: 6apXmvzquPKGDwzx.
 
-6) Run "docker pull deepcortex/scorpius-deployment:falconv2".
+6) Run "docker pull deepcortex/scorpius-deployment:falcon".
 
 7) Run the following docker command replacing /path/to/environments with the path to the environments directory you created in step 1.
 
@@ -31,7 +31,7 @@ docker run \
   -e CUSTOMER_KEY=${CUSTOMER_KEY} \
   -e DCOS_USERNAME=${DCOS_USERNAME} \
   -e DCOS_PASSWORD=${DCOS_PASSWORD} \
-  deepcortex/scorpius-deployment:falconv2
+  deepcortex/scorpius-deployment:falcon
 
 8) Once your terminal output states the deployment is complete you can access the DeepCortex UI.
 
@@ -47,7 +47,7 @@ docker run \
   -e CUSTOMER_KEY=${CUSTOMER_KEY} \
   -e DCOS_USERNAME=${DCOS_USERNAME} \
   -e DCOS_PASSWORD=${DCOS_PASSWORD} \
-  -it --entrypoint "/bin/bash" deepcortex/scorpius-deployment:falconv2 /opt/deploy/destroy.sh
+  -it --entrypoint "/bin/bash" deepcortex/scorpius-deployment:falcon /opt/deploy/destroy.sh
 
 Building just the platform (DC/OS cluster)
 
@@ -59,7 +59,14 @@ docker run \
   -e CUSTOMER_KEY=${CUSTOMER_KEY} \
   -e DCOS_USERNAME=${DCOS_USERNAME} \
   -e DCOS_PASSWORD=${DCOS_PASSWORD} \
-  -it --entrypoint "/bin/bash" deepcortex/scorpius-deployment:falconv2 /opt/deploy/build_platform.sh
+  -it --entrypoint "/bin/bash" deepcortex/scorpius-deployment:falcon /opt/deploy/build.sh -s platform
+
+all optional arguments:
+  -b: shutdown boostrap - can be set to true destroy bootstrap node after the cluster deploys
+  -g: gpu on start - can be set to false to exclude spinning up a gpu node after the cluster deploys
+  -m: deploy mode - can be set to simple to exclude download of DC/OS cli and extra output
+  -s: stacks - a list of comma separated values to overwrite which terraform stacks to build
+  -p: packer - can be set to false to exclude packer builds
 
 Destroying just the platform (DC/OS cluster)
 
@@ -71,4 +78,7 @@ docker run \
   -e CUSTOMER_KEY=${CUSTOMER_KEY} \
   -e DCOS_USERNAME=${DCOS_USERNAME} \
   -e DCOS_PASSWORD=${DCOS_PASSWORD} \
-  -it --entrypoint "/bin/bash" deepcortex/scorpius-deployment:falconv2 /opt/deploy/destroy_platform.sh
+  -it --entrypoint "/bin/bash" deepcortex/scorpius-deployment:falcon /opt/deploy/destroy.sh -s platform
+
+all optional arguments:
+  -s: stacks - a list of comma separated values to overwrite which terraform stacks to destroy

@@ -4,7 +4,38 @@
 #  scorpius
 Automated deployment for DeepCortex platform
 
-Prior to deployment you must make sure the Terms and Services for the base image in the AWS marketplace have been accepted in necessary. You can do this by spinning up a temporary machine using this AMI from within the AWS console. This process will ask you to accept the Terms and Services. (note: this can currently only be done through the console and not the cli or other tool)
+Prior to deployment you must make sure you have already accepted the Terms and Services for the base image you plan to use if it's from the AWS marketplace and reguires such an agreement. You can do this by spinning up a temporary machine using this AMI from within the AWS console. This process will ask you to accept the Terms and Services. (note: this can currently only be done through the console and not the cli or other tool)
+
+### Configuration
+
+Before running any deployment scripts be sure to do the following:
+1. Copy the environments/template.tfvars file and create your own.
+2. Fill in all available configurations.
+3. Export the following environment variables:
+    * CONFIG - the name of the config file to use (under the environments dir e.g. deepcortex-settings).
+    * AWS_ACCESS_KEY_ID - the access key that should be used to deploy in AWS.
+    * AWS_SECRET_ACCESS_KEY - the secret key that should be used to deploy in AWS.
+    * CUSTOMER_KEY - the DC/OS enterprise key
+    * DCOS_USERNAME - the username you'd like to use to login to the DC/OS cluster
+    * DCOS_PASSWORD - the password you'd like to use to login to the DC/OS cluster (avoid special characters used in bash such as "#", ";", "$", etc.)
+
+### Deployment Scripts
+
+1. build.sh - used to build DeepCortex
+    * -b: shutdown boostrap - can be set to true destroy bootstrap node after the cluster deploys
+    * -g: gpu on start - can be set to false to exclude spinning up a gpu node after the cluster deploys
+    * -m: deploy mode - can be set to simple to exclude download of DC/OS cli and extra output
+    * -s: stacks - a list of comma separated values to overwrite which terraform stacks to build
+    * -p: packer - can be set to false to exclude packer builds
+2. destroy.sh - used to destroy DeepCortex
+    * -s: stacks - a list of comma separated values to overwrite which terraform stacks to build
+3. suspend_dc.sh - used to suspend the DC/OS cluster
+    * -s: stacks - a list of comma separated values to overwrite which asgs to shutdown
+4. resume_dc.sh - used to resume the DC/OS cluster
+    * -b: shutdown boostrap - can be set to true destroy bootstrap node after the cluster deploys
+    * -g: gpu on start - can be set to false to exclude gpu from restart
+    * -s: stacks - a list of comma separated values to overwrite which asgs to resume
+
 
 ### Docker deployment
 
@@ -90,6 +121,9 @@ Or, to build a specific one:
 ./packer.sh bootstrap CONFIG
 ./packer.sh master CONFIG
 ./packer.sh slave CONFIG
+./packer.sh public-slave CONFIG
+./packer.sh gpu-slave CONFIG
+
 ```
 
 once we have the AMIs ready, we can continue with Terraform.
