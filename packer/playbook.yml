@@ -80,8 +80,6 @@
 
 - hosts: slave
   become: yes
-  vars:
-    main_user: "{{main_user}}"
   roles:
     - services
 

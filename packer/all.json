@@ -22,6 +22,7 @@
         "dcos_download_url": "{{ env `DCOS_DOWNLOAD_URL`}}",
         "online_prediction": "{{ env `ONLINE_PREDICTION`}}",
         "requirements_file": "{{ env `REQUIREMENTS_FILE`}}",
+        "machine_os":        "{{ env `MACHINE_OS`}}",
 
         "master_xvde_size":  "{{ env `MASTER_XVDE_SIZE`}}",
         "master_xvdf_size":  "{{ env `MASTER_XVDF_SIZE`}}",
@@ -310,7 +311,10 @@
     "provisioners": [
       {
         "type": "shell",
-        "script": "./packer/scripts/install.sh"
+        "script": "./packer/scripts/install.sh",
+        "environment_vars": [
+          "MACHINE_OS={{user `machine_os`}}"
+        ]
       },
       {
         "type": "ansible-local",

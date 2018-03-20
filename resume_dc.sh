@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# -b: shutdown boostrap - can be set to true destroy bootstrap node after the cluster deploys
 # -g: gpu on start - can be set to false to exclude gpu from restart
 # -s: stacks - a list of comma separated values to overwrite which asgs to resume
 
@@ -27,8 +28,9 @@ OWNER=$(awk -F\" '/^tag_owner/{print $2}'  "environments/$CONFIG.tfvars")
 
 parse_args()
 {
-  while getopts ":s:" opt "$@"; do
+  while getopts ":b:g:s:" opt "$@"; do
     case "$opt" in
+      b) SHUTDOWN_BOOTSTRAP="$OPTARG" ;;
       g) GPU_ON_START="$OPTARG" ;;
       s) set -f
          IFS=,
@@ -40,6 +42,7 @@ parse_args()
 }
 
 if [[ "$GPU_ON_START" != "false" ]];then
+  bash set_capacity.sh bootstrap 1
   bash set_capacity.sh gpu-slave 1
   NUM_GPU_SLAVES=1
 fi
@@ -194,5 +197,10 @@ if [[ "$DEPLOY_MODE" != "simple" ]];then
   done
 
   echo "*** You can now access DeepCortex at: http://$BAILE_ELB"
+
+  if [[ "$SHUTDOWN_BOOTSTRAP" == "true" ]];then
+    echo "Shutting down bootstrap node"
+    bash set_capacity.sh bootstrap 0
+  fi
 
 fi

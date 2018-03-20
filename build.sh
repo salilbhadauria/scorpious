@@ -164,8 +164,8 @@ if [[ "$DEPLOY_MODE" != "simple" ]];then
     echo "To attempt a fix, terminate the GPU node in AWS so the auto scaling group can deploy a new one."
     echo ""
     NODES=$(dcos node | grep agent | wc -l)
+    echo "Waiting for the GPU node to connect..."
     until [[ $NODES -eq $((DCOS_NODES + 1)) ]]; do
-      echo "Waiting for the GPU node to connect..."
       sleep 60
       COUNT=$((COUNT+1))
       echo "GPU node has been deploying for $COUNT minutes."
