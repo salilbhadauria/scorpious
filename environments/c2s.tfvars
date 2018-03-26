@@ -89,7 +89,7 @@ bootstrap_asg_min_size          = "1"
 bootstrap_asg_max_size          = "1"
 bootstrap_elb_dns_name          = "bootstrap"
 s3_prefix                       = "deepcortex"
-cluster_name                    = "deepcortex"
+cluster_name                    = "deepcortex-staging"
 
 master_asg_desired_capacity     = "1"
 master_asg_min_size             = "1"
@@ -144,13 +144,19 @@ redshift_encrypted = false
 redshift_skip_final_snapshot = true
 
 # Application Docker Image Versions
+argo_docker_image_version = "0.0.0-b34df4c2677e03352ec02ddad2a666e912229f27"
 aries_docker_image_version = "0.0.0-d7d4808443dccd85278492a35614894e6051ae23"
-baile_docker_image_version = "v1.0.7"
+baile_docker_image_version = "v1.0.6"
 baile_haproxy_docker_image_version = "v1.0"
 cortex_docker_image_version = "0.0.0-7f2913f624a1260cf2ed15852c1857ac0e50bbbf"
 logstash_docker_image_version = "latest"
 orion_docker_image_version = "0.0.0-e53741dfd2840966a6090af62273b866e43ea175"
 job_master_docker_image = "deepcortex/cortex-job-master:0.10.0-5-gefa67ab-SNAPSHOT"
+pegasus_docker_image_version = "0.0.1-SNAPSHOT-20-ga19254e"
 rmq_docker_image_version = "latest"
+taurus_docker_image_version = "0.0.0-4ee5f7015ea9cd60d875f2db9eeb4ccb7a30732c"
 um_docker_image_version = "v1.0"
 salsa_version = "falcon"
+
+# Number of total DC/OS services
+dcos_services = "15"
