@@ -21,6 +21,8 @@ aries_srv_mem: 1024
 aries_host: "aries-api-rest.marathon.l4lb.thisdcos.directory"
 aries_port: 9000
 aries_rest_url: "http://aries-api-rest.marathon.l4lb.thisdcos.directory:9000"
+aries_elastic_job_index: "cortex_jobs_dev"
+aries_elastic_heartbeat_index: "cortex_job_heartbeats_dev"
 
 # Argo
 argo_http_auth_user_name: "argo-auth-user"

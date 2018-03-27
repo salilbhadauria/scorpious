@@ -66,6 +66,7 @@ resource "aws_redshift_cluster" "redshift-clstr" {
   cluster_subnet_group_name    = "${aws_redshift_subnet_group.redshift-subnet-grp.id}"
   final_snapshot_identifier    = "final-redshift-snapshot"
   cluster_parameter_group_name = "${aws_redshift_parameter_group.redshift-clstr-pg.id}"
+  enhanced_vpc_routing         = "true"
 
   tags = "${local.tags}"
 }

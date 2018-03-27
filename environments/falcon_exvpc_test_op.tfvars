@@ -19,13 +19,16 @@ arn                             = "aws-us-gov"
 s3_endpoint                     = "s3-us-gov-west-1.amazonaws.com"
 
 # the ami id for the machine that will serve as the bastion (can be CentOS or Amazon Linux)
-bastion_ami_id                  = "ami-128c0873"
+bastion_ami_id                  = "ami-0466e865"
 
 # the ami id for the machines that will run DeepCortex (should be a CentOS 7.4 ami)
-packer_base_ami                 = "ami-128c0873"
+packer_base_ami                 = "ami-0466e865"
+
+# operating system for DeepCortex machines (centos or rhel)
+machine_os                      = "rhel"
 
 # the default ssh user for the above ami (likely centos for CentOS machines, but could be ec2-user so make sure to check the ami you are using)
-packer_ssh_user                 = "centos"
+packer_ssh_user                 = "ec2-user"
 
 # the VPC ID of the VPC you will launch DeepCortex into
 vpc_id                          = "vpc-7a51d11f"
@@ -50,23 +53,23 @@ access_cidr                     = "205.251.70.6/32"
 deploy_cidr                     = "205.251.70.6/32"
 
 # specify if Public MSTAR data should be uploaded to the default DeepCortex S3 bucket
-upload_datasets                 = "true"
+upload_datasets                 = "false"
 
 ### You may change any of the below names if you choose, otherwise the defaults we be used.
 
 # the name of the S3 buckets used for storing terraform artifacts, storing DeepCortex data, and storing DC/OS data
-tf_bucket                       = "falcon-deepcortex-staging-terraform"
-dcos_apps_bucket                = "falcon-deepcortex-staging-dcos-apps"
-dcos_stack_bucket               = "falcon-deepcortex-staging-dcos-backend"
+tf_bucket                       = "falcon-deepcortex-exvpc-test-terraform"
+dcos_apps_bucket                = "falcon-deepcortex-exvpc-test-dcos-apps"
+dcos_stack_bucket               = "falcon-deepcortex-exvpc-test-dcos-backend"
 
 # the tags that will be applied to the infrastructure (environment, owner, usage)
 # environment and owner can only be a combined 17 characters
-environment                     = "staging"
+environment                     = "exvpctest"
 tag_owner                       = "deepcortex"
 tag_usage                       = "falcon"
 
 # the name of the redshfit cluster
-redshift_cluster_name           = "falcon-deepcortex-staging-redshift"
+redshift_cluster_name           = "falcon-deepcortex-exvpc-test-redshift"
 
 
 ### DO NOT CHANGE ANYTHING BELOW THIS LINE
@@ -77,19 +80,22 @@ dcos_version                    = "1.10.2"
 # public vs private baile
 baile_access                    = "private"
 
+# enable online prediction (true/false)
+online_prediction               = "false"
+
 # true or false for downloading latest files (frontend and mstar) from S3 rather than using files in the docker container
 download_from_s3                = "true"
 
 # prefix for terraform templates
-prefix                          = "c2s_"
+prefix                          = "exvpc_"
 
 # Platform
 bootstrap_asg_desired_capacity  = "1"
-bootstrap_asg_min_size          = "1"
+bootstrap_asg_min_size          = "0"
 bootstrap_asg_max_size          = "1"
 bootstrap_elb_dns_name          = "bootstrap"
 s3_prefix                       = "deepcortex"
-cluster_name                    = "deepcortex-staging"
+cluster_name                    = "deepcortex-exvpctest"
 
 master_asg_desired_capacity     = "1"
 master_asg_min_size             = "1"
@@ -129,7 +135,7 @@ public_slave_xvdf_size             = "50"
 public_slave_xvdh_size             = "50"
 
 captain_asg_desired_capacity       = "1"
-captain_asg_min_size               = "1"
+captain_asg_min_size               = "0"
 captain_asg_max_size               = "1"
 
 
@@ -145,13 +151,13 @@ redshift_skip_final_snapshot = true
 
 # Application Docker Image Versions
 argo_docker_image_version = "0.0.0-b34df4c2677e03352ec02ddad2a666e912229f27"
-aries_docker_image_version = "0.0.0-d7d4808443dccd85278492a35614894e6051ae23"
-baile_docker_image_version = "v1.0.6"
+aries_docker_image_version = "0.0.0-2171e30b5811cd4fab6626fe97d4e20575803a11"
+baile_docker_image_version = "v1.0.8"
 baile_haproxy_docker_image_version = "v1.0"
-cortex_docker_image_version = "0.0.0-7f2913f624a1260cf2ed15852c1857ac0e50bbbf"
+cortex_docker_image_version = "1.0.26-3-g73e1b00"
 logstash_docker_image_version = "latest"
 orion_docker_image_version = "0.0.0-e53741dfd2840966a6090af62273b866e43ea175"
-job_master_docker_image = "deepcortex/cortex-job-master:0.10.0-5-gefa67ab-SNAPSHOT"
+job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-285-gd21efc4-SNAPSHOT"
 pegasus_docker_image_version = "0.0.1-SNAPSHOT-20-ga19254e"
 rmq_docker_image_version = "latest"
 taurus_docker_image_version = "0.0.0-4ee5f7015ea9cd60d875f2db9eeb4ccb7a30732c"

@@ -19,16 +19,13 @@ arn                             = "aws-us-gov"
 s3_endpoint                     = "s3-us-gov-west-1.amazonaws.com"
 
 # the ami id for the machine that will serve as the bastion (can be CentOS or Amazon Linux)
-bastion_ami_id                  = "ami-0466e865"
+bastion_ami_id                  = "ami-128c0873"
 
 # the ami id for the machines that will run DeepCortex (should be a CentOS 7.4 ami)
-packer_base_ami                 = "ami-0466e865"
-
-# operating system for DeepCortex machines (centos or rhel)
-machine_os                      = "rhel"
+packer_base_ami                 = "ami-128c0873"
 
 # the default ssh user for the above ami (likely centos for CentOS machines, but could be ec2-user so make sure to check the ami you are using)
-packer_ssh_user                 = "ec2-user"
+packer_ssh_user                 = "centos"
 
 # the VPC ID of the VPC you will launch DeepCortex into
 vpc_id                          = "vpc-7a51d11f"
@@ -53,23 +50,23 @@ access_cidr                     = "205.251.70.6/32"
 deploy_cidr                     = "205.251.70.6/32"
 
 # specify if Public MSTAR data should be uploaded to the default DeepCortex S3 bucket
-upload_datasets                 = "false"
+upload_datasets                 = "true"
 
 ### You may change any of the below names if you choose, otherwise the defaults we be used.
 
 # the name of the S3 buckets used for storing terraform artifacts, storing DeepCortex data, and storing DC/OS data
-tf_bucket                       = "falcon-deepcortex-c2s-test-terraform"
-dcos_apps_bucket                = "falcon-deepcortex-c2s-test-dcos-apps"
-dcos_stack_bucket               = "falcon-deepcortex-c2s-test-dcos-backend"
+tf_bucket                       = "falcon-deepcortex-staging-terraform"
+dcos_apps_bucket                = "falcon-deepcortex-staging-dcos-apps"
+dcos_stack_bucket               = "falcon-deepcortex-staging-dcos-backend"
 
 # the tags that will be applied to the infrastructure (environment, owner, usage)
 # environment and owner can only be a combined 17 characters
-environment                     = "c2stest"
+environment                     = "staging"
 tag_owner                       = "deepcortex"
 tag_usage                       = "falcon"
 
 # the name of the redshfit cluster
-redshift_cluster_name           = "falcon-deepcortex-c2s-test-redshift"
+redshift_cluster_name           = "falcon-deepcortex-staging-redshift"
 
 
 ### DO NOT CHANGE ANYTHING BELOW THIS LINE
@@ -80,22 +77,19 @@ dcos_version                    = "1.10.2"
 # public vs private baile
 baile_access                    = "private"
 
-# enable online prediction (true/false)
-online_prediction               = "false"
-
 # true or false for downloading latest files (frontend and mstar) from S3 rather than using files in the docker container
 download_from_s3                = "true"
 
 # prefix for terraform templates
-prefix                          = "c2s_"
+prefix                          = "exvpc_"
 
 # Platform
 bootstrap_asg_desired_capacity  = "1"
-bootstrap_asg_min_size          = "0"
+bootstrap_asg_min_size          = "1"
 bootstrap_asg_max_size          = "1"
 bootstrap_elb_dns_name          = "bootstrap"
 s3_prefix                       = "deepcortex"
-cluster_name                    = "deepcortex-c2stest"
+cluster_name                    = "deepcortex-staging"
 
 master_asg_desired_capacity     = "1"
 master_asg_min_size             = "1"
@@ -135,7 +129,7 @@ public_slave_xvdf_size             = "50"
 public_slave_xvdh_size             = "50"
 
 captain_asg_desired_capacity       = "1"
-captain_asg_min_size               = "0"
+captain_asg_min_size               = "1"
 captain_asg_max_size               = "1"
 
 
