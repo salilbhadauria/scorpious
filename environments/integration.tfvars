@@ -1,6 +1,6 @@
 # Packer
 packer_base_ami                 = "ami-0d7c5868"
-packer_ssh_user                 = "ec2-user"
+main_user                 = "ec2-user"
 
 # Ansible
 dcos_apps_bucket                = "deepcortex-dcos-apps"

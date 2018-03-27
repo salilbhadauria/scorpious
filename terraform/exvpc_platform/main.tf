@@ -223,6 +223,9 @@ data "template_file" "bootstrap_userdata" {
     cluster_name = "${var.cluster_name}"
     s3_bucket = "${aws_s3_bucket.dcos_stack_bucket.id}"
     s3_prefix = "${var.environment}-${var.s3_prefix}"
+    download_ssh_keys = "${var.download_ssh_keys}"
+    ssh_keys_s3_bucket = "${var.ssh_keys_s3_bucket}"
+    main_user = "${var.main_user}"
     num_masters = "${var.master_asg_desired_capacity}"
     bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
     masters_elb = "${module.master_elb_internal.elb_dns_name}"
@@ -503,6 +506,9 @@ data "template_file" "master_userdata" {
     environment = "${var.environment}"
     aws_region = "${var.aws_region}"
     bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
+    download_ssh_keys = "${var.download_ssh_keys}"
+    ssh_keys_s3_bucket = "${var.ssh_keys_s3_bucket}"
+    main_user = "${var.main_user}"
   }
 
   depends_on = [
@@ -611,6 +617,9 @@ data "template_file" "slave_userdata" {
     environment = "${var.environment}"
     aws_region = "${var.aws_region}"
     bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
+    download_ssh_keys = "${var.download_ssh_keys}"
+    ssh_keys_s3_bucket = "${var.ssh_keys_s3_bucket}"
+    main_user = "${var.main_user}"
   }
 
   depends_on = [
@@ -656,6 +665,9 @@ data "template_file" "gpu_slave_userdata" {
     environment = "${var.environment}"
     aws_region = "${var.aws_region}"
     bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
+    download_ssh_keys = "${var.download_ssh_keys}"
+    ssh_keys_s3_bucket = "${var.ssh_keys_s3_bucket}"
+    main_user = "${var.main_user}"
   }
 
   depends_on = [
@@ -805,6 +817,9 @@ data "template_file" "public_slave_userdata" {
     environment = "${var.environment}"
     aws_region = "${var.aws_region}"
     bootstrap_dns = "${module.bootstrap_elb.elb_dns_name}"
+    download_ssh_keys = "${var.download_ssh_keys}"
+    ssh_keys_s3_bucket = "${var.ssh_keys_s3_bucket}"
+    main_user = "${var.main_user}"
   }
 
   depends_on = [
@@ -876,6 +891,9 @@ data "template_file" "captain_userdata" {
     dcos_master_url = "${module.master_elb_internal.elb_dns_name}"
     dcos_apps_bucket = "${aws_s3_bucket.dcos_apps_bucket.id}"
     dcos_apps_bucket_domain = "${aws_s3_bucket.dcos_apps_bucket.id}.${var.s3_endpoint}"
+    download_ssh_keys = "${var.download_ssh_keys}"
+    ssh_keys_s3_bucket = "${var.ssh_keys_s3_bucket}"
+    main_user = "${var.main_user}"
     online_prediction_sqs_queue = "online-prediction-${var.tag_owner}-${var.environment}"
     aws_region = "${var.aws_region}"
     redshift_user = "${data.terraform_remote_state.redshift.redshift_master_username}"

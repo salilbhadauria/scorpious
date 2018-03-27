@@ -28,7 +28,7 @@ packer_base_ami                 = "ami-26ebbc5c"
 machine_os                      = "rhel"
 
 # the default ssh user for the above ami (likely centos for CentOS machines, but could be ec2-user so make sure to check the ami you are using)
-packer_ssh_user                 = "ec2-user"
+main_user                       = "ec2-user"
 
 # the VPC ID of the VPC you will launch DeepCortex into
 vpc_id                          = "vpc-a7d785c1"
@@ -54,6 +54,15 @@ deploy_cidr                     = "205.251.70.6/32"
 
 # specify if Public MSTAR and CAD data should be uploaded to the default DeepCortex S3 bucket
 upload_datasets                 = "true"
+
+# extra ssh keys: fill out the following section if you wish for the DC/OS machines to have additional
+# ssh keys added to allow other users to ssh to those machines with a key other than the one provided above
+
+# set to true if you'd like to add additional keys
+download_ssh_keys               = "true"
+
+# specify the location of the file in S3 that contains the list of public keys you'd like to add to each machine
+ssh_keys_s3_bucket              = "s3://artifacts.dev.deepcortex.ai/configurations/ssh/keys.public"
 
 ### You may change any of the below names if you choose, otherwise the defaults we be used.
 

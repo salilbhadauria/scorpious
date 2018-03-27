@@ -36,7 +36,7 @@ baile_access                    = "private"
 
 # Packer
 packer_base_ami                 = "ami-6f61e60e"
-packer_ssh_user                 = "ec2-user"
+main_user                 = "ec2-user"
 
 # Terraform
 # VPC

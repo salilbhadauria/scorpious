@@ -59,6 +59,17 @@ resource "aws_iam_instance_profile" "bastion_profile" {
     role = "${data.terraform_remote_state.iam.bastion_iam_role_name}"
 }
 
+data "template_file" "bastion_userdata" {
+  template = "${file("../../terraform/templates/bastion_userdata.tpl")}"
+
+  vars {
+    aws_region = "${var.aws_region}"
+    download_ssh_keys = "${var.download_ssh_keys}"
+    ssh_keys_s3_bucket = "${var.ssh_keys_s3_bucket}"
+    main_user = "${var.main_user}"
+  }
+}
+
 module "asg_bastion" {
     source = "../../terraform/modules/autoscaling_group"
 
@@ -68,7 +79,7 @@ module "asg_bastion" {
     lc_ebs_optimized   = "false"
     lc_key_name        = "${module.devops_key.name}"
     lc_security_groups = [ "${module.sg_bastion.id}" ]
-    lc_user_data       = "#!/bin/bash\ncurl https://amazon-ssm-us-east-1.s3.amazonaws.com/latest/linux_amd64/amazon-ssm-agent.rpm -o amazon-ssm-agent.rpm && yum install -y amazon-ssm-agent.rpm"
+    lc_user_data       = "${data.template_file.bastion_userdata.rendered}"
     lc_iam_instance_profile = "${aws_iam_instance_profile.bastion_profile.id}"
 
     asg_name             = "${var.tag_owner}-${var.environment}-bastion-asg"

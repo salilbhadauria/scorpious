@@ -49,6 +49,25 @@ resource "aws_iam_role_policy_attachment" "bastion_ssm_attach" {
     policy_arn = "arn:${var.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
+resource "aws_iam_role_policy" "bastion_policy" {
+  name = "${var.tag_owner}-${var.environment}-bastion_policy"
+  role = "${aws_iam_role.bastion_role.id}"
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
 resource "aws_iam_role" "nat_instance_role" {
     name = "${var.tag_owner}-${var.environment}-nat_instance_role"
     path = "/"

@@ -1,6 +1,6 @@
 # Packer (base ami changed for GPU)
 packer_base_ami                 = "ami-22ef9734"
-packer_ssh_user                 = "centos"
+main_user                 = "centos"
 
 # Ansible
 dcos_apps_bucket                = "deepcortex-dcos-apps"

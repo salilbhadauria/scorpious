@@ -2,6 +2,9 @@
 environment:
   environment: ${environment}
   aws_default_region: ${aws_region}
+  download_ssh_keys: ${download_ssh_keys}
+  ssh_keys_s3_bucket: ${ssh_keys_s3_bucket}
+  main_user: ${main_user}
 manage_resolv_conf: false
 preserve_hostname: true
 runcmd:
@@ -25,6 +28,7 @@ runcmd:
   - sed -i "s/masters_elb_dns_via_user_data/${masters_elb}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
   - sed -i "s/bootstrap_dns_via_user_data/${bootstrap_dns}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
   - sed -i "s/aws_region_via_user_data/${aws_region}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
+  - if [ ${download_ssh_keys} = true ]; then aws s3 cp ${ssh_keys_s3_bucket} - >> /home/${main_user}/.ssh/authorized_keys; fi
   - cd /var/lib/dcos-bootstrap; bash dcos_generate_config.sh --set-superuser-password ${dcos_password}
   - cd /var/lib/dcos-bootstrap; bash dcos_generate_config.sh
   - docker pull httpd:2.4.23

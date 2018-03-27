@@ -5,6 +5,9 @@ variable "environment" {}
 variable "vpc_id" {}
 variable "subnet_id_1" {}
 variable "subnet_id_2" {}
+variable "download_ssh_keys" { default = "false" }
+variable "ssh_keys_s3_bucket" { default = "" }
+variable "main_user" {}
 
 variable "tf_bucket" {}
 

@@ -2,6 +2,9 @@
 environment:
   environment: ${environment}
   aws_default_region: ${aws_region}
+  download_ssh_keys: ${download_ssh_keys}
+  ssh_keys_s3_bucket: ${ssh_keys_s3_bucket}
+  main_user: ${main_user}
 manage_resolv_conf: false
 preserve_hostname: true
 runcmd:
@@ -17,6 +20,7 @@ runcmd:
   - service ntpd restart
   - curl https://amazon-ssm-us-east-1.s3.amazonaws.com/latest/linux_amd64/amazon-ssm-agent.rpm -o amazon-ssm-agent.rpm
   - yum install -y amazon-ssm-agent.rpm
+  - if [ ${download_ssh_keys} = true ]; then aws s3 cp ${ssh_keys_s3_bucket} - >> /home/${main_user}/.ssh/authorized_keys; fi
   - sysctl net.bridge.bridge-nf-call-iptables=1
   - sysctl net.bridge.bridge-nf-call-ip6tables=1
   - zone_id=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
@@ -28,4 +32,5 @@ runcmd:
   - cd /opt/gpu_support; bash install_gpu.sh
   - cd /tmp; bash dcos_install.sh slave
   - service ntpd restart
+  - systemctl start amazon-ssm-agent
   - sudo reboot

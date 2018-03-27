@@ -2,6 +2,9 @@
 
 variable "aws_region" {}
 variable "environment" {}
+variable "download_ssh_keys" { default = "false" }
+variable "ssh_keys_s3_bucket" { default = "" }
+variable "main_user" {}
 
 variable "tf_bucket" {}
 

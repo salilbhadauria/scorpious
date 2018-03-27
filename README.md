@@ -100,7 +100,7 @@ Building the environment requires first building the AMIs that terraform will us
 In the environments/CONFIG.tfvars file for your environment/region/cloud you will need to update the following variables:
 
  - packer_base_ami
- - packer_ssh_user
+ - main_user
  - aws_region
 
 Running packer:

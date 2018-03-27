@@ -25,7 +25,7 @@ bastion_ami_id                  = "ami-128c0873"
 packer_base_ami                 = "ami-128c0873"
 
 # the default ssh user for the above ami (likely centos for CentOS machines, but could be ec2-user so make sure to check the ami you are using)
-packer_ssh_user                 = "centos"
+main_user                 = "centos"
 
 # the VPC ID of the VPC you will launch DeepCortex into
 vpc_id                          = "vpc-7a51d11f"
