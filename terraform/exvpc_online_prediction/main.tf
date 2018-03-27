@@ -12,7 +12,7 @@ data "terraform_remote_state" "iam" {
   backend = "s3"
   config {
     bucket = "${var.tf_bucket}"
-    key    = "${var.aws_region}/${var.environment}/c2s_iam/terraform.tfstate"
+    key    = "${var.aws_region}/${var.environment}/exvpc_iam/terraform.tfstate"
     region = "${var.aws_region}"
   }
 }
@@ -22,7 +22,7 @@ data "terraform_remote_state" "platform" {
   backend = "s3"
   config {
     bucket = "${var.tf_bucket}"
-    key    = "${var.aws_region}/${var.environment}/c2s_platform/terraform.tfstate"
+    key    = "${var.aws_region}/${var.environment}/exvpc_platform/terraform.tfstate"
     region = "${var.aws_region}"
   }
 }

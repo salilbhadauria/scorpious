@@ -81,7 +81,7 @@ baile_access                    = "private"
 download_from_s3                = "false"
 
 # prefix for terraform templates
-prefix                          = "c2s_"
+prefix                          = "exvpc_"
 
 # Platform
 bootstrap_asg_desired_capacity  = "1"

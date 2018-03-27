@@ -58,18 +58,18 @@ upload_datasets                 = "false"
 ### You may change any of the below names if you choose, otherwise the defaults we be used.
 
 # the name of the S3 buckets used for storing terraform artifacts, storing DeepCortex data, and storing DC/OS data
-tf_bucket                       = "falcon-deepcortex-c2s-test-terraform"
-dcos_apps_bucket                = "falcon-deepcortex-c2s-test-dcos-apps"
-dcos_stack_bucket               = "falcon-deepcortex-c2s-test-dcos-backend"
+tf_bucket                       = "falcon-deepcortex-exvpc-test-terraform"
+dcos_apps_bucket                = "falcon-deepcortex-exvpc-test-dcos-apps"
+dcos_stack_bucket               = "falcon-deepcortex-exvpc-test-dcos-backend"
 
 # the tags that will be applied to the infrastructure (environment, owner, usage)
 # environment and owner can only be a combined 17 characters
-environment                     = "c2stest"
+environment                     = "exvpctest"
 tag_owner                       = "deepcortex"
 tag_usage                       = "falcon"
 
 # the name of the redshfit cluster
-redshift_cluster_name           = "falcon-deepcortex-c2s-test-redshift"
+redshift_cluster_name           = "falcon-deepcortex-exvpc-test-redshift"
 
 
 ### DO NOT CHANGE ANYTHING BELOW THIS LINE
@@ -87,7 +87,7 @@ online_prediction               = "false"
 download_from_s3                = "true"
 
 # prefix for terraform templates
-prefix                          = "c2s_"
+prefix                          = "exvpc_"
 
 # Platform
 bootstrap_asg_desired_capacity  = "1"
@@ -95,7 +95,7 @@ bootstrap_asg_min_size          = "0"
 bootstrap_asg_max_size          = "1"
 bootstrap_elb_dns_name          = "bootstrap"
 s3_prefix                       = "deepcortex"
-cluster_name                    = "deepcortex-c2stest"
+cluster_name                    = "deepcortex-exvpctest"
 
 master_asg_desired_capacity     = "1"
 master_asg_min_size             = "1"
