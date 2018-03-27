@@ -46,7 +46,8 @@
   }],
   "labels":{
     "HAPROXY_GROUP":"external",
-    "HAPROXY_0_VHOST":"${BAILE_LB_URL}"
+    "HAPROXY_0_VHOST":"${BAILE_LB_URL}",
+    "HAPROXY_0_VHOST":"${BAILE_INTERNAL_LB_URL}"
   },
   "upgradeStrategy": {
     "maximumOverCapacity": 1,

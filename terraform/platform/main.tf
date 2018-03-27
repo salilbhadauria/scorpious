@@ -688,9 +688,9 @@ module "gpu_slave_asg" {
 module "baile_elb_sg" {
     source = "../../terraform/modules/security_group"
 
-    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
+    vpc_id = "${var.vpc_id}"
 
-    sg_name = "baile-elb"
+    sg_name = "baile-elb-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -701,6 +701,26 @@ module "baile_elb_sg" {
             cidr_blocks = "${var.access_cidr}"
         },
     ]
+
+    egress_rules_cidr = [
+        {
+            protocol    = "all"
+            from_port   = "0"
+            to_port     = "0"
+            cidr_blocks = "0.0.0.0/0"
+        },
+    ]
+
+    tags = "${local.tags}"
+}
+
+module "baile_elb_internal_sg" {
+    source = "../../terraform/modules/security_group"
+
+    vpc_id = "${var.vpc_id}"
+
+    sg_name = "baile-elb-in-${var.tag_owner}-${var.environment}"
+    sg_description = "some description"
 
     ingress_rules_sgid_count = 1
     ingress_rules_sgid = [
@@ -736,12 +756,39 @@ resource "aws_security_group_rule" "baile_elb_deploy_ingress_rule_cidr" {
     description       = "Access for baile from deploy cidr"
 }
 
+resource "aws_security_group_rule" "baile_elb_public_ingress_rule_cidr" {
+    count = "${local.create_public_baile_access}"
+
+    security_group_id = "${module.baile_elb_sg.id}"
+    type              = "ingress"
+    from_port         = "80"
+    to_port           = "80"
+    protocol          = "tcp"
+    cidr_blocks       = ["0.0.0.0/0"]
+    description       = "Access for baile from public internet"
+}
+
 module "baile_elb" {
   source              = "../../terraform/modules/elb"
   elb_name            = "${var.tag_owner}-${var.environment}-baile-elb"
   elb_is_internal     = "false"
   elb_security_group  = "${module.baile_elb_sg.id}"
   subnets             = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
+  frontend_port       = "80"
+  frontend_protocol   = "http"
+  backend_port        = "80"
+  backend_protocol    = "http"
+  health_check_target = "TCP:80"
+
+  tags                = "${local.tags}"
+}
+
+module "baile_elb_internal" {
+  source              = "../../terraform/modules/elb"
+  elb_name            = "${var.tag_owner}-${var.environment}-baile-elb-in"
+  elb_is_internal     = "true"
+  elb_security_group  = "${module.baile_elb_internal_sg.id}"
+  subnets             = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
   frontend_port       = "80"
   frontend_protocol   = "http"
   backend_port        = "80"
@@ -761,7 +808,7 @@ module "public_slave_sg" {
     sg_name = "public-slave"
     sg_description = "some description"
 
-    ingress_rules_sgid_count = 3
+    ingress_rules_sgid_count = 4
     ingress_rules_sgid = [
         {
             protocol    = "tcp"
@@ -781,6 +828,12 @@ module "public_slave_sg" {
             to_port     = "80"
             sg_id = "${module.baile_elb_sg.id}"
         },
+        {
+            protocol    = "tcp"
+            from_port   = "80"
+            to_port     = "80"
+            sg_id = "${module.baile_elb_internal_sg.id}"
+        }
     ]
 
     egress_rules_cidr = [
@@ -828,7 +881,7 @@ module "public_slave_asg" {
     asg_desired_capacity    = "${var.public_slave_asg_desired_capacity}"
     asg_min_size            = "${var.public_slave_asg_min_size}"
     asg_max_size            = "${var.public_slave_asg_max_size}"
-    asg_load_balancers      = [ "${module.baile_elb.elb_id}" ]
+    asg_load_balancers      = [ "${module.baile_elb.elb_id}", "${module.baile_elb_internal.elb_id}" ]
 
     tags_asg = "${local.tags_asg}"
     asg_name_tag = "${var.tag_owner}-${var.environment}-public-slave-asg"
@@ -884,6 +937,7 @@ data "template_file" "captain_userdata" {
     redshift_password = "${data.terraform_remote_state.redshift.redshift_master_password}"
     redshift_host = "${data.terraform_remote_state.redshift.redshift_url}"
     baile_lb_url = "${module.baile_elb.elb_dns_name}"
+    baile_internal_lb_url = "${module.baile_elb_internal.elb_dns_name}"
     dcos_nodes = "${var.slave_asg_desired_capacity + var.public_slave_asg_desired_capacity + var.gpu_slave_asg_desired_capacity}"
     master_instance_name = "${var.tag_owner}-${var.environment}-master"
     apps_aws_access_key = "${data.terraform_remote_state.iam.app_access_key}"

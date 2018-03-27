@@ -14,6 +14,7 @@ environment:
   aws_default_region: ${aws_region}
   dcos_master: ${dcos_master_url}
   baile_lb_url: ${baile_lb_url}
+  baile_internal_lb_url: ${baile_internal_lb_url}
   redshift_host: ${redshift_host}
   redshift_user: ${redshift_user}
   redshift_password: ${redshift_password}

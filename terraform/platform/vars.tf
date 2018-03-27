@@ -75,6 +75,7 @@ variable "online_prediction" { default = "true" }
 
 locals {
     create_deploy_sgs = "${var.access_cidr == var.deploy_cidr ? 0 : 1}"
+    create_public_baile_access = "${var.baile_access == "public" ? 1 : 0}"
     tags = {
         owner       = "${var.tag_owner}"
         environment = "${var.environment}"
