@@ -1,16 +1,15 @@
 {
-  "id": "um-service",
+  "id": "argo-api-rest",
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "deepcortex/um-service:${DOCKER_IMAGE_VERSION}",
+      "image": "deepcortex/argo-api-rest:${DOCKER_IMAGE_VERSION}",
       "network": "BRIDGE",
       "portMappings": [
         { "hostPort": 0,
           "containerPort": 9000,
-          "servicePort": 10000,
           "labels": {
-            "VIP_0": "/um-service:80"
+            "VIP_0": "/argo-api-rest:9000"
           }
         }
       ],
@@ -18,8 +17,13 @@
     }
   },
   "env": {
-    "MONGODB_URI": "${MONGODB_URI}",
-    "EMAIL_ON": "${EMAIL_ON}"
+    "HTTP_AUTH_USER_NAME": "${HTTP_AUTH_USER_NAME}",
+    "HTTP_AUTH_USER_PASSWORD": "${HTTP_AUTH_USER_PASSWORD}",
+    "ELASTIC_HOST": "${ELASTIC_HOST}",
+    "ELASTIC_PORT": "${ELASTIC_PORT}",
+    "ELASTIC_SSL": "${ELASTIC_SSL}",
+    "ELASTIC_CONFIG_SETTING_INDEX": "${ELASTIC_CONFIG_SETTING_INDEX}",
+    "ELASTIC_SSL": "${ELASTIC_SSL}"
   },
   "instances": ${SRV_INSTANCES},
   "cpus": ${SRV_CPUS},
@@ -37,7 +41,7 @@
     ],
   "healthChecks": [{
     "protocol": "HTTP",
-    "path": "/api/um-service/v0.1/healthCheck",
+    "path": "/v1/health",
     "portIndex": 0,
     "timeoutSeconds": 10,
     "gracePeriodSeconds": 10,

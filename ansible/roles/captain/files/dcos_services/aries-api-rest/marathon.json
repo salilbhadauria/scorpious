@@ -13,19 +13,19 @@
           }
         }
       ],
-      "parameters": [
-        { "key": "env", "value": "HTTP_SEARCH_USER_NAME=${HTTP_SEARCH_USER_NAME}" },
-        { "key": "env", "value": "HTTP_SEARCH_USER_PASSWORD=${HTTP_SEARCH_USER_PASSWORD}" },
-        { "key": "env", "value": "HTTP_COMMAND_USER_NAME=${HTTP_COMMAND_USER_NAME}" },
-        { "key": "env", "value": "HTTP_COMMAND_USER_PASSWORD=${HTTP_COMMAND_USER_PASSWORD}" },
-        { "key": "env", "value": "ELASTIC_HOST=${ELASTIC_HOST}" },
-        { "key": "env", "value": "ELASTIC_PORT=${ELASTIC_PORT}" },
-        { "key": "env", "value": "ELASTIC_SSL=${ELASTIC_SSL}" },
-        { "key": "env", "value": "ELASTIC_JOB_INDEX=${ELASTIC_JOB_INDEX}" },
-        { "key": "env", "value": "ELASTIC_HEARTBEAT_INDEX=${ELASTIC_HEARTBEAT_INDEX}" }
-      ],
       "forcePullImage": true
     }
+  },
+  "env": {
+    "HTTP_SEARCH_USER_NAME": "${HTTP_SEARCH_USER_NAME}",
+    "HTTP_SEARCH_USER_PASSWORD": "${HTTP_SEARCH_USER_PASSWORD}",
+    "HTTP_COMMAND_USER_NAME": "${HTTP_COMMAND_USER_NAME}",
+    "HTTP_COMMAND_USER_PASSWORD": "${HTTP_COMMAND_USER_PASSWORD}",
+    "ELASTIC_HOST": "${ELASTIC_HOST}",
+    "ELASTIC_PORT": "${ELASTIC_PORT}",
+    "ELASTIC_SSL": "${ELASTIC_SSL}",
+    "ELASTIC_JOB_INDEX": "${ELASTIC_JOB_INDEX}",
+    "ELASTIC_HEARTBEAT_INDEX": "${ELASTIC_HEARTBEAT_INDEX}"
   },
   "instances": ${SRV_INSTANCES},
   "cpus": ${SRV_CPUS},

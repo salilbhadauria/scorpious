@@ -12,14 +12,18 @@
           "labels": {
             "VIP_0": "/baile-haproxy:80"
           }
+        },
+        { "hostPort": 0,
+          "containerPort": 80,
+          "servicePort": 10001
         }
-      ],
-      "parameters": [
-        { "key": "env", "value": "S3_BUCKET=${S3_BUCKET}" },
-        { "key": "env", "value": "BAILE_ADDRESS=${BAILE_ADDRESS}" }
       ],
       "forcePullImage":true
     }
+  },
+  "env": {
+    "S3_BUCKET": "${S3_BUCKET}",
+    "BAILE_ADDRESS": "${BAILE_ADDRESS}"
   },
   "instances": ${SRV_INSTANCES},
   "cpus": ${SRV_CPUS},
@@ -47,7 +51,7 @@
   "labels":{
     "HAPROXY_GROUP":"external",
     "HAPROXY_0_VHOST":"${BAILE_LB_URL}",
-    "HAPROXY_0_VHOST":"${BAILE_INTERNAL_LB_URL}"
+    "HAPROXY_1_VHOST":"${BAILE_INTERNAL_LB_URL}"
   },
   "upgradeStrategy": {
     "maximumOverCapacity": 1,

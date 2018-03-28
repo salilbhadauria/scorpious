@@ -6,12 +6,12 @@
       "image": "deepcortex/logstash-rmq:${DOCKER_IMAGE_VERSION}",
       "network": "HOST",
       "portMappings": [],
-      "parameters": [
-        { "key": "env", "value": "RABBITMQ_USER=${RABBITMQ_USER}" },
-        { "key": "env", "value": "RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD}" }
-      ],
       "forcePullImage":true
     }
+  },
+  "env": {
+    "RABBITMQ_USER": "${RABBITMQ_USER}",
+    "RABBITMQ_PASSWORD": "${RABBITMQ_PASSWORD}"
   },
   "instances": ${SRV_INSTANCES},
   "cpus": ${SRV_CPUS},

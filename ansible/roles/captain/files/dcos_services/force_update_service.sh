@@ -8,4 +8,4 @@ source ${ENV_VARS}
 
 envsubst < ${TEMPLATE} > marathon.json
 
-dcos marathon app update $APP_NAME < marathon.json
+dcos marathon app update $APP_NAME < marathon.json --force
