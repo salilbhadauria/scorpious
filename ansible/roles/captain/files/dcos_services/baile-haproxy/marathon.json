@@ -41,7 +41,7 @@
     ],
   "healthChecks": [{
     "protocol": "HTTP",
-    "path": "/",
+    "path": "/api/insilico/v1.4/healthCheck",
     "portIndex": 0,
     "timeoutSeconds": 10,
     "gracePeriodSeconds": 10,
