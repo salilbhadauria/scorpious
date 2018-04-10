@@ -18,7 +18,11 @@ if [[ $? -ne 0 ]]; then
   aws s3 sync front-end "s3://${AWS_S3_BUCKET}/static-content/dev/"
   rm -rf front-end
   rm -f front-end.tar.gz
+fi
 
+# Upload Datasets to S3
+aws s3 ls "s3://${AWS_S3_BUCKET}/Datasets/"
+if [[ $? -ne 0 ]]; then
   if [ $UPLOAD_DATASETS = "true" ]; then
     if [ $DOWNLOAD_FROM_S3 = "true" ]; then
       curl -O "https://s3.amazonaws.com/artifacts.dev.deepcortex.ai/deployment_downloads/Datasets.tar.gz"

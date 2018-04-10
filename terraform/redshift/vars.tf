@@ -20,7 +20,6 @@ locals {
 }
 
 variable "redshift_family" {}
-variable "redshift_cluster_name" {}
 variable "redshift_database_name" {}
 variable "redshift_master_username" {}
 variable "redshift_node_type" {}

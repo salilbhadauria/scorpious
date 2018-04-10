@@ -22,7 +22,7 @@ module "redshift-clstr-sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "redshift"
+    sg_name = "redshift-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -31,16 +31,6 @@ module "redshift-clstr-sg" {
             from_port   = "5439"
             to_port     = "5439"
             cidr_blocks = "${var.access_cidr}"
-        },
-    ]
-
-    ingress_rules_sgid_count = 1
-    ingress_rules_sgid = [
-        {
-            protocol    = "tcp"
-            from_port   = "5439"
-            to_port     = "5439"
-            sg_id       = "${data.terraform_remote_state.vpc.sg_private_egress_subnet_id}"
         },
     ]
 
@@ -72,8 +62,13 @@ resource "random_string" "redshift_password" {
   special = false
 }
 
+resource "random_string" "snapshot_id" {
+  length = 10
+  special = false
+}
+
 resource "aws_redshift_cluster" "redshift-clstr" {
-  cluster_identifier           = "${var.redshift_cluster_name}"
+  cluster_identifier           = "${var.tag_owner}-${var.environment}"
   database_name                = "${var.redshift_database_name}"
   master_username              = "${var.redshift_master_username}"
   master_password              = "${random_string.redshift_password.result}"
@@ -84,7 +79,7 @@ resource "aws_redshift_cluster" "redshift-clstr" {
   skip_final_snapshot          = "${var.redshift_skip_final_snapshot}"
   vpc_security_group_ids       = ["${module.redshift-clstr-sg.id}"]
   cluster_subnet_group_name    = "${aws_redshift_subnet_group.redshift-subnet-grp.id}"
-  final_snapshot_identifier    = "final-redshift-snapshot"
+  final_snapshot_identifier    = "${var.tag_owner}-${var.environment}-${random_string.snapshot_id.result}"
   cluster_parameter_group_name = "${aws_redshift_parameter_group.redshift-clstr-pg.id}"
   enhanced_vpc_routing         = "true"
 

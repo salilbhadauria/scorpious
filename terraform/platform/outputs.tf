@@ -43,11 +43,3 @@ output "gpu_slave_asg_name" {
 output "captain_asg_name" {
   value = "${module.captain_asg.asg_name}"
 }
-
-output "apps_s3_bucket" {
-  value = "${aws_s3_bucket.dcos_apps_bucket.id}"
-}
-
-output "apps_s3_bucket_arn" {
-  value = "${aws_s3_bucket.dcos_apps_bucket.arn}"
-}

@@ -5,6 +5,7 @@
 
 resource "aws_security_group" "sg" {
 
+    count       = "${var.sg_count}"
     vpc_id      = "${var.vpc_id}"
     name        = "${var.sg_name}"
     description = "${var.sg_description}"
@@ -33,7 +34,7 @@ resource "aws_security_group" "sg" {
 #
 #
 resource "aws_security_group_rule" "ingress_rule_cidr" {
-    count = "${length(var.ingress_rules_cidr)}"
+    count = "${length(var.ingress_rules_cidr) * var.sg_count}"
 
     security_group_id = "${aws_security_group.sg.id}"
     type              = "ingress"
@@ -65,7 +66,7 @@ resource "aws_security_group_rule" "ingress_rule_sgid" {
     # TL;DR: list elements that are computed values restrain the ability to
     # calculate the length of the object
     # count = "${length(var.routes)}"
-    count = "${var.ingress_rules_sgid_count}"
+    count = "${var.ingress_rules_sgid_count * var.sg_count}"
 
     security_group_id        = "${aws_security_group.sg.id}"
     type                     = "ingress"
@@ -96,7 +97,7 @@ resource "aws_security_group_rule" "ingress_rule_self" {
     # TL;DR: list elements that are computed values restrain the ability to
     # calculate the length of the object
     # count = "${length(var.routes)}"
-    count = "${length(var.ingress_rules_self)}"
+    count = "${length(var.ingress_rules_self) * var.sg_count}"
 
     security_group_id        = "${aws_security_group.sg.id}"
     type                     = "ingress"
@@ -110,7 +111,7 @@ resource "aws_security_group_rule" "ingress_rule_self" {
 ## Egress
 
 resource "aws_security_group_rule" "egress_rule_cidr" {
-    count = "${length(var.egress_rules_cidr)}"
+    count = "${length(var.egress_rules_cidr) * var.sg_count}"
 
     security_group_id = "${aws_security_group.sg.id}"
     type              = "egress"
@@ -127,7 +128,7 @@ resource "aws_security_group_rule" "egress_rule_sgid" {
     # TL;DR: list elements that are computed values restrain the ability to
     # calculate the length of the object
     # count = "${length(var.routes)}"
-    count = "${var.egress_rules_sgid_count}"
+    count = "${var.egress_rules_sgid_count * var.sg_count}"
 
     security_group_id        = "${aws_security_group.sg.id}"
     type                     = "egress"
@@ -144,7 +145,7 @@ resource "aws_security_group_rule" "egress_rule_self" {
     # TL;DR: list elements that are computed values restrain the ability to
     # calculate the length of the object
     # count = "${length(var.routes)}"
-    count = "${length(var.egress_rules_self)}"
+    count = "${length(var.egress_rules_self) * var.sg_count}"
 
     security_group_id        = "${aws_security_group.sg.id}"
     type                     = "egress"

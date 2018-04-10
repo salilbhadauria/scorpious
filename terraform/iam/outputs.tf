@@ -3,9 +3,12 @@
 output "bastion_iam_role_name" {
     value = "${aws_iam_role.bastion_role.name}"
 }
+
+# workaround used here to make nat output optional based on if its created or not
 output "nat_instance_iam_role_name" {
-    value = "${aws_iam_role.nat_instance_role.name}"
+    value = "${element(compact(concat(list(var.only_public == "true" ? "N/A" : ""), aws_iam_role.nat_instance_role.*.name)), 0)}"
 }
+
 output "bootstrap_iam_role_name" {
     value = "${aws_iam_role.bootstrap_role.name}"
 }

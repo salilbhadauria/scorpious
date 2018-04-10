@@ -5,3 +5,8 @@ variable "environment" {}
 variable "dcos_apps_bucket" {}
 variable "tag_owner" {}
 variable "arn" { default = "aws"}
+variable "only_public" { default = "false" }
+
+locals {
+    create_nat = "${var.only_public == "true" ? 0 : 1}"
+}

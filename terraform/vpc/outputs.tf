@@ -24,20 +24,14 @@ output "private_egress_subnet_ids" {
   value = [ "${module.vpc.private_egress_subnet_ids}" ]
 }
 
-output "devops_key_name" {
-  value = "${module.devops_key.name}"
+output "route_tables_public" {
+    value = "${module.vpc.route_tables_public}"
 }
 
-output "sg_private_egress_subnet_id" {
-  value = "${module.sg_private_egress_subnet.id}"
-}
-output "sg_bastion_id" {
-  value = "${module.sg_bastion.id}"
+output "route_tables_private" {
+    value = "${module.vpc.route_tables_private}"
 }
 
-output "asg_bastion_name" {
-  value = "${module.asg_bastion.asg_name}"
-}
-output "asg_nat_name" {
-  value = "${module.asg_nat.asg_name}"
+output "route_tables_private_egress" {
+    value = "${module.vpc.route_tables_private_egress}"
 }

@@ -11,13 +11,13 @@ variable "s3_endpoint" {}
 variable "download_ssh_keys" { default = "false" }
 variable "ssh_keys_s3_bucket" { default = "" }
 variable "main_user" {}
+variable "salsa_version" {}
 
 # Bootstrap vars
 
 variable "bootstrap_asg_desired_capacity" {}
 variable "bootstrap_asg_min_size" {}
 variable "bootstrap_asg_max_size" {}
-variable "bootstrap_elb_dns_name" {}
 variable "s3_prefix" {}
 variable "cluster_name" {}
 variable "dcos_stack_bucket" {}
@@ -72,6 +72,7 @@ variable "um_docker_image_version" {}
 variable "upload_datasets" { default = "false"}
 variable "download_from_s3" { default = "true" }
 variable "online_prediction" { default = "true" }
+variable "only_public" { default = "false" }
 
 locals {
     create_deploy_sgs = "${var.access_cidr == var.deploy_cidr ? 0 : 1}"

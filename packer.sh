@@ -22,10 +22,14 @@ export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}' "environments/$CO
 export ENVIRONMENT=$(awk -F\" '/^environment/{print $2}'  "environments/$CONFIG.tfvars")
 export OWNER=$(awk -F\" '/^tag_owner/{print $2}'  "environments/$CONFIG.tfvars")
 export MAIN_USER=$(awk -F\" '/^main_user/{print $2}'  "environments/$CONFIG.tfvars")
-export PACKER_VPC_ID=$(awk -F\" '/^vpc_id/{print $2}'  "environments/$CONFIG.tfvars")
-export PACKER_SUBNET_ID=$(awk -F\" '/^subnet_id_1/{print $2}'  "environments/$CONFIG.tfvars")
 export ONLINE_PREDICTION=$(awk -F\" '/^online_prediction/{print $2}'  "environments/$CONFIG.tfvars")
 export MACHINE_OS=$(awk -F\" '/^machine_os/{print $2}'  "environments/$CONFIG.tfvars")
+export CREATE_VPC=$(awk -F\" '/^create_vpc/{print $2}'  "environments/$CONFIG.tfvars")
+
+if [ $CREATE_VPC = "false" ]; then
+  export PACKER_VPC_ID=$(awk -F\" '/^vpc_id/{print $2}'  "environments/$CONFIG.tfvars")
+  export PACKER_SUBNET_ID=$(awk -F\" '/^subnet_id_1/{print $2}'  "environments/$CONFIG.tfvars")
+fi
 
 if [ $ONLINE_PREDICTION = "true" ]; then
   export REQUIREMENTS_FILE="./ansible/requirements.yml"

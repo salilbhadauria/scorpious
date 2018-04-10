@@ -69,6 +69,7 @@ EOF
 }
 
 resource "aws_iam_role" "nat_instance_role" {
+    count = "${local.create_nat}"
     name = "${var.tag_owner}-${var.environment}-nat_instance_role"
     path = "/"
     assume_role_policy = <<EOF
@@ -91,11 +92,13 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "nat_instance_ssm_attach" {
-    role       = "${aws_iam_role.nat_instance_role.name}"
+    count = "${local.create_nat}"
+    role = "${aws_iam_role.nat_instance_role.name}"
     policy_arn = "arn:${var.arn}:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 }
 
 resource "aws_iam_role_policy" "nat_instance_policy" {
+    count = "${local.create_nat}"
     name = "${var.tag_owner}-${var.environment}-nat_instance_policy"
     role = "${aws_iam_role.nat_instance_role.id}"
     policy = <<EOF

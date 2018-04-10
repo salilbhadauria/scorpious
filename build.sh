@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set +e
+set -e
 
 # optional arguments:
 # -b: shutdown boostrap - can be set to true destroy bootstrap node after the cluster deploys
@@ -7,6 +7,7 @@ set +e
 # -m: deploy mode - can be set to simple to exclude download of DC/OS cli and extra output
 # -s: stacks - a list of comma separated values to overwrite which terraform stacks to build
 # -p: packer - can be set to false to exclude packer builds
+# -t: s3 type - can be set to existing to import existing S3 buckets
 
 usage() {
   echo "Usage: Must set environment variables for CONFIG, AWS_PROFILE or (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY), CUSTOMER_KEY, DCOS_USERNAME, DCOS_PASSWORD"
@@ -28,7 +29,7 @@ fi
 
 parse_args()
 {
-  while getopts ":b:d:g:m:p:s:" opt "$@"; do
+  while getopts ":b:d:g:m:p:s:t:" opt "$@"; do
     case "$opt" in
       b) SHUTDOWN_BOOTSTRAP="$OPTARG" ;;
       g) GPU_ON_START="$OPTARG" ;;
@@ -37,6 +38,7 @@ parse_args()
       s) set -f
          IFS=,
          STACKS=($OPTARG) ;;
+      t) S3_TYPE="$OPTARG" ;;
       :) error "option -$OPTARG requires an argument." ;;
       \?) error "unknown option: -$OPTARG" ;;
     esac
@@ -48,27 +50,62 @@ export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$C
 
 sh terraform_init_backend.sh $CONFIG
 
-PREFIX=$(awk -F\" '/^prefix/{print $2}'  "environments/$CONFIG.tfvars")
-STACKS=("iam" "vpc" "redshift" "platform" "online_prediction")
-
+CREATE_VPC=$(awk -F\" '/^create_vpc/{print $2}'  "environments/$CONFIG.tfvars")
+ONLY_PUBLIC=$(awk -F\" '/^only_public/{print $2}'  "environments/$CONFIG.tfvars")
 ONLINE_PREDICTION=$(awk -F\" '/^online_prediction/{print $2}'  "environments/$CONFIG.tfvars")
-if [[ "$ONLINE_PREDICTION" != "true" ]];then
-  STACKS=("iam" "vpc" "redshift" "platform")
-fi
+AWS_DCOS_STACK_BUCKET=$(awk -F\" '/^dcos_stack_bucket/{print $2}'  "environments/$CONFIG.tfvars")
+AWS_DCOS_APPS_BUCKET=$(awk -F\" '/^dcos_apps_bucket/{print $2}'  "environments/$CONFIG.tfvars")
 
 parse_args "$@"
+
+if [ -z $STACKS ]; then
+  STACKS=()
+
+  if [[ "$CREATE_VPC" = "true" ]];then
+    STACKS+=("vpc")
+    echo "Adding VPC to Stack"
+  else
+    echo "Importing existing VPC"
+    bash import_vpc.sh $CONFIG
+  fi
+
+  if [[ "$S3_TYPE" = "existing" ]];then
+    echo "Importing existing s3 buckets"
+    bash import_s3.sh $CONFIG
+  else
+    STACKS+=("s3_buckets")
+    echo "Adding s3_buckets to Stack"
+  fi
+
+  STACKS+=("iam" "base")
+  echo "Adding iam and base to Stack"
+
+  if [[ "$ONLY_PUBLIC" != "true" ]];then
+    STACKS+=("nat")
+    echo "Adding nat to Stack"
+  fi
+
+  STACKS+=("redshift" "platform")
+  echo "Adding redshift and platform to Stack"
+
+  if [[ "$ONLINE_PREDICTION" = "true" ]];then
+    STACKS+=("online_prediction")
+    echo "Adding online_prediction to Stack"
+  fi
+fi
 
 if [[ "$PACKER" != "false" ]];then
   sh packer.sh all $CONFIG;
 fi
 
 for i in "${STACKS[@]}"; do
-  sh terraform.sh init $CONFIG "$PREFIX$i";
-  sh terraform.sh plan $CONFIG "$PREFIX$i";
-  sh terraform.sh apply $CONFIG "$PREFIX$i";
+  echo "Building $i"
+  sh terraform.sh init $CONFIG "$i"
+  sh terraform.sh plan $CONFIG "$i"
+  sh terraform.sh apply $CONFIG "$i"
 done
 
-if [[ "$DEPLOY_MODE" != "simple" ]];then
+if [[ "$DEPLOY_MODE" != "simple" ]] && [[ "${STACKS[@]}" =~ "platform" ]];then
 
   ENVIRONMENT=$(awk -F\" '/^environment/{print $2}'  "environments/$CONFIG.tfvars")
   OWNER=$(awk -F\" '/^tag_owner/{print $2}'  "environments/$CONFIG.tfvars")

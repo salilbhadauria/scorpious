@@ -13,6 +13,8 @@ variable "sg_description" {
   default     = "Security group"
 }
 
+variable "sg_count" { default = 1 }
+
 variable "tags" {
   description = "Tag maps"
   type        = "map"

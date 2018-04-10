@@ -28,6 +28,7 @@ data "aws_ami" "ami" {
 # Launch configuration
 
 resource "aws_launch_configuration" "lc" {
+    count                = "${var.asg_count}"
     name_prefix          = "${var.lc_name_prefix}"
     image_id             = "${var.lc_ami_id != "" ? var.lc_ami_id : data.aws_ami.ami.id}"
     instance_type        = "${var.lc_instance_type}"
@@ -52,6 +53,7 @@ resource "aws_launch_configuration" "lc" {
 # Autoscaling group
 
 resource "aws_autoscaling_group" "asg" {
+    count                = "${var.asg_count}"
     name                      = "${var.asg_name}"
     vpc_zone_identifier       = [ "${var.asg_subnet_ids}" ]
     desired_capacity          = "${var.asg_desired_capacity}"
