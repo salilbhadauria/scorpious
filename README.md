@@ -27,8 +27,10 @@ Before running any deployment scripts be sure to do the following:
     * -m: deploy mode - can be set to simple to exclude download of DC/OS cli and extra output
     * -s: stacks - a list of comma separated values to overwrite which terraform stacks to build
     * -p: packer - can be set to false to exclude packer builds
+    * -t: s3 type - can be set to existing to import existing S3 buckets
 2. destroy.sh - used to destroy DeepCortex
     * -s: stacks - a list of comma separated values to overwrite which terraform stacks to build
+    * -d: can be set to true to delete s3 buckets
 3. suspend_dc.sh - used to suspend the DC/OS cluster
     * -s: stacks - a list of comma separated values to overwrite which asgs to shutdown
 4. resume_dc.sh - used to resume the DC/OS cluster
@@ -36,6 +38,9 @@ Before running any deployment scripts be sure to do the following:
     * -g: gpu on start - can be set to false to exclude gpu from restart
     * -s: stacks - a list of comma separated values to overwrite which asgs to resume
 
+### Packer Scripts
+
+1. Build only certain packer image: ./packer.sh $AMI_NAME $CONFIG e.g ./packer.sh bootstrap my_config
 
 ### Docker deployment
 

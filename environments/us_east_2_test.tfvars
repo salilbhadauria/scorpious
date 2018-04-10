@@ -27,11 +27,11 @@ create_vpc                      = "true"
 
 # set to false to create NAT instances for private-egress subnets or true if only using public subnets
 # should be false if using an existing VPC since that currently only supports public subnets
-only_public                      = "false"
+only_public                     = "true"
 
 # the ami id for the machine that will serve as the bastion (should be specific for NAT instances)
 # only use if only_public is false
-nat_ami_id                      = "ami-15e9c770"
+nat_ami_id                      = ""
 
 # if creating a VPC, enter the comma separated list of CIDRs for each subnet and availability zone
 # Ex: [ "10.0.1.0/24", "10.0.2.0/24", ], [] for no subnets of that type
@@ -71,10 +71,10 @@ s3_endpoint                     = "s3.amazonaws.com"
 
 ################## AMIs and Users ####################
 
-# the ami id for the machine that will serve as the bastion (can be CentOS or Amazon Linux)
+# the ami id for the machine that will serve as the bastion (can be CentOS/RHEL or Amazon Linux)
 bastion_ami_id                  = "ami-0b1e356e"
 
-# the ami id for the machines that will run DeepCortex (should be a CentOS 7.4 ami)
+# the ami id for the machines that will run DeepCortex (should be a CentOS/RHEL 7.4 ami)
 packer_base_ami                 = "ami-0b1e356e"
 
 # operating system for DeepCortex machines (centos or rhel)
@@ -91,10 +91,10 @@ ssh_public_key                  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQChaCuON
 ################## Machine Access ####################
 
 # the CIDR for a VPN or machine IP that should be able to access DeepCortex
-access_cidr                     = "205.251.70.6/32"
+access_cidr                     = "0.0.0.0/0"
 
 # the CIDR for the IP of the machine that is running the deployment container
-deploy_cidr                     = "205.251.70.6/32"
+deploy_cidr                     = "0.0.0.0/0"
 
 # extra ssh keys: fill out the following section if you wish for the DC/OS machines to have additional
 # ssh keys added to allow other users to ssh to those machines with a key other than the one provided above
@@ -104,7 +104,7 @@ download_ssh_keys               = "true"
 
 # specify the location of the file in S3 that contains the list of public keys you'd like to add to each machine
 # leave blank if the above value is set to false
-ssh_keys_s3_bucket              = "s3://artifacts.dev.deepcortex.ai/configurations/ssh/keys.public"
+ssh_keys_s3_bucket              = "s3://artifacts.dev.deepcortex.ai/configurations/ssh/deployment_project_keys"
 
 ######################################################
 
