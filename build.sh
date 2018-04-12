@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set +e
+set -e
 
 # optional arguments:
 # -b: shutdown boostrap - can be set to true destroy bootstrap node after the cluster deploys
