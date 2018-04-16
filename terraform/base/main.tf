@@ -158,16 +158,12 @@ module "sg_private_egress_subnet" {
     tags = "${local.tags}"
 }
 
-resource "aws_iam_instance_profile" "bastion_profile" {
-    name = "${var.tag_owner}-${var.environment}-bastion_profile"
-    role = "${data.terraform_remote_state.iam.bastion_iam_role_name}"
-}
-
 data "template_file" "bastion_userdata" {
   template = "${file("../../terraform/templates/bastion_userdata.tpl")}"
 
   vars {
     aws_region = "${var.aws_region}"
+    environment = "${var.environment}"
     download_ssh_keys = "${var.download_ssh_keys}"
     ssh_keys_s3_bucket = "${var.ssh_keys_s3_bucket}"
     main_user = "${var.main_user}"
@@ -184,7 +180,7 @@ module "asg_bastion" {
     lc_key_name        = "${module.devops_key.name}"
     lc_security_groups = [ "${module.sg_bastion.id}" ]
     lc_user_data       = "${data.template_file.bastion_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.bastion_profile.id}"
+    lc_iam_instance_profile = "${data.terraform_remote_state.iam.bastion_instance_profile_name}"
 
     asg_name             = "${var.tag_owner}-${var.environment}-bastion-asg"
     asg_subnet_ids       = "${data.terraform_remote_state.vpc.public_subnet_ids}"

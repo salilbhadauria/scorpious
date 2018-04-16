@@ -58,32 +58,6 @@ data "terraform_remote_state" "redshift" {
 
 ###################################################################
 
-# IAM S3 policy for app user
-
-resource "aws_iam_user_policy" "app_s3" {
-  name = "${var.tag_owner}-${var.environment}-app-user-policy"
-  user = "${data.terraform_remote_state.iam.app_user_name}"
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "s3:*"
-      ],
-      "Effect": "Allow",
-      "Resource": [
-        "${data.terraform_remote_state.s3_buckets.apps_s3_bucket_arn}",
-        "${data.terraform_remote_state.s3_buckets.apps_s3_bucket_arn}/*"
-      ]
-    }
-  ]
-}
-EOF
-}
-
-#########################################################
 # Security Groups
 
 module "dcos_stack_sg" {
@@ -207,18 +181,18 @@ data "template_file" "bootstrap_userdata" {
     masters_elb = "${module.master_elb_internal.elb_dns_name}"
     aws_region = "${var.aws_region}"
     dns_ip = "${cidrhost(data.terraform_remote_state.vpc.vpc_cidr, 2)}"
+    dcos_username = "${var.dcos_username}"
     dcos_password = "${var.dcos_password}"
+    customer_key = "${var.customer_key}"
+    docker_registry_url = "${var.docker_registry_url}"
+    docker_registry_auth_token = "${var.docker_registry_auth_token}"
+    docker_email_login = "${var.docker_email_login}"
   }
 
   depends_on = [
     "module.bootstrap_elb",
     "module.master_elb_internal"
   ]
-}
-
-resource "aws_iam_instance_profile" "bootstrap_instance_profile" {
-  name  = "${var.tag_owner}-${var.environment}-bootstrap_instance_profile"
-  role = "${data.terraform_remote_state.iam.bootstrap_iam_role_name}"
 }
 
 module "bootstrap_elb" {
@@ -246,7 +220,7 @@ module "bootstrap_asg" {
     lc_key_name             = "${data.terraform_remote_state.base.devops_key_name}"
     lc_security_groups      = [ "${module.bootstrap_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.bootstrap_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
+    lc_iam_instance_profile = "${data.terraform_remote_state.iam.bootstrap_instance_profile_name}"
 
     asg_name                = "${var.tag_owner}-${var.environment}-bootstrap-asg"
     asg_subnet_ids          = "${slice(concat(data.terraform_remote_state.vpc.public_subnet_ids, data.terraform_remote_state.vpc.private_egress_subnet_ids), var.only_public == "true" ? 0 : length(data.terraform_remote_state.vpc.public_subnet_ids), var.only_public == "true" ? length(data.terraform_remote_state.vpc.public_subnet_ids) : length(data.terraform_remote_state.vpc.public_subnet_ids) + length(data.terraform_remote_state.vpc.private_egress_subnet_ids))}"
@@ -516,11 +490,6 @@ module "master_elb_internal" {
   tags                = "${local.tags}"
 }
 
-resource "aws_iam_instance_profile" "master_instance_profile" {
-  name  = "${var.tag_owner}-${var.environment}-master_instance_profile"
-  role = "${data.terraform_remote_state.iam.master_iam_role_name}"
-}
-
 module "master_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
@@ -531,7 +500,7 @@ module "master_asg" {
     lc_key_name             = "${data.terraform_remote_state.base.devops_key_name}"
     lc_security_groups      = [ "${module.master_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.master_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.master_instance_profile.id}"
+    lc_iam_instance_profile = "${data.terraform_remote_state.iam.master_instance_profile_name}"
 
     asg_name                = "${var.tag_owner}-${var.environment}-master-asg"
     asg_subnet_ids          = "${data.terraform_remote_state.vpc.public_subnet_ids}"
@@ -606,11 +575,6 @@ data "template_file" "slave_userdata" {
   ]
 }
 
-resource "aws_iam_instance_profile" "slave_instance_profile" {
-  name  = "${var.tag_owner}-${var.environment}-slave_instance_profile"
-  role = "${data.terraform_remote_state.iam.slave_iam_role_name}"
-}
-
 module "slave_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
@@ -621,7 +585,7 @@ module "slave_asg" {
     lc_key_name             = "${data.terraform_remote_state.base.devops_key_name}"
     lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.slave_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
+    lc_iam_instance_profile = "${data.terraform_remote_state.iam.slave_instance_profile_name}"
 
     asg_name                = "${var.tag_owner}-${var.environment}-slave-asg"
     asg_subnet_ids          = "${slice(concat(data.terraform_remote_state.vpc.public_subnet_ids, data.terraform_remote_state.vpc.private_egress_subnet_ids), var.only_public == "true" ? 0 : length(data.terraform_remote_state.vpc.public_subnet_ids), var.only_public == "true" ? length(data.terraform_remote_state.vpc.public_subnet_ids) : length(data.terraform_remote_state.vpc.public_subnet_ids) + length(data.terraform_remote_state.vpc.private_egress_subnet_ids))}"
@@ -664,7 +628,7 @@ module "gpu_slave_asg" {
     lc_key_name             = "${data.terraform_remote_state.base.devops_key_name}"
     lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.gpu_slave_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
+    lc_iam_instance_profile = "${data.terraform_remote_state.iam.slave_instance_profile_name}"
 
     asg_name                = "${var.tag_owner}-${var.environment}-gpu-slave-asg"
     asg_subnet_ids          = "${slice(concat(data.terraform_remote_state.vpc.public_subnet_ids, data.terraform_remote_state.vpc.private_egress_subnet_ids), var.only_public == "true" ? 0 : length(data.terraform_remote_state.vpc.public_subnet_ids), var.only_public == "true" ? length(data.terraform_remote_state.vpc.public_subnet_ids) : length(data.terraform_remote_state.vpc.public_subnet_ids) + length(data.terraform_remote_state.vpc.private_egress_subnet_ids))}"
@@ -869,7 +833,7 @@ module "public_slave_asg" {
     lc_key_name             = "${data.terraform_remote_state.base.devops_key_name}"
     lc_security_groups      = [ "${module.public_slave_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.public_slave_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
+    lc_iam_instance_profile = "${data.terraform_remote_state.iam.slave_instance_profile_name}"
 
     asg_name                = "${var.tag_owner}-${var.environment}-public-slave-asg"
     asg_subnet_ids          = "${data.terraform_remote_state.vpc.public_subnet_ids}"
@@ -920,6 +884,8 @@ data "template_file" "captain_userdata" {
 
   vars {
     environment = "${var.environment}"
+    dcos_username = "${var.dcos_username}"
+    dcos_password = "${var.dcos_password}"
     dcos_master_url = "${module.master_elb_internal.elb_dns_name}"
     dcos_apps_bucket = "${data.terraform_remote_state.s3_buckets.apps_s3_bucket}"
     dcos_apps_bucket_domain = "${data.terraform_remote_state.s3_buckets.apps_s3_bucket}.${var.s3_endpoint}"
@@ -935,8 +901,8 @@ data "template_file" "captain_userdata" {
     baile_internal_lb_url = "${module.baile_elb_internal.elb_dns_name}"
     dcos_nodes = "${var.slave_asg_desired_capacity + var.public_slave_asg_desired_capacity + var.gpu_slave_asg_desired_capacity}"
     master_instance_name = "${var.tag_owner}-${var.environment}-master"
-    apps_aws_access_key = "${data.terraform_remote_state.iam.app_access_key}"
-    apps_aws_secret_key = "${data.terraform_remote_state.iam.app_secret_key}"
+    apps_aws_access_key = "${element(compact(concat(list(var.apps_access_key), data.terraform_remote_state.iam.app_access_key)), 0)}"
+    apps_aws_secret_key = "${element(compact(concat(list(var.apps_secret_key), data.terraform_remote_state.iam.app_secret_key)), 0)}"
     rabbit_password = "${random_string.rabbit_password.result}"
     aries_http_search_user_password = "${random_string.aries_http_search_user_password.result}"
     aries_http_command_user_password = "${random_string.aries_http_command_user_password.result}"
@@ -969,11 +935,6 @@ data "template_file" "captain_userdata" {
   ]
 }
 
-resource "aws_iam_instance_profile" "captain_instance_profile" {
-  name  = "${var.tag_owner}-${var.environment}-captain_instance_profile"
-  role = "${data.terraform_remote_state.iam.captain_iam_role_name}"
-}
-
 module "captain_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
@@ -984,7 +945,7 @@ module "captain_asg" {
     lc_key_name             = "${data.terraform_remote_state.base.devops_key_name}"
     lc_security_groups      = [ "${module.captain_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.captain_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.captain_instance_profile.id}"
+    lc_iam_instance_profile = "${data.terraform_remote_state.iam.captain_instance_profile_name}"
 
     asg_name                = "${var.tag_owner}-${var.environment}-captain-asg"
 

@@ -69,6 +69,13 @@ s3_endpoint                     = "s3.amazonaws.com"
 
 ######################################################
 
+###################### IAM ###########################
+
+# set to true to create IAM resources or false to use resources that have already created
+create_iam                      = "true"
+
+######################################################
+
 ################## AMIs and Users ####################
 
 # the ami id for the machine that will serve as the bastion (can be CentOS or Amazon Linux)
@@ -104,7 +111,7 @@ download_ssh_keys               = "true"
 
 # specify the location of the file in S3 that contains the list of public keys you'd like to add to each machine
 # leave blank if the above value is set to false
-ssh_keys_s3_bucket              = "s3://artifacts.dev.deepcortex.ai/configurations/ssh/keys.public"
+ssh_keys_s3_bucket              = "artifacts.dev.deepcortex.ai/configurations/ssh/keys.public"
 
 ######################################################
 
@@ -213,6 +220,9 @@ redshift_cluster_type = "single-node"
 redshift_number_of_nodes = 1
 redshift_encrypted = false
 redshift_skip_final_snapshot = false
+
+# Docker
+docker_registry_url = "https://index.docker.io/v1/"
 
 # Application Docker Image Versions
 argo_docker_image_version = "0.0.0-0a7e019180ecf897f38f085f63918373a89c11fc"

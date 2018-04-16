@@ -7,27 +7,27 @@
 account                         = "068078214683"
 
 # the name of the AWS region e.g. "us-east-1"
-aws_region                      = "us-east-2"
+aws_region                      = "us-east-1"
 
 # the comma separated list of availability zones e.g. [ "1a", "1b" ]
-azs                             = [ "2a", "2b" ]
+azs                             = [ "1a", "1b" ]
 
 # the VPC CIDR block you will launch DeepCortex into
-vpc_cidr                        = "10.0.0.0/16"
+vpc_cidr                        = "10.15.0.0/16"
 
 ######################################################
 
-#################### VPC Type ########################
+###################### VPC ###########################
 
 # the following variables determine if you will create a VPC during deployemnt or use an already exisitng VPC
 # if you choose to use an already existing VPC fill out the "Existing VPC Section"
 
 # set to true to create a vpc or false to use one that's already created
-create_vpc                      = "true"
+create_vpc                      = "false"
 
 # set to false to create NAT instances for private-egress subnets or true if only using public subnets
 # should be false if using an existing VPC since that currently only supports public subnets
-only_public                     = "true"
+only_public                      = "true"
 
 # the ami id for the machine that will serve as the bastion (should be specific for NAT instances)
 # only use if only_public is false
@@ -37,7 +37,7 @@ nat_ami_id                      = ""
 # Ex: [ "10.0.1.0/24", "10.0.2.0/24", ], [] for no subnets of that type
 # if using an existing VPC, just enter placeholders for the correct number of subnets being used
 # Ex: [ 0, 0 ] for 2 subnets of that type, [] for no subnets of that type
-public_subnets                  = [ "10.0.1.0/24", "10.0.2.0/24", ]
+public_subnets                  = [ 0, 0 ]
 private_subnets                 = []
 private_subnets_egress          = []
 
@@ -46,14 +46,21 @@ private_subnets_egress          = []
 ############## Existing VPC Section ##################
 
 # the VPC ID of the VPC you will launch DeepCortex into
-vpc_id                          = ""
+vpc_id                          = "vpc-a7d785c1"
 
 # the VPC S3 Endpoint of the VPC you will launch DeepCortex into
-vpce_id                         = ""
+vpce_id                         = "vpce-a45a91cd"
 
 # the subnet IDs of the subnets you will launch DeepCortex into
-subnet_id_0                     = ""
-subnet_id_1                     = ""
+subnet_id_0                     = "subnet-3715ff7f"
+subnet_id_1                     = "subnet-5e497805"
+
+######################################################
+
+###################### IAM ###########################
+
+# set to true to create IAM resources or false to use resources that have already created
+create_iam                      = "false"
 
 ######################################################
 
@@ -69,20 +76,13 @@ s3_endpoint                     = "s3.amazonaws.com"
 
 ######################################################
 
-###################### IAM ###########################
-
-# set to true to create IAM resources or false to use resources that have already created
-create_iam                      = "true"
-
-######################################################
-
 ################## AMIs and Users ####################
 
-# the ami id for the machine that will serve as the bastion (can be CentOS/RHEL or Amazon Linux)
-bastion_ami_id                  = "ami-0b1e356e"
+# the ami id for the machine that will serve as the bastion (can be CentOS or Amazon Linux)
+bastion_ami_id                  = "ami-26ebbc5c"
 
-# the ami id for the machines that will run DeepCortex (should be a CentOS/RHEL 7.4 ami)
-packer_base_ami                 = "ami-0b1e356e"
+# the ami id for the machines that will run DeepCortex (should be a CentOS 7.4 ami)
+packer_base_ami                 = "ami-26ebbc5c"
 
 # operating system for DeepCortex machines (centos or rhel)
 machine_os                      = "rhel"
@@ -98,10 +98,10 @@ ssh_public_key                  = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQChaCuON
 ################## Machine Access ####################
 
 # the CIDR for a VPN or machine IP that should be able to access DeepCortex
-access_cidr                     = "0.0.0.0/0"
+access_cidr                     = "205.251.70.6/32"
 
 # the CIDR for the IP of the machine that is running the deployment container
-deploy_cidr                     = "0.0.0.0/0"
+deploy_cidr                     = "205.251.70.6/32"
 
 # extra ssh keys: fill out the following section if you wish for the DC/OS machines to have additional
 # ssh keys added to allow other users to ssh to those machines with a key other than the one provided above
@@ -111,16 +111,16 @@ download_ssh_keys               = "true"
 
 # specify the location of the file in S3 that contains the list of public keys you'd like to add to each machine
 # leave blank if the above value is set to false
-ssh_keys_s3_bucket              = "artifacts.dev.deepcortex.ai/configurations/ssh/deployment_project_keys"
+ssh_keys_s3_bucket              = "artifacts.dev.deepcortex.ai/configurations/ssh/keys.public"
 
 ######################################################
 
 #################### S3 Buckets ######################
 
 # the name of the S3 buckets used for storing terraform artifacts, storing DeepCortex data, and storing DC/OS data
-tf_bucket                       = "falcon-deepcortex-autotest-terraform"
-dcos_apps_bucket                = "falcon-deepcortex-autotest-dcos-apps"
-dcos_stack_bucket               = "falcon-deepcortex-autotest-dcos-backend"
+tf_bucket                       = "falcon-deepcortex-new2-terraform"
+dcos_apps_bucket                = "falcon-deepcortex-new2-dcos-apps"
+dcos_stack_bucket               = "falcon-deepcortex-new2-dcos-backend"
 
 ######################################################
 
@@ -128,9 +128,9 @@ dcos_stack_bucket               = "falcon-deepcortex-autotest-dcos-backend"
 
 # the tags that will be applied to the infrastructure (environment, owner, usage)
 # environment and owner can only be a combined 17 characters
-environment                     = "autotest"
+environment                     = "new2"
 tag_owner                       = "deepcortex"
-tag_usage                       = "autotest"
+tag_usage                       = "new2"
 
 ######################################################
 
@@ -147,6 +147,8 @@ upload_datasets                 = "false"
 
 ################# Default Settings ###################
 
+### DO NOT CHANGE ANYTHING BELOW THIS LINE
+
 # version of DC/OS
 dcos_version                    = "1.10.2"
 
@@ -161,7 +163,7 @@ download_from_s3                = "true"
 
 # Platform
 s3_prefix                       = "deepcortex"
-cluster_name                    = "deepcortex-autotest"
+cluster_name                    = "deepcortex-new2"
 
 bootstrap_asg_desired_capacity  = "1"
 bootstrap_asg_min_size          = "0"
@@ -218,6 +220,9 @@ redshift_cluster_type = "single-node"
 redshift_number_of_nodes = 1
 redshift_encrypted = false
 redshift_skip_final_snapshot = false
+
+# Docker
+docker_registry_url = "https://index.docker.io/v1/"
 
 # Application Docker Image Versions
 argo_docker_image_version = "0.0.0-0a7e019180ecf897f38f085f63918373a89c11fc"

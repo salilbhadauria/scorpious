@@ -5,7 +5,6 @@ usage() {
   echo "Usage: $0 <image> <config_file> [args...]"
   echo " e.g.: $0 bootstrap integration"
   echo "All images require environment variable AWS_PROFILE or access keys (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) to be set"
-  echo "Bootstrap image requires environment variables CUSTOMER_KEY, DCOS_USERNAME, and DCOS_PASSWORD to be set"
   exit 1
 }
 
@@ -69,21 +68,6 @@ if [ -z "$AWS_PROFILE" ];then
     echo "AWS_PROFILE or access keys (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) are not set"
     usage
   fi
-fi
-
-if [ -z "$CUSTOMER_KEY" ] && [ "${IMAGE}" = "bootstrap" ];then
-  echo "Error: CUSTOMER_KEY is not set"
-  usage
-fi
-
-if [ -z "$DCOS_USERNAME" ] && ([ "${IMAGE}" = "bootstrap" ] || [ "${IMAGE}" = "captain" ]);then
-  echo "Error: DCOS_USERNAME is not set"
-  usage
-fi
-
-if [ -z "$DCOS_PASSWORD" ] && ([ "${IMAGE}" = "bootstrap" ] || [ "${IMAGE}" = "captain" ]);then
-  echo "Error: DCOS_PASSWORD is not set"
-  usage
 fi
 
 PWD=$(pwd)

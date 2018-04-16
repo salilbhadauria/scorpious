@@ -10,11 +10,21 @@ set -e
 # -t: s3 type - can be set to existing to import existing S3 buckets
 
 usage() {
-  echo "Usage: Must set environment variables for CONFIG, AWS_PROFILE or (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY), CUSTOMER_KEY, DCOS_USERNAME, DCOS_PASSWORD"
+  echo "Usage: Must set environment variables for CONFIG, AWS_PROFILE or (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY), CUSTOMER_KEY, DCOS_USERNAME, DCOS_PASSWORD, DOCKER_EMAIL_LOGIN, DOCKER_REGISTRY_AUTH_TOKEN"
   exit 1
 }
 
-VARS=("CONFIG" "CUSTOMER_KEY" "DCOS_USERNAME" "DCOS_PASSWORD")
+if [[ -z "$CONFIG" ]];then
+  echo "CONFIG is not set"
+  usage
+fi
+
+if [[ -z "$AWS_PROFILE" ]] && ([[ -z "$AWS_ACCESS_KEY_ID" ]] || [[ -z "$AWS_SECRET_ACCESS_KEY" ]]);then
+  echo "AWS_PROFILE or access keys (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) are not set"
+  usage
+fi
+
+VARS=("CUSTOMER_KEY" "DCOS_USERNAME" "DCOS_PASSWORD" "DOCKER_EMAIL_LOGIN" "DOCKER_REGISTRY_AUTH_TOKEN")
 for i in "${VARS[@]}"; do
   if [[ -z "${!i}" ]];then
     echo "$i is not set"
@@ -22,10 +32,11 @@ for i in "${VARS[@]}"; do
   fi
 done
 
-if [[ -z "$AWS_PROFILE" ]] && ([[ -z "$AWS_ACCESS_KEY_ID" ]] || [[ -z "$AWS_SECRET_ACCESS_KEY" ]]);then
-  echo "AWS_PROFILE or access keys (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) are not set"
-  usage
-fi
+for i in "${VARS[@]}"; do
+  var=$i
+  val=$(echo "$i" | awk '{print tolower($0)}')
+  export TF_VAR_$val=${!var}
+done
 
 parse_args()
 {
@@ -45,18 +56,22 @@ parse_args()
   done
 }
 
-export TF_VAR_dcos_password=$DCOS_PASSWORD
 export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$CONFIG.tfvars")
 
 sh terraform_init_backend.sh $CONFIG
 
 CREATE_VPC=$(awk -F\" '/^create_vpc/{print $2}'  "environments/$CONFIG.tfvars")
+CREATE_IAM=$(awk -F\" '/^create_iam/{print $2}'  "environments/$CONFIG.tfvars")
 ONLY_PUBLIC=$(awk -F\" '/^only_public/{print $2}'  "environments/$CONFIG.tfvars")
 ONLINE_PREDICTION=$(awk -F\" '/^online_prediction/{print $2}'  "environments/$CONFIG.tfvars")
 AWS_DCOS_STACK_BUCKET=$(awk -F\" '/^dcos_stack_bucket/{print $2}'  "environments/$CONFIG.tfvars")
 AWS_DCOS_APPS_BUCKET=$(awk -F\" '/^dcos_apps_bucket/{print $2}'  "environments/$CONFIG.tfvars")
 
 parse_args "$@"
+
+if [[ "$PACKER" != "false" ]];then
+  sh packer.sh all $CONFIG;
+fi
 
 if [ -z $STACKS ]; then
   STACKS=()
@@ -77,8 +92,25 @@ if [ -z $STACKS ]; then
     echo "Adding s3_buckets to Stack"
   fi
 
-  STACKS+=("iam" "base")
-  echo "Adding iam and base to Stack"
+  if [[ "$CREATE_IAM" = "true" ]];then
+    STACKS+=("iam")
+    echo "Adding IAM to Stack"
+  else
+    echo "Importing existing IAM resources"
+
+    if [[ -z "$APPS_AWS_ACCESS_KEY_ID" ]] || [[ -z "$APPS_AWS_SECRET_ACCESS_KEY" ]];then
+      echo "App user access keys are not set"
+      exit 1
+    fi
+
+    export TF_VAR_apps_access_key=$APPS_AWS_ACCESS_KEY_ID
+    export TF_VAR_apps_secret_key=$APPS_AWS_SECRET_ACCESS_KEY
+
+    bash import_iam.sh $CONFIG
+  fi
+
+  STACKS+=("base")
+  echo "Adding base to Stack"
 
   if [[ "$ONLY_PUBLIC" != "true" ]];then
     STACKS+=("nat")
@@ -92,10 +124,6 @@ if [ -z $STACKS ]; then
     STACKS+=("online_prediction")
     echo "Adding online_prediction to Stack"
   fi
-fi
-
-if [[ "$PACKER" != "false" ]];then
-  sh packer.sh all $CONFIG;
 fi
 
 for i in "${STACKS[@]}"; do

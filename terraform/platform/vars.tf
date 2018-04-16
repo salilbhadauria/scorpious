@@ -12,6 +12,10 @@ variable "download_ssh_keys" { default = "false" }
 variable "ssh_keys_s3_bucket" { default = "" }
 variable "main_user" {}
 variable "salsa_version" {}
+variable "dcos_username" {}
+variable "dcos_password" {}
+variable "apps_access_key" { default = "" }
+variable "apps_secret_key" { default = "" }
 
 # Bootstrap vars
 
@@ -22,7 +26,10 @@ variable "s3_prefix" {}
 variable "cluster_name" {}
 variable "dcos_stack_bucket" {}
 variable "dcos_apps_bucket" {}
-variable "dcos_password" {}
+variable "customer_key" {}
+variable "docker_registry_url" {}
+variable "docker_registry_auth_token" {}
+variable "docker_email_login" {}
 
 # Master vars
 

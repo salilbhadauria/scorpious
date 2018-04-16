@@ -59,11 +59,8 @@
 - hosts: bootstrap
   become: yes
   vars:
-    dcos_download: "{{dcos_download_url}}"
     security: disabled
     registry: true
-    docker_registry_auth_token: "ZGVlcGNvcnRleHJlYWQ6bnkyUDJwUlVMWHcyY1Vydg=="
-    superuser_username: "{{dcos_username}}"
     enterprise_dcos: true
     resolvers:
       - provider_dns_via_user_data

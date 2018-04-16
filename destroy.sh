@@ -6,11 +6,21 @@ set -e
 # -d: can be set to true to delete s3 buckets
 
 usage() {
-  echo "Usage: Must set environment variables for CONFIG, AWS_PROFILE or (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY), CUSTOMER_KEY, DCOS_USERNAME, DCOS_PASSWORD"
+  echo "Usage: Must set environment variables for CONFIG, AWS_PROFILE or (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY), CUSTOMER_KEY, DCOS_USERNAME, DCOS_PASSWORD, DOCKER_EMAIL_LOGIN, DOCKER_REGISTRY_AUTH_TOKEN"
   exit 1
 }
 
-VARS=("CONFIG" "CUSTOMER_KEY" "DCOS_USERNAME" "DCOS_PASSWORD")
+if [[ -z "$CONFIG" ]];then
+  echo "CONFIG is not set"
+  usage
+fi
+
+if [[ -z "$AWS_PROFILE" ]] && ([[ -z "$AWS_ACCESS_KEY_ID" ]] || [[ -z "$AWS_SECRET_ACCESS_KEY" ]]);then
+  echo "AWS_PROFILE or access keys (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) are not set"
+  usage
+fi
+
+VARS=("CUSTOMER_KEY" "DCOS_USERNAME" "DCOS_PASSWORD" "DOCKER_EMAIL_LOGIN" "DOCKER_REGISTRY_AUTH_TOKEN")
 for i in "${VARS[@]}"; do
   if [[ -z "${!i}" ]];then
     echo "$i is not set"
@@ -18,10 +28,11 @@ for i in "${VARS[@]}"; do
   fi
 done
 
-if [[ -z "$AWS_PROFILE" ]] && ([[ -z "$AWS_ACCESS_KEY_ID" ]] || [[ -z "$AWS_SECRET_ACCESS_KEY" ]]);then
-  echo "AWS_PROFILE or access keys (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) are not set"
-  usage
-fi
+for i in "${VARS[@]}"; do
+  var=$i
+  val=$(echo "$i" | awk '{print tolower($0)}')
+  export TF_VAR_$val=${!var}
+done
 
 parse_args()
 {
@@ -69,10 +80,10 @@ if [[ "$DELETE_S3" = "true" ]];then
   esac
 fi
 
-export TF_VAR_dcos_password="${DCOS_PASSWORD}"
 export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$CONFIG.tfvars")
 
 CREATE_VPC=$(awk -F\" '/^create_vpc/{print $2}'  "environments/$CONFIG.tfvars")
+CREATE_IAM=$(awk -F\" '/^create_iam/{print $2}'  "environments/$CONFIG.tfvars")
 ONLY_PUBLIC=$(awk -F\" '/^only_public/{print $2}'  "environments/$CONFIG.tfvars")
 ONLINE_PREDICTION=$(awk -F\" '/^online_prediction/{print $2}'  "environments/$CONFIG.tfvars")
 
@@ -89,7 +100,21 @@ if [ -z $STACKS ]; then
     STACKS+=("nat")
   fi
 
-  STACKS+=("base" "iam")
+  STACKS+=("base")
+
+  if [[ "$CREATE_IAM" = "true" ]];then
+    STACKS+=("iam")
+  else
+    if [[ -z "$APPS_AWS_ACCESS_KEY_ID" ]] || [[ -z "$APPS_AWS_SECRET_ACCESS_KEY" ]];then
+      echo "App user access keys are not set"
+      exit 1
+    fi
+
+    export TF_VAR_apps_access_key=$APPS_AWS_ACCESS_KEY_ID
+    export TF_VAR_apps_secret_key=$APPS_AWS_SECRET_ACCESS_KEY
+
+    ./terraform.sh state-rm $CONFIG iam ""
+  fi
 
   if [[ "$DELETE_S3" = "true" ]];then
     STACKS+=("s3_buckets")

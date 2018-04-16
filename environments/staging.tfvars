@@ -62,7 +62,7 @@ upload_datasets                 = "true"
 download_ssh_keys               = "true"
 
 # specify the location of the file in S3 that contains the list of public keys you'd like to add to each machine
-ssh_keys_s3_bucket              = "s3://artifacts.dev.deepcortex.ai/configurations/ssh/keys.public"
+ssh_keys_s3_bucket              = "artifacts.dev.deepcortex.ai/configurations/ssh/keys.public"
 
 ### You may change any of the below names if you choose, otherwise the defaults we be used.
 
