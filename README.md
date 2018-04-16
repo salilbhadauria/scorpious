@@ -18,6 +18,11 @@ Before running any deployment scripts be sure to do the following:
     * CUSTOMER_KEY - the DC/OS enterprise key
     * DCOS_USERNAME - the username you'd like to use to login to the DC/OS cluster
     * DCOS_PASSWORD - the password you'd like to use to login to the DC/OS cluster (avoid special characters used in bash such as "#", ";", "$", etc.)
+    * DOCKER_REGISTRY_AUTH_TOKEN - the token for docker authentication
+    * DOCKER_EMAIL_LOGIN - the login email for docker
+4. If you are importing IAM resources and not creating them through terraform you will also need to import access keys from the app user:
+    * APPS_AWS_ACCESS_KEY_ID - the access key for the app user.
+    * APPS_AWS_SECRET_ACCESS_KEY - the secret key for the app user.
 
 ### Deployment Scripts
 
@@ -54,8 +59,13 @@ Before running any deployment scripts be sure to do the following:
     * CUSTOMER_KEY - the DC/OS enterprise key
     * DCOS_USERNAME - the username you'd like to use to login to the DC/OS cluster
     * DCOS_PASSWORD - the password you'd like to use to login to the DC/OS cluster (avoid special characters used in bash such as "#", ";", "$", etc.)
-5. Run "docker pull deepcortex/scorpius-deploymnet:TAG" repalcing tag with the correct image tag.
-6. Run the following docker command replacing /path/to/environments with the path to the environments directory you created in step 1 and TAG with the correct version of the docker image.
+    * DOCKER_REGISTRY_AUTH_TOKEN - the token for docker authentication
+    * DOCKER_EMAIL_LOGIN - the login email for docker
+5. If you are importing IAM resources and not creating them through terraform you will also need to import access keys from the app user:
+    * APPS_AWS_ACCESS_KEY_ID - the access key for the app user.
+    * APPS_AWS_SECRET_ACCESS_KEY - the secret key for the app user.
+6. Run "docker pull deepcortex/scorpius-deploymnet:TAG" repalcing tag with the correct image tag.
+7. Run the following docker command replacing /path/to/environments with the path to the environments directory you created in step 1 and TAG with the correct version of the docker image.
 
     ```bash
     docker run \
@@ -66,12 +76,14 @@ Before running any deployment scripts be sure to do the following:
       -e CUSTOMER_KEY=${CUSTOMER_KEY} \
       -e DCOS_USERNAME=${DCOS_USERNAME} \
       -e DCOS_PASSWORD=${DCOS_PASSWORD} \
+      -e DOCKER_EMAIL_LOGIN=${DOCKER_EMAIL_LOGIN} \
+      -e DOCKER_REGISTRY_AUTH_TOKEN=${DOCKER_REGISTRY_AUTH_TOKEN} \
       deepcortex/scorpius-deployment:TAG
     ```
-7. To add endpoints.json for C2S:
+8. To add endpoints.json for C2S:
     * Create a directory on your local machine called "extra_files" and place the endpoints.json file in that directory.
     * Add "-v /path/to/extra_files:/opt/deploy/ansible/roles/captain/files/extra_files" to the docker command.
-8. Once your terminal output states the deployment it complete you can access the DeepCortex UI.
+9. Once your terminal output states the deployment it complete you can access the DeepCortex UI.
 
 ### Manual deploying the scripts without docker.
 
@@ -97,6 +109,8 @@ You must export the following varible to run build.sh
 * CUSTOMER_KEY
 * DCOS_USERNAME
 * DCOS_PASSWORD
+* DOCKER_REGISTRY_AUTH_TOKEN
+* DOCKER_EMAIL_LOGIN
 
 ##### Packer:
 
@@ -109,11 +123,6 @@ In the environments/CONFIG.tfvars file for your environment/region/cloud you wil
  - aws_region
 
 Running packer:
-
-Bootstrap instance requires the following env variables exported:
-  - CUSTOMER_KEY
-  - DCOS_USERNAME
-  - DCOS_PASSWORD
 
 Run the following command to build all AMIs in parallel:
 ```

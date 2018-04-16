@@ -55,7 +55,7 @@ module "sg_nat" {
             protocol    = "tcp"
             from_port   = "22"
             to_port     = "22"
-            sg_id       = "${data.terraform_remote_state.base.bastion_sg_id}"
+            sg_id       = "${data.terraform_remote_state.base.sg_bastion_id}"
             description = "SSH access from bastion"
         },
         {
@@ -88,11 +88,6 @@ module "sg_nat" {
     tags = "${local.tags}"
 }
 
-resource "aws_iam_instance_profile" "nat_instance_profile" {
-    name = "${var.tag_owner}-${var.environment}-nat_instance_profile"
-    role = "${data.terraform_remote_state.iam.nat_instance_iam_role_name}"
-}
-
 data "template_file" "nat_instance_userdata" {
     template = "${file("../../terraform/templates/nat_instance_userdata.tpl")}"
     vars {
@@ -113,7 +108,7 @@ module "asg_nat" {
     lc_key_name        = "${data.terraform_remote_state.base.devops_key_name}"
     lc_security_groups = [ "${module.sg_nat.id}" ]
     lc_user_data       = "${data.template_file.nat_instance_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.nat_instance_profile.id}"
+    lc_iam_instance_profile = "${data.terraform_remote_state.iam.nat_instance_profile_name}"
 
     asg_name             = "${var.tag_owner}-${var.environment}-nat-asg"
     asg_subnet_ids       = "${data.terraform_remote_state.vpc.public_subnet_ids}"

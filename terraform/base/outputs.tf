@@ -23,8 +23,3 @@ output "sg_bastion_id" {
 output "asg_bastion_name" {
   value = "${module.asg_bastion.asg_name}"
 }
-
-output "bastion_sg_id" {
-  value = "${module.sg_bastion.id}"
-}
-

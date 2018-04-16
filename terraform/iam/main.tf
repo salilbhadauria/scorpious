@@ -5,6 +5,16 @@ terraform {
     backend "s3" {}
 }
 
+# Retrieve S3 data
+data "terraform_remote_state" "s3_buckets" {
+  backend = "s3"
+  config {
+    bucket = "${var.tf_bucket}"
+    key    = "${var.aws_region}/${var.environment}/s3_buckets/terraform.tfstate"
+    region = "${var.aws_region}"
+  }
+}
+
 #########################################################
 # IAM Users
 ## Users and Policies
@@ -15,7 +25,33 @@ resource "aws_iam_user" "app" {
 }
 
 resource "aws_iam_access_key" "app" {
+  count = "${local.create_iam}"
   user = "${aws_iam_user.app.name}"
+}
+
+# IAM S3 policy for app user
+
+resource "aws_iam_user_policy" "app_s3" {
+  name = "${var.tag_owner}-${var.environment}-app-user-policy"
+  user = "${aws_iam_user.app.name}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:*"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${data.terraform_remote_state.s3_buckets.apps_s3_bucket_arn}",
+        "${data.terraform_remote_state.s3_buckets.apps_s3_bucket_arn}/*"
+      ]
+    }
+  ]
+}
+EOF
 }
 
 #########################################################
@@ -61,11 +97,21 @@ resource "aws_iam_role_policy" "bastion_policy" {
         "s3:*"
       ],
       "Effect": "Allow",
-      "Resource": "*"
+      "Resource": [
+        "${data.terraform_remote_state.s3_buckets.apps_s3_bucket_arn}",
+        "${data.terraform_remote_state.s3_buckets.apps_s3_bucket_arn}/*",
+        "${data.terraform_remote_state.s3_buckets.stack_s3_bucket_arn}",
+        "${data.terraform_remote_state.s3_buckets.stack_s3_bucket_arn}/*"
+      ]
     }
   ]
 }
 EOF
+}
+
+resource "aws_iam_instance_profile" "bastion_instance_profile" {
+    name = "${var.tag_owner}-${var.environment}-bastion_instance_profile"
+    role = "${aws_iam_role.bastion_role.name}"
 }
 
 resource "aws_iam_role" "nat_instance_role" {
@@ -122,6 +168,12 @@ resource "aws_iam_role_policy" "nat_instance_policy" {
 EOF
 }
 
+resource "aws_iam_instance_profile" "nat_instance_profile" {
+    count = "${local.create_nat}"
+    name = "${var.tag_owner}-${var.environment}-nat_instance_profile"
+    role = "${aws_iam_role.nat_instance_role.name}"
+}
+
 resource "aws_iam_role" "bootstrap_role" {
   name = "${var.tag_owner}-${var.environment}-bootstrap_role"
   path = "/"
@@ -161,11 +213,21 @@ resource "aws_iam_role_policy" "bootstrap_policy" {
         "s3:*"
       ],
       "Effect": "Allow",
-      "Resource": "*"
+      "Resource": [
+        "${data.terraform_remote_state.s3_buckets.apps_s3_bucket_arn}",
+        "${data.terraform_remote_state.s3_buckets.apps_s3_bucket_arn}/*",
+        "${data.terraform_remote_state.s3_buckets.stack_s3_bucket_arn}",
+        "${data.terraform_remote_state.s3_buckets.stack_s3_bucket_arn}/*"
+      ]
     }
   ]
 }
 EOF
+}
+
+resource "aws_iam_instance_profile" "bootstrap_instance_profile" {
+  name  = "${var.tag_owner}-${var.environment}-bootstrap_instance_profile"
+  role = "${aws_iam_role.bootstrap_role.name}"
 }
 
 resource "aws_iam_role" "master_role" {
@@ -207,11 +269,21 @@ resource "aws_iam_role_policy" "master_policy" {
         "s3:*"
       ],
       "Effect": "Allow",
-      "Resource": "*"
+      "Resource": [
+        "${data.terraform_remote_state.s3_buckets.apps_s3_bucket_arn}",
+        "${data.terraform_remote_state.s3_buckets.apps_s3_bucket_arn}/*",
+        "${data.terraform_remote_state.s3_buckets.stack_s3_bucket_arn}",
+        "${data.terraform_remote_state.s3_buckets.stack_s3_bucket_arn}/*"
+      ]
     }
   ]
 }
 EOF
+}
+
+resource "aws_iam_instance_profile" "master_instance_profile" {
+  name  = "${var.tag_owner}-${var.environment}-master_instance_profile"
+  role = "${aws_iam_role.master_role.name}"
 }
 
 resource "aws_iam_role" "slave_role" {
@@ -253,11 +325,21 @@ resource "aws_iam_role_policy" "slave_policy" {
         "s3:*"
       ],
       "Effect": "Allow",
-      "Resource": "*"
+      "Resource": [
+        "${data.terraform_remote_state.s3_buckets.apps_s3_bucket_arn}",
+        "${data.terraform_remote_state.s3_buckets.apps_s3_bucket_arn}/*",
+        "${data.terraform_remote_state.s3_buckets.stack_s3_bucket_arn}",
+        "${data.terraform_remote_state.s3_buckets.stack_s3_bucket_arn}/*"
+      ]
     }
   ]
 }
 EOF
+}
+
+resource "aws_iam_instance_profile" "slave_instance_profile" {
+  name  = "${var.tag_owner}-${var.environment}-slave_instance_profile"
+  role = "${aws_iam_role.slave_role.name}"
 }
 
 resource "aws_iam_role" "captain_role" {
@@ -296,13 +378,73 @@ resource "aws_iam_role_policy" "captain_policy" {
   "Statement": [
     {
       "Action": [
-        "s3:*",
-        "ec2:*"
+        "s3:*"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "${data.terraform_remote_state.s3_buckets.apps_s3_bucket_arn}",
+        "${data.terraform_remote_state.s3_buckets.apps_s3_bucket_arn}/*",
+        "${data.terraform_remote_state.s3_buckets.stack_s3_bucket_arn}",
+        "${data.terraform_remote_state.s3_buckets.stack_s3_bucket_arn}/*"
+      ]
+    },
+    {
+      "Action": [
+        "ec2:DescribeInstances"
       ],
       "Effect": "Allow",
       "Resource": "*"
+    },
+    {
+      "Action": [
+        "ec2:*"
+      ],
+      "Effect": "Allow",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+            "ec2:ResourceTag/owner": "deepcortex"
+        }
+      }
     }
   ]
 }
 EOF
+}
+
+resource "aws_iam_instance_profile" "captain_instance_profile" {
+  name  = "${var.tag_owner}-${var.environment}-captain_instance_profile"
+  role = "${aws_iam_role.captain_role.name}"
+}
+
+# Extra policy for ssh keys bucket if applicable
+
+resource "aws_iam_policy" "ssh_key_bucket" {
+  count = "${local.create_extra_ssh_key_policy}"
+
+  name = "${var.tag_owner}-${var.environment}-ssh_key_bucket"
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:${var.arn}:s3:::${var.ssh_keys_s3_bucket}"
+      ]
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_policy_attachment" "test-attach" {
+  count      = "${local.create_extra_ssh_key_policy}"
+
+  name       = "${aws_iam_policy.ssh_key_bucket.name}"
+  roles      = ["${aws_iam_role.bastion_role.name}", "${aws_iam_role.bootstrap_role.name}", "${aws_iam_role.master_role.name}", "${aws_iam_role.slave_role.name}", "${aws_iam_role.captain_role.name}"]
+  policy_arn = "${aws_iam_policy.ssh_key_bucket.arn}"
 }

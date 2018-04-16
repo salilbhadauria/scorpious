@@ -10,7 +10,7 @@ elif [ $MACHINE_OS = "rhel" ]; then
 fi
 
 sudo yum -q -y install deltarpm
-sudo yum -q -y update
+#sudo yum -q -y update
 
 # Needed only for LVM amis
 #sudo yum -q -y install cloud-utils-growpart

@@ -2,9 +2,6 @@
 environment:
   environment: ${environment}
   aws_default_region: ${aws_region}
-  download_ssh_keys: ${download_ssh_keys}
-  ssh_keys_s3_bucket: ${ssh_keys_s3_bucket}
-  main_user: ${main_user}
 manage_resolv_conf: false
 preserve_hostname: true
 runcmd:
@@ -28,8 +25,13 @@ runcmd:
   - sed -i "s/masters_elb_dns_via_user_data/${masters_elb}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
   - sed -i "s/bootstrap_dns_via_user_data/${bootstrap_dns}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
   - sed -i "s/aws_region_via_user_data/${aws_region}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
-  - if [ ${download_ssh_keys} = true ]; then aws s3 cp ${ssh_keys_s3_bucket} - >> /home/${main_user}/.ssh/authorized_keys; fi
+  - sed -i "s/dcos_username_via_user_data/${dcos_username}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
+  - sed -i "s/customer_key_via_user_data/${customer_key}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
+  - sed -i "s,docker_registry_url_via_user_data,${docker_registry_url},g" /var/lib/dcos-bootstrap/genconf/config.yaml
+  - sed -i "s/docker_email_login_via_user_data/${docker_email_login}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
+  - sed -i "s/docker_registry_auth_token_via_user_data/${docker_registry_auth_token}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
+  - if [ ${download_ssh_keys} = true ]; then aws s3 cp s3://${ssh_keys_s3_bucket} - >> /home/${main_user}/.ssh/authorized_keys; fi
   - cd /var/lib/dcos-bootstrap; bash dcos_generate_config.sh --set-superuser-password ${dcos_password}
   - cd /var/lib/dcos-bootstrap; bash dcos_generate_config.sh
   - docker pull httpd:2.4.23
-  - docker run --name dcos_haproxy -p 8080:80 -v /var/lib/dcos-bootstrap/genconf/serve:/usr/local/apache2/htdocs/:ro httpd:2.4.23
+  - docker run -d --name dcos_haproxy -p 8080:80 -v /var/lib/dcos-bootstrap/genconf/serve:/usr/local/apache2/htdocs/:ro httpd:2.4.23
