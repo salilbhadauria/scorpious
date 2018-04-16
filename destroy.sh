@@ -87,6 +87,16 @@ CREATE_IAM=$(awk -F\" '/^create_iam/{print $2}'  "environments/$CONFIG.tfvars")
 ONLY_PUBLIC=$(awk -F\" '/^only_public/{print $2}'  "environments/$CONFIG.tfvars")
 ONLINE_PREDICTION=$(awk -F\" '/^online_prediction/{print $2}'  "environments/$CONFIG.tfvars")
 
+if [[ "$CREATE_IAM" != "true" ]];then
+  if [[ -z "$APPS_AWS_ACCESS_KEY_ID" ]] || [[ -z "$APPS_AWS_SECRET_ACCESS_KEY" ]];then
+    echo "App user access keys are not set"
+    exit 1
+  fi
+
+  export TF_VAR_apps_access_key=$APPS_AWS_ACCESS_KEY_ID
+  export TF_VAR_apps_secret_key=$APPS_AWS_SECRET_ACCESS_KEY
+fi
+
 if [ -z $STACKS ]; then
   STACKS=()
 
@@ -105,14 +115,6 @@ if [ -z $STACKS ]; then
   if [[ "$CREATE_IAM" = "true" ]];then
     STACKS+=("iam")
   else
-    if [[ -z "$APPS_AWS_ACCESS_KEY_ID" ]] || [[ -z "$APPS_AWS_SECRET_ACCESS_KEY" ]];then
-      echo "App user access keys are not set"
-      exit 1
-    fi
-
-    export TF_VAR_apps_access_key=$APPS_AWS_ACCESS_KEY_ID
-    export TF_VAR_apps_secret_key=$APPS_AWS_SECRET_ACCESS_KEY
-
     ./terraform.sh state-rm $CONFIG iam ""
   fi
 

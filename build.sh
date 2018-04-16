@@ -73,6 +73,16 @@ if [[ "$PACKER" != "false" ]];then
   sh packer.sh all $CONFIG;
 fi
 
+if [[ "$CREATE_IAM" != "true" ]];then
+  if [[ -z "$APPS_AWS_ACCESS_KEY_ID" ]] || [[ -z "$APPS_AWS_SECRET_ACCESS_KEY" ]];then
+    echo "App user access keys are not set"
+    exit 1
+  fi
+
+  export TF_VAR_apps_access_key=$APPS_AWS_ACCESS_KEY_ID
+  export TF_VAR_apps_secret_key=$APPS_AWS_SECRET_ACCESS_KEY
+fi
+
 if [ -z $STACKS ]; then
   STACKS=()
 
@@ -97,15 +107,6 @@ if [ -z $STACKS ]; then
     echo "Adding IAM to Stack"
   else
     echo "Importing existing IAM resources"
-
-    if [[ -z "$APPS_AWS_ACCESS_KEY_ID" ]] || [[ -z "$APPS_AWS_SECRET_ACCESS_KEY" ]];then
-      echo "App user access keys are not set"
-      exit 1
-    fi
-
-    export TF_VAR_apps_access_key=$APPS_AWS_ACCESS_KEY_ID
-    export TF_VAR_apps_secret_key=$APPS_AWS_SECRET_ACCESS_KEY
-
     bash import_iam.sh $CONFIG
   fi
 
