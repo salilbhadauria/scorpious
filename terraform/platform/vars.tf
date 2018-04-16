@@ -11,18 +11,25 @@ variable "s3_endpoint" {}
 variable "download_ssh_keys" { default = "false" }
 variable "ssh_keys_s3_bucket" { default = "" }
 variable "main_user" {}
+variable "salsa_version" {}
+variable "dcos_username" {}
+variable "dcos_password" {}
+variable "apps_access_key" { default = "" }
+variable "apps_secret_key" { default = "" }
 
 # Bootstrap vars
 
 variable "bootstrap_asg_desired_capacity" {}
 variable "bootstrap_asg_min_size" {}
 variable "bootstrap_asg_max_size" {}
-variable "bootstrap_elb_dns_name" {}
 variable "s3_prefix" {}
 variable "cluster_name" {}
 variable "dcos_stack_bucket" {}
 variable "dcos_apps_bucket" {}
-variable "dcos_password" {}
+variable "customer_key" {}
+variable "docker_registry_url" {}
+variable "docker_registry_auth_token" {}
+variable "docker_email_login" {}
 
 # Master vars
 
@@ -72,6 +79,7 @@ variable "um_docker_image_version" {}
 variable "upload_datasets" { default = "false"}
 variable "download_from_s3" { default = "true" }
 variable "online_prediction" { default = "true" }
+variable "only_public" { default = "false" }
 
 locals {
     create_deploy_sgs = "${var.access_cidr == var.deploy_cidr ? 0 : 1}"

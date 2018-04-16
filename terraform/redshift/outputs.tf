@@ -12,3 +12,6 @@ output "redshift_url" {
 output "redshift_cluster_identifier" {
   value = "${aws_redshift_cluster.redshift-clstr.cluster_identifier}"
 }
+output "sg_redshift_id" {
+  value = "${module.redshift-clstr-sg.id}"
+}

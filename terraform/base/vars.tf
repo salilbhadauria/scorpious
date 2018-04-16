@@ -2,10 +2,11 @@
 
 variable "aws_region" {}
 variable "environment" {}
-variable "vpc_id" {}
 variable "download_ssh_keys" { default = "false" }
 variable "ssh_keys_s3_bucket" { default = "" }
 variable "main_user" {}
+variable "only_public" { default = true }
+variable "create_vpc" { default = true }
 
 variable "tf_bucket" {}
 
@@ -34,6 +35,12 @@ variable "tag_owner" {}
 variable "tag_usage" {}
 
 locals {
+    create_vpc = "${var.create_vpc == "true" ? 1 : 0}"
+    private_sg = "${var.only_public == "true" ? 0 : 1}"
+    private_egress_sg = "${var.only_public == "true" ? 0 : 1}"
+    create_public_sg = "${local.create_vpc}"
+    create_private_sg = "${local.private_sg * local.create_vpc}"
+    create_private_egress_sg = "${local.private_egress_sg * local.create_vpc}"
     tags = {
         owner       = "${var.tag_owner}"
         environment = "${var.environment}"
@@ -66,6 +73,4 @@ locals {
 
 variable "ssh_public_key" {}
 variable "bastion_ami_id" {}
-
-variable "nat_ami_id" {}
 variable "access_cidr" {}

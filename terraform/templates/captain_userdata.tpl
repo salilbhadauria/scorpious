@@ -1,13 +1,12 @@
 #cloud-config
 environment:
   environment: ${environment}
+  dcos_username: ${dcos_username}
+  dcos_password: ${dcos_password}
   dcos_nodes: ${dcos_nodes}
   dcos_master_url: ${dcos_master_url}
   aws_s3_bucket: ${dcos_apps_bucket}
   aws_s3_bucket_domain: ${dcos_apps_bucket_domain}
-  download_ssh_keys: ${download_ssh_keys}
-  ssh_keys_s3_bucket: ${ssh_keys_s3_bucket}
-  main_user: ${main_user}
   online_prediction_sqs_queue: ${online_prediction_sqs_queue}
   app_aws_access_key_id: ${apps_aws_access_key}
   app_aws_secret_access_key: ${apps_aws_secret_key}
@@ -61,5 +60,5 @@ runcmd:
   - service ntpd restart
   - curl https://amazon-ssm-us-east-1.s3.amazonaws.com/latest/linux_amd64/amazon-ssm-agent.rpm -o amazon-ssm-agent.rpm
   - yum install -y amazon-ssm-agent.rpm
-  - if [ ${download_ssh_keys} = true ]; then aws s3 cp ${ssh_keys_s3_bucket} - >> /home/${main_user}/.ssh/authorized_keys; fi
+  - if [ ${download_ssh_keys} = true ]; then aws s3 cp s3://${ssh_keys_s3_bucket} - >> /home/${main_user}/.ssh/authorized_keys; fi
   - service mongod stop

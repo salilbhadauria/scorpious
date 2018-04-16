@@ -16,6 +16,8 @@ AWS_SECRET_ACCESS_KEY - the secret key that should be used to deploy in AWS.
 CUSTOMER_KEY - the DC/OS enterprise key
 DCOS_USERNAME - the username you'd like to use to login to the DC/OS cluster
 DCOS_PASSWORD - the password you'd like to use to login to the DC/OS cluster (avoid special characters used in bash such as "#", ";", "$", etc.)
+DOCKER_REGISTRY_AUTH_TOKEN - the token for docker authentication
+DOCKER_EMAIL_LOGIN - the login email for docker
 
 5) Run "docker login -u falcondeepcortex" and enter the password: 6apXmvzquPKGDwzx.
 
@@ -47,6 +49,8 @@ docker run \
   -e CUSTOMER_KEY=${CUSTOMER_KEY} \
   -e DCOS_USERNAME=${DCOS_USERNAME} \
   -e DCOS_PASSWORD=${DCOS_PASSWORD} \
+  -e DOCKER_EMAIL_LOGIN=${DOCKER_EMAIL_LOGIN} \
+  -e DOCKER_REGISTRY_AUTH_TOKEN=${DOCKER_REGISTRY_AUTH_TOKEN} \
   -it --entrypoint "/bin/bash" deepcortex/scorpius-deployment:falcon /opt/deploy/destroy.sh
 
 Building just the platform (DC/OS cluster)
@@ -59,6 +63,8 @@ docker run \
   -e CUSTOMER_KEY=${CUSTOMER_KEY} \
   -e DCOS_USERNAME=${DCOS_USERNAME} \
   -e DCOS_PASSWORD=${DCOS_PASSWORD} \
+  -e DOCKER_EMAIL_LOGIN=${DOCKER_EMAIL_LOGIN} \
+  -e DOCKER_REGISTRY_AUTH_TOKEN=${DOCKER_REGISTRY_AUTH_TOKEN} \
   -it --entrypoint "/bin/bash" deepcortex/scorpius-deployment:falcon /opt/deploy/build.sh -s platform
 
 all optional arguments:
@@ -78,6 +84,8 @@ docker run \
   -e CUSTOMER_KEY=${CUSTOMER_KEY} \
   -e DCOS_USERNAME=${DCOS_USERNAME} \
   -e DCOS_PASSWORD=${DCOS_PASSWORD} \
+  -e DOCKER_EMAIL_LOGIN=${DOCKER_EMAIL_LOGIN} \
+  -e DOCKER_REGISTRY_AUTH_TOKEN=${DOCKER_REGISTRY_AUTH_TOKEN} \
   -it --entrypoint "/bin/bash" deepcortex/scorpius-deployment:falcon /opt/deploy/destroy.sh -s platform
 
 all optional arguments:

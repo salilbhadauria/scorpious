@@ -2,16 +2,22 @@
 
 variable "aws_region" {}
 variable "environment" {}
-variable "tf_bucket" {}
 variable "tag_owner" {}
 variable "tag_usage" {}
+variable "tf_bucket" {}
+variable "dcos_stack_bucket" {}
+variable "dcos_apps_bucket" {}
+variable "access_cidr" {}
+variable "deploy_cidr" {}
+variable "baile_access" {}
+variable "s3_endpoint" {}
 variable "arn" { default = "aws"}
 
 locals {
     tags = {
         owner       = "${var.tag_owner}"
         environment = "${var.environment}"
-        layer       = "online-prediction"
+        layer       = "platform"
         usage       = "${var.tag_usage}"
     }
 }

@@ -6,6 +6,26 @@ terraform {
 }
 
 #########################################################
+# Retrieve IAM data
+data "terraform_remote_state" "iam" {
+  backend = "s3"
+  config {
+    bucket = "${var.tf_bucket}"
+    key    = "${var.aws_region}/${var.environment}/iam/terraform.tfstate"
+    region = "${var.aws_region}"
+  }
+}
+
+# Retrieve S3 data
+data "terraform_remote_state" "s3_buckets" {
+  backend = "s3"
+  config {
+    bucket = "${var.tf_bucket}"
+    key    = "${var.aws_region}/${var.environment}/s3_buckets/terraform.tfstate"
+    region = "${var.aws_region}"
+  }
+}
+
 # Retrieve VPC data
 data "terraform_remote_state" "vpc" {
   backend = "s3"
@@ -16,12 +36,12 @@ data "terraform_remote_state" "vpc" {
   }
 }
 
-# Retrieve IAM data
-data "terraform_remote_state" "iam" {
+# Retrieve BASE data
+data "terraform_remote_state" "base" {
   backend = "s3"
   config {
     bucket = "${var.tf_bucket}"
-    key    = "${var.aws_region}/${var.environment}/iam/terraform.tfstate"
+    key    = "${var.aws_region}/${var.environment}/base/terraform.tfstate"
     region = "${var.aws_region}"
   }
 }
@@ -36,76 +56,8 @@ data "terraform_remote_state" "redshift" {
   }
 }
 
-# Buckets
+###################################################################
 
-resource "aws_s3_bucket" "dcos_stack_bucket" {
-  bucket = "${var.dcos_stack_bucket}"
-  acl    = "private"
-  tags   = "${merge(local.tags, map("name", "${var.dcos_stack_bucket}"))}"
-  lifecycle {
-      prevent_destroy = false
-  }
-}
-
-resource "aws_s3_bucket" "dcos_apps_bucket" {
-  bucket = "${var.dcos_apps_bucket}"
-  acl    = "private"
-  tags   = "${merge(local.tags, map("name", "${var.dcos_apps_bucket}"))}"
-  lifecycle {
-      prevent_destroy = false
-  }
-}
-
-data "template_file" "dcos_apps_bucket_policy" {
-  template = "${file("../../terraform/templates/dcos_apps_bucket_policy_${var.baile_access}.tpl")}"
-
-  vars {
-    dcos_apps_bucket_arn = "${aws_s3_bucket.dcos_apps_bucket.arn}"
-    access_cidr = "${var.access_cidr}"
-    deploy_cidr = "${var.deploy_cidr}"
-    vpce_id = "${data.terraform_remote_state.vpc.vpce_id}"
-  }
-
-  depends_on = [
-    "aws_s3_bucket.dcos_apps_bucket"
-  ]
-}
-
-resource "aws_s3_bucket_policy" "dcos_apps_bucket_policy" {
-  bucket = "${aws_s3_bucket.dcos_apps_bucket.id}"
-  policy = "${data.template_file.dcos_apps_bucket_policy.rendered}"
-
-  depends_on = [
-    "aws_s3_bucket.dcos_apps_bucket"
-  ]
-}
-
-# IAM S3 policy for app user
-
-resource "aws_iam_user_policy" "app_s3" {
-  name = "${var.environment}-app-user-policy"
-  user = "${data.terraform_remote_state.iam.app_user_name}"
-
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "s3:*"
-      ],
-      "Effect": "Allow",
-      "Resource": [
-        "${aws_s3_bucket.dcos_apps_bucket.arn}",
-        "${aws_s3_bucket.dcos_apps_bucket.arn}/*"
-      ]
-    }
-  ]
-}
-EOF
-}
-
-#########################################################
 # Security Groups
 
 module "dcos_stack_sg" {
@@ -113,7 +65,7 @@ module "dcos_stack_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "dcos-stack"
+    sg_name = "dcos-stack-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_self = [
@@ -135,6 +87,18 @@ module "dcos_stack_sg" {
     tags = "${local.tags}"
 }
 
+resource "aws_security_group_rule" "redshift_ingress_rule_sgid" {
+    count = 1
+
+    security_group_id        = "${data.terraform_remote_state.redshift.sg_redshift_id}"
+    type                     = "ingress"
+    from_port                = "5439"
+    to_port                  = "5439"
+    protocol                 = "tcp"
+    source_security_group_id = "${module.dcos_stack_sg.id}"
+    description              = "Access for redshift from DC/OS"
+}
+
 #########################################################
 # Bootstrap
 module "bootstrap_sg" {
@@ -142,7 +106,7 @@ module "bootstrap_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "bootstrap"
+    sg_name = "bootstrap-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 2
@@ -151,7 +115,7 @@ module "bootstrap_sg" {
             protocol    = "tcp"
             from_port   = "22"
             to_port     = "22"
-            sg_id = "${data.terraform_remote_state.vpc.sg_bastion_id}"
+            sg_id = "${data.terraform_remote_state.base.sg_bastion_id}"
         },
         {
             protocol    = "tcp"
@@ -177,15 +141,16 @@ module "bootstrap_elb_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "bootstrap-elb"
+    sg_name = "bootstrap-elb-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
-    ingress_rules_cidr = [
+    ingress_rules_sgid_count = 1
+    ingress_rules_sgid = [
         {
             protocol    = "tcp"
             from_port   = "8080"
             to_port     = "8080"
-            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
+            sg_id       = "${module.dcos_stack_sg.id}"
         },
     ]
 
@@ -206,7 +171,7 @@ data "template_file" "bootstrap_userdata" {
   vars {
     environment = "${var.environment}"
     cluster_name = "${var.cluster_name}"
-    s3_bucket = "${aws_s3_bucket.dcos_stack_bucket.id}"
+    s3_bucket = "${data.terraform_remote_state.s3_buckets.stack_s3_bucket}"
     s3_prefix = "${var.environment}-${var.s3_prefix}"
     download_ssh_keys = "${var.download_ssh_keys}"
     ssh_keys_s3_bucket = "${var.ssh_keys_s3_bucket}"
@@ -216,7 +181,12 @@ data "template_file" "bootstrap_userdata" {
     masters_elb = "${module.master_elb_internal.elb_dns_name}"
     aws_region = "${var.aws_region}"
     dns_ip = "${cidrhost(data.terraform_remote_state.vpc.vpc_cidr, 2)}"
+    dcos_username = "${var.dcos_username}"
     dcos_password = "${var.dcos_password}"
+    customer_key = "${var.customer_key}"
+    docker_registry_url = "${var.docker_registry_url}"
+    docker_registry_auth_token = "${var.docker_registry_auth_token}"
+    docker_email_login = "${var.docker_email_login}"
   }
 
   depends_on = [
@@ -225,17 +195,12 @@ data "template_file" "bootstrap_userdata" {
   ]
 }
 
-resource "aws_iam_instance_profile" "bootstrap_instance_profile" {
-  name  = "${var.tag_owner}-${var.environment}-bootstrap_instance_profile"
-  role = "${data.terraform_remote_state.iam.bootstrap_iam_role_name}"
-}
-
 module "bootstrap_elb" {
   source              = "../../terraform/modules/elb"
   elb_name            = "${var.tag_owner}-${var.environment}-bootstrap-elb"
   elb_is_internal     = "true"
   elb_security_group  = "${module.bootstrap_elb_sg.id}"
-  subnets             = [ "${data.terraform_remote_state.vpc.private_egress_subnet_ids}" ]
+  subnets             = [ "${slice(concat(data.terraform_remote_state.vpc.public_subnet_ids, data.terraform_remote_state.vpc.private_egress_subnet_ids), var.only_public == "true" ? 0 : length(data.terraform_remote_state.vpc.public_subnet_ids), var.only_public == "true" ? length(data.terraform_remote_state.vpc.public_subnet_ids) : length(data.terraform_remote_state.vpc.public_subnet_ids) + length(data.terraform_remote_state.vpc.private_egress_subnet_ids))}" ]
   frontend_port       = "8080"
   frontend_protocol   = "http"
   backend_port        = "8080"
@@ -252,13 +217,13 @@ module "bootstrap_asg" {
     lc_name_prefix          = "${var.environment}-bootstrap-"
     lc_instance_type        = "t2.medium"
     lc_ebs_optimized        = "false"
-    lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
+    lc_key_name             = "${data.terraform_remote_state.base.devops_key_name}"
     lc_security_groups      = [ "${module.bootstrap_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.bootstrap_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.bootstrap_instance_profile.id}"
+    lc_iam_instance_profile = "${data.terraform_remote_state.iam.bootstrap_instance_profile_name}"
 
     asg_name                = "${var.tag_owner}-${var.environment}-bootstrap-asg"
-    asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
+    asg_subnet_ids          = "${slice(concat(data.terraform_remote_state.vpc.public_subnet_ids, data.terraform_remote_state.vpc.private_egress_subnet_ids), var.only_public == "true" ? 0 : length(data.terraform_remote_state.vpc.public_subnet_ids), var.only_public == "true" ? length(data.terraform_remote_state.vpc.public_subnet_ids) : length(data.terraform_remote_state.vpc.public_subnet_ids) + length(data.terraform_remote_state.vpc.private_egress_subnet_ids))}"
     asg_desired_capacity    = "${var.bootstrap_asg_desired_capacity}"
     asg_min_size            = "${var.bootstrap_asg_min_size}"
     asg_max_size            = "${var.bootstrap_asg_max_size}"
@@ -277,7 +242,7 @@ module "master_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "master"
+    sg_name = "master-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 13
@@ -286,7 +251,7 @@ module "master_sg" {
             protocol    = "tcp"
             from_port   = "22"
             to_port     = "22"
-            sg_id = "${data.terraform_remote_state.vpc.sg_bastion_id}"
+            sg_id = "${data.terraform_remote_state.base.sg_bastion_id}"
         },
         {
             protocol    = "tcp"
@@ -378,7 +343,7 @@ module "master_elb_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "master-elb"
+    sg_name = "master-elb-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_cidr = [
@@ -433,42 +398,46 @@ module "master_elb_internal_sg" {
     sg_name = "master-elb-internal"
     sg_description = "some description"
 
-    ingress_rules_cidr = [
+    sg_name = "master-elb-in-${var.tag_owner}-${var.environment}"
+    sg_description = "some description"
+
+    ingress_rules_sgid_count = 6
+    ingress_rules_sgid = [
         {
             protocol    = "tcp"
             from_port   = "80"
             to_port     = "80"
-            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
+            sg_id        = "${module.dcos_stack_sg.id}"
         },
         {
             protocol    = "tcp"
             from_port   = "443"
             to_port     = "443"
-            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
+            sg_id        = "${module.dcos_stack_sg.id}"
         },
         {
             protocol    = "tcp"
             from_port   = "5050"
             to_port     = "5050"
-            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
+            sg_id        = "${module.dcos_stack_sg.id}"
         },
         {
             protocol    = "tcp"
             from_port   = "2181"
             to_port     = "2181"
-            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
+            sg_id        = "${module.dcos_stack_sg.id}"
         },
         {
             protocol    = "tcp"
             from_port   = "8080"
             to_port     = "8080"
-            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
+            sg_id        = "${module.dcos_stack_sg.id}"
         },
         {
             protocol    = "tcp"
             from_port   = "8181"
             to_port     = "8181"
-            cidr_blocks = "${data.terraform_remote_state.vpc.vpc_cidr}"
+            sg_id        = "${module.dcos_stack_sg.id}"
         },
     ]
 
@@ -521,22 +490,17 @@ module "master_elb_internal" {
   tags                = "${local.tags}"
 }
 
-resource "aws_iam_instance_profile" "master_instance_profile" {
-  name  = "${var.tag_owner}-${var.environment}-master_instance_profile"
-  role = "${data.terraform_remote_state.iam.master_iam_role_name}"
-}
-
 module "master_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
-    ami_name                = "master*"
+    ami_name                = "master-${var.tag_owner}-${var.environment}*"
     lc_name_prefix          = "${var.environment}-master-"
     lc_instance_type        = "m4.2xlarge"
     lc_ebs_optimized        = "false"
-    lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
+    lc_key_name             = "${data.terraform_remote_state.base.devops_key_name}"
     lc_security_groups      = [ "${module.master_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.master_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.master_instance_profile.id}"
+    lc_iam_instance_profile = "${data.terraform_remote_state.iam.master_instance_profile_name}"
 
     asg_name                = "${var.tag_owner}-${var.environment}-master-asg"
     asg_subnet_ids          = "${data.terraform_remote_state.vpc.public_subnet_ids}"
@@ -558,7 +522,7 @@ module "slave_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "slave"
+    sg_name = "slave-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 3
@@ -567,7 +531,7 @@ module "slave_sg" {
             protocol    = "tcp"
             from_port   = "22"
             to_port     = "22"
-            sg_id = "${data.terraform_remote_state.vpc.sg_bastion_id}"
+            sg_id = "${data.terraform_remote_state.base.sg_bastion_id}"
         },
         {
             protocol    = "tcp"
@@ -611,25 +575,20 @@ data "template_file" "slave_userdata" {
   ]
 }
 
-resource "aws_iam_instance_profile" "slave_instance_profile" {
-  name  = "${var.tag_owner}-${var.environment}-slave_instance_profile"
-  role = "${data.terraform_remote_state.iam.slave_iam_role_name}"
-}
-
 module "slave_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
-    ami_name                = "slave*"
+    ami_name                = "slave-${var.tag_owner}-${var.environment}*"
     lc_name_prefix          = "${var.environment}-slave-"
     lc_instance_type        = "m4.4xlarge"
     lc_ebs_optimized        = "false"
-    lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
-    lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}", "${data.terraform_remote_state.vpc.sg_private_egress_subnet_id}" ]
+    lc_key_name             = "${data.terraform_remote_state.base.devops_key_name}"
+    lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.slave_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
+    lc_iam_instance_profile = "${data.terraform_remote_state.iam.slave_instance_profile_name}"
 
     asg_name                = "${var.tag_owner}-${var.environment}-slave-asg"
-    asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
+    asg_subnet_ids          = "${slice(concat(data.terraform_remote_state.vpc.public_subnet_ids, data.terraform_remote_state.vpc.private_egress_subnet_ids), var.only_public == "true" ? 0 : length(data.terraform_remote_state.vpc.public_subnet_ids), var.only_public == "true" ? length(data.terraform_remote_state.vpc.public_subnet_ids) : length(data.terraform_remote_state.vpc.public_subnet_ids) + length(data.terraform_remote_state.vpc.private_egress_subnet_ids))}"
     asg_desired_capacity    = "${var.slave_asg_desired_capacity}"
     asg_min_size            = "${var.slave_asg_min_size}"
     asg_max_size            = "${var.slave_asg_max_size}"
@@ -662,17 +621,17 @@ data "template_file" "gpu_slave_userdata" {
 module "gpu_slave_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
-    ami_name                = "gpu-slave*"
+    ami_name                = "gpu-slave-${var.tag_owner}-${var.environment}*"
     lc_name_prefix          = "${var.environment}-gpu-slave-"
     lc_instance_type        = "p2.xlarge"
     lc_ebs_optimized        = "false"
-    lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
-    lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}", "${data.terraform_remote_state.vpc.sg_private_egress_subnet_id}" ]
+    lc_key_name             = "${data.terraform_remote_state.base.devops_key_name}"
+    lc_security_groups      = [ "${module.slave_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.gpu_slave_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
+    lc_iam_instance_profile = "${data.terraform_remote_state.iam.slave_instance_profile_name}"
 
     asg_name                = "${var.tag_owner}-${var.environment}-gpu-slave-asg"
-    asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
+    asg_subnet_ids          = "${slice(concat(data.terraform_remote_state.vpc.public_subnet_ids, data.terraform_remote_state.vpc.private_egress_subnet_ids), var.only_public == "true" ? 0 : length(data.terraform_remote_state.vpc.public_subnet_ids), var.only_public == "true" ? length(data.terraform_remote_state.vpc.public_subnet_ids) : length(data.terraform_remote_state.vpc.public_subnet_ids) + length(data.terraform_remote_state.vpc.private_egress_subnet_ids))}"
     asg_desired_capacity    = "${var.gpu_slave_asg_desired_capacity}"
     asg_min_size            = "${var.gpu_slave_asg_min_size}"
     asg_max_size            = "${var.gpu_slave_asg_max_size}"
@@ -688,7 +647,7 @@ module "gpu_slave_asg" {
 module "baile_elb_sg" {
     source = "../../terraform/modules/security_group"
 
-    vpc_id = "${var.vpc_id}"
+    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
     sg_name = "baile-elb-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
@@ -717,7 +676,7 @@ module "baile_elb_sg" {
 module "baile_elb_internal_sg" {
     source = "../../terraform/modules/security_group"
 
-    vpc_id = "${var.vpc_id}"
+    vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
     sg_name = "baile-elb-in-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
@@ -728,7 +687,7 @@ module "baile_elb_internal_sg" {
             protocol    = "tcp"
             from_port   = "80"
             to_port     = "80"
-            sg_id       = "${data.terraform_remote_state.vpc.sg_bastion_id}"
+            sg_id       = "${data.terraform_remote_state.base.sg_bastion_id}"
         },
     ]
 
@@ -788,7 +747,7 @@ module "baile_elb_internal" {
   elb_name            = "${var.tag_owner}-${var.environment}-baile-elb-in"
   elb_is_internal     = "true"
   elb_security_group  = "${module.baile_elb_internal_sg.id}"
-  subnets             = [ "${var.subnet_id_1}", "${var.subnet_id_2}" ]
+  subnets             = [ "${slice(concat(data.terraform_remote_state.vpc.public_subnet_ids, data.terraform_remote_state.vpc.private_egress_subnet_ids), var.only_public == "true" ? 0 : length(data.terraform_remote_state.vpc.public_subnet_ids), var.only_public == "true" ? length(data.terraform_remote_state.vpc.public_subnet_ids) : length(data.terraform_remote_state.vpc.public_subnet_ids) + length(data.terraform_remote_state.vpc.private_egress_subnet_ids))}" ]
   frontend_port       = "80"
   frontend_protocol   = "http"
   backend_port        = "80"
@@ -805,7 +764,7 @@ module "public_slave_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "public-slave"
+    sg_name = "public-slave-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 4
@@ -814,7 +773,7 @@ module "public_slave_sg" {
             protocol    = "tcp"
             from_port   = "22"
             to_port     = "22"
-            sg_id = "${data.terraform_remote_state.vpc.sg_bastion_id}"
+            sg_id = "${data.terraform_remote_state.base.sg_bastion_id}"
         },
         {
             protocol    = "tcp"
@@ -867,14 +826,14 @@ data "template_file" "public_slave_userdata" {
 module "public_slave_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
-    ami_name                = "public-slave*"
+    ami_name                = "public-slave-${var.tag_owner}-${var.environment}*"
     lc_name_prefix          = "${var.environment}-public-slave-"
     lc_instance_type        = "t2.medium"
     lc_ebs_optimized        = "false"
-    lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
+    lc_key_name             = "${data.terraform_remote_state.base.devops_key_name}"
     lc_security_groups      = [ "${module.public_slave_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.public_slave_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.slave_instance_profile.id}"
+    lc_iam_instance_profile = "${data.terraform_remote_state.iam.slave_instance_profile_name}"
 
     asg_name                = "${var.tag_owner}-${var.environment}-public-slave-asg"
     asg_subnet_ids          = "${data.terraform_remote_state.vpc.public_subnet_ids}"
@@ -896,7 +855,7 @@ module "captain_sg" {
 
     vpc_id = "${data.terraform_remote_state.vpc.vpc_id}"
 
-    sg_name = "captain"
+    sg_name = "captain-${var.tag_owner}-${var.environment}"
     sg_description = "some description"
 
     ingress_rules_sgid_count = 1
@@ -905,7 +864,7 @@ module "captain_sg" {
             protocol    = "tcp"
             from_port   = "22"
             to_port     = "22"
-            sg_id = "${data.terraform_remote_state.vpc.sg_bastion_id}"
+            sg_id = "${data.terraform_remote_state.base.sg_bastion_id}"
         },
     ]
 
@@ -925,9 +884,11 @@ data "template_file" "captain_userdata" {
 
   vars {
     environment = "${var.environment}"
+    dcos_username = "${var.dcos_username}"
+    dcos_password = "${var.dcos_password}"
     dcos_master_url = "${module.master_elb_internal.elb_dns_name}"
-    dcos_apps_bucket = "${aws_s3_bucket.dcos_apps_bucket.id}"
-    dcos_apps_bucket_domain = "${aws_s3_bucket.dcos_apps_bucket.id}.${var.s3_endpoint}"
+    dcos_apps_bucket = "${data.terraform_remote_state.s3_buckets.apps_s3_bucket}"
+    dcos_apps_bucket_domain = "${data.terraform_remote_state.s3_buckets.apps_s3_bucket}.${var.s3_endpoint}"
     download_ssh_keys = "${var.download_ssh_keys}"
     ssh_keys_s3_bucket = "${var.ssh_keys_s3_bucket}"
     main_user = "${var.main_user}"
@@ -940,8 +901,8 @@ data "template_file" "captain_userdata" {
     baile_internal_lb_url = "${module.baile_elb_internal.elb_dns_name}"
     dcos_nodes = "${var.slave_asg_desired_capacity + var.public_slave_asg_desired_capacity + var.gpu_slave_asg_desired_capacity}"
     master_instance_name = "${var.tag_owner}-${var.environment}-master"
-    apps_aws_access_key = "${data.terraform_remote_state.iam.app_access_key}"
-    apps_aws_secret_key = "${data.terraform_remote_state.iam.app_secret_key}"
+    apps_aws_access_key = "${element(compact(concat(list(var.apps_access_key), data.terraform_remote_state.iam.app_access_key)), 0)}"
+    apps_aws_secret_key = "${element(compact(concat(list(var.apps_secret_key), data.terraform_remote_state.iam.app_secret_key)), 0)}"
     rabbit_password = "${random_string.rabbit_password.result}"
     aries_http_search_user_password = "${random_string.aries_http_search_user_password.result}"
     aries_http_command_user_password = "${random_string.aries_http_command_user_password.result}"
@@ -966,7 +927,7 @@ data "template_file" "captain_userdata" {
     salsa_version = "${var.salsa_version}"
     upload_datasets = "${var.upload_datasets}"
     download_from_s3 = "${var.download_from_s3}"
-    online_prediction = "${var.online_prediction"
+    online_prediction = "${var.online_prediction}"
   }
 
   depends_on = [
@@ -974,25 +935,23 @@ data "template_file" "captain_userdata" {
   ]
 }
 
-resource "aws_iam_instance_profile" "captain_instance_profile" {
-  name  = "${var.tag_owner}-${var.environment}-captain_instance_profile"
-  role = "${data.terraform_remote_state.iam.captain_iam_role_name}"
-}
-
 module "captain_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
-    ami_name                = "captain*"
+    ami_name                = "captain-${var.tag_owner}-${var.environment}*"
     lc_name_prefix          = "${var.environment}-captain-"
     lc_instance_type        = "t2.medium"
     lc_ebs_optimized        = "false"
-    lc_key_name             = "${data.terraform_remote_state.vpc.devops_key_name}"
+    lc_key_name             = "${data.terraform_remote_state.base.devops_key_name}"
     lc_security_groups      = [ "${module.captain_sg.id}", "${module.dcos_stack_sg.id}" ]
     lc_user_data            = "${data.template_file.captain_userdata.rendered}"
-    lc_iam_instance_profile = "${aws_iam_instance_profile.captain_instance_profile.id}"
+    lc_iam_instance_profile = "${data.terraform_remote_state.iam.captain_instance_profile_name}"
 
     asg_name                = "${var.tag_owner}-${var.environment}-captain-asg"
-    asg_subnet_ids          = "${data.terraform_remote_state.vpc.private_egress_subnet_ids}"
+
+    # hack for having conditional for two lists of differnt length
+    asg_subnet_ids          = "${slice(concat(data.terraform_remote_state.vpc.public_subnet_ids, data.terraform_remote_state.vpc.private_egress_subnet_ids), var.only_public == "true" ? 0 : length(data.terraform_remote_state.vpc.public_subnet_ids), var.only_public == "true" ? length(data.terraform_remote_state.vpc.public_subnet_ids) : length(data.terraform_remote_state.vpc.public_subnet_ids) + length(data.terraform_remote_state.vpc.private_egress_subnet_ids))}"
+
     asg_desired_capacity    = "${var.captain_asg_desired_capacity}"
     asg_min_size            = "${var.captain_asg_min_size}"
     asg_max_size            = "${var.captain_asg_max_size}"

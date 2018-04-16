@@ -5,7 +5,6 @@ usage() {
   echo "Usage: $0 <image> <config_file> [args...]"
   echo " e.g.: $0 bootstrap integration"
   echo "All images require environment variable AWS_PROFILE or access keys (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) to be set"
-  echo "Bootstrap image requires environment variables CUSTOMER_KEY, DCOS_USERNAME, and DCOS_PASSWORD to be set"
   exit 1
 }
 
@@ -22,10 +21,14 @@ export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}' "environments/$CO
 export ENVIRONMENT=$(awk -F\" '/^environment/{print $2}'  "environments/$CONFIG.tfvars")
 export OWNER=$(awk -F\" '/^tag_owner/{print $2}'  "environments/$CONFIG.tfvars")
 export MAIN_USER=$(awk -F\" '/^main_user/{print $2}'  "environments/$CONFIG.tfvars")
-export PACKER_VPC_ID=$(awk -F\" '/^vpc_id/{print $2}'  "environments/$CONFIG.tfvars")
-export PACKER_SUBNET_ID=$(awk -F\" '/^subnet_id_1/{print $2}'  "environments/$CONFIG.tfvars")
 export ONLINE_PREDICTION=$(awk -F\" '/^online_prediction/{print $2}'  "environments/$CONFIG.tfvars")
 export MACHINE_OS=$(awk -F\" '/^machine_os/{print $2}'  "environments/$CONFIG.tfvars")
+export CREATE_VPC=$(awk -F\" '/^create_vpc/{print $2}'  "environments/$CONFIG.tfvars")
+
+if [ $CREATE_VPC = "false" ]; then
+  export PACKER_VPC_ID=$(awk -F\" '/^vpc_id/{print $2}'  "environments/$CONFIG.tfvars")
+  export PACKER_SUBNET_ID=$(awk -F\" '/^subnet_id_1/{print $2}'  "environments/$CONFIG.tfvars")
+fi
 
 if [ $ONLINE_PREDICTION = "true" ]; then
   export REQUIREMENTS_FILE="./ansible/requirements.yml"
@@ -65,21 +68,6 @@ if [ -z "$AWS_PROFILE" ];then
     echo "AWS_PROFILE or access keys (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) are not set"
     usage
   fi
-fi
-
-if [ -z "$CUSTOMER_KEY" ] && [ "${IMAGE}" = "bootstrap" ];then
-  echo "Error: CUSTOMER_KEY is not set"
-  usage
-fi
-
-if [ -z "$DCOS_USERNAME" ] && ([ "${IMAGE}" = "bootstrap" ] || [ "${IMAGE}" = "captain" ]);then
-  echo "Error: DCOS_USERNAME is not set"
-  usage
-fi
-
-if [ -z "$DCOS_PASSWORD" ] && ([ "${IMAGE}" = "bootstrap" ] || [ "${IMAGE}" = "captain" ]);then
-  echo "Error: DCOS_PASSWORD is not set"
-  usage
 fi
 
 PWD=$(pwd)

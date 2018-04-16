@@ -12,7 +12,7 @@ usage() {
   exit 1
 }
 
-if [ ${#} -ne 3 ]; then
+if [ ${#} -lt 3 ]; then
  usage
 fi
 
@@ -20,12 +20,7 @@ if [ -z "$AWS_PROFILE" ];then
   if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ];then
     echo "AWS_PROFILE or access keys (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) are not set"
     usage
-  fi  
-fi
-
-if [ -z "$TF_VAR_dcos_password" ];then
-  echo "TF_VAR_dcos_password is not set - please run export TF_VAR_dcos_password=YOUR_PASSWORD"
-  usage
+  fi
 fi
 
 export ACTION=$1
@@ -75,6 +70,43 @@ clean)
   echo "Cleaning workspace for $DEBUG_OUT"
   rm -rf "$WORKDIR"
   ;;
+import)
+  [ -e "$WORKDIR" ] || {
+      echo >&2 "Please run init first"
+      exit 1
+  }
+  echo "Importing modules and resources"
+  cp "$ENVIRONMENT_ROOT/$CONFIG.tfvars" "$WORKDIR/terraform.tfvars"
+  cd "$WORKDIR"
+  terraform import "$@"
+  ;;
+refresh)
+  [ -e "$WORKDIR" ] || {
+      echo >&2 "Please run init first"
+      exit 1
+  }
+  echo "Refreshing modules and resources"
+  cd "$WORKDIR"
+  terraform refresh "$@"
+  ;;
+output)
+  [ -e "$WORKDIR" ] || {
+      echo >&2 "Please run init first"
+      exit 1
+  }
+  echo "Refreshing modules and resources"
+  cd "$WORKDIR"
+  terraform refresh "$@"
+  ;;
+state-rm)
+  [ -e "$WORKDIR" ] || {
+      echo >&2 "Please run init first"
+      exit 1
+  }
+  echo "Refreshing modules and resources"
+  cd "$WORKDIR"
+  terraform state rm "$@"
+  ;;
 plan)
   [ -e "$WORKDIR" ] || {
       echo >&2 "Please run init first"
@@ -95,6 +127,15 @@ plan-destroy)
   }
   cd "$WORKDIR"
   terraform plan -destroy -out "$ENVIRONMENT.tfplan" "$@"
+  ;;
+destroy)
+  echo "Destroying $DEBUG_OUT"
+  [ -e "$WORKDIR" ] || {
+      echo >&2 "Please run init first"
+      exit 1
+  }
+  cd "$WORKDIR"
+  terraform destroy "$@"
   ;;
 apply)
   [ -e "$WORKDIR/$ENVIRONMENT.tfplan" ] || {

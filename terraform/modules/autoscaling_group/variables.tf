@@ -64,6 +64,8 @@ variable "lc_iam_instance_profile" {
 
 # Autoscaling group
 
+variable "asg_count" { default = 1 }
+
 variable "asg_name" {
   description = "Autoscaling group name"
 }

@@ -1,7 +1,7 @@
 ---
 path_bootstrap: /var/lib/dcos-bootstrap
 
-dcos_download: https://downloads.dcos.io/dcos/stable/dcos_generate_config.sh
+dcos_download_url: https://downloads.dcos.io/dcos/stable/dcos_generate_config.sh
 
 resolvers:
   - 8.8.4.4
@@ -11,13 +11,7 @@ dns_search: None
 # Vars for DCOS enterprise
 enterprise_dcos: false
 security: permissive
-customer_key: "########-####-####-####-############"
-superuser_username: admin
-superuser_password_hash: "##############################"
 
 # Vars for registry
 registry: false
-docker_registry_auth_token: "###############################"
-email: dcos-readonly@deepcortex.ai
-registry_url: 'https://index.docker.io/v1/'
 enable_docker_gc: true
