@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # install kernel driver
-sudo yum install -y gcc kernel-devel-$(uname -r)
+# sudo yum install -y gcc kernel-devel-$(uname -r)
 
 # blacklist nvidia conflicting kernel modules
 cat << EOF | sudo tee --append /etc/modprobe.d/blacklist.conf
