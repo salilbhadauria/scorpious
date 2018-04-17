@@ -82,7 +82,7 @@ s3_endpoint                     = "s3.amazonaws.com"
 bastion_ami_id                  = "ami-26ebbc5c"
 
 # the ami id for the machines that will run DeepCortex (should be a CentOS 7.4 ami)
-packer_base_ami                 = "ami-b49231cb"
+packer_base_ami                 = "ami-37943748"
 
 # operating system for DeepCortex machines (centos or rhel)
 machine_os                      = "rhel"
