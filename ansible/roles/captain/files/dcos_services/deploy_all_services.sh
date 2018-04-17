@@ -50,12 +50,15 @@ export DCOS_MASTER_PRIVATE_IP=$(aws ec2 describe-instances --filter Name=tag-key
 
 # Deploy frameworks from DC/OS universe + rabbitMQ
 dcos package install marathon-lb --yes
-dcos package install mongodb-replicaset --options=mongodb/options.json --yes
+bash deploy_catalog_service.sh percona-mongo mongodb/options.json mongodb/env_vars.sh
 dcos package install elastic --options=elasticsearch/options.json --yes
 dcos package install kibana --yes
 bash deploy_service.sh rabbitmq/marathon.json rabbitmq/env_vars.sh
 dcos package install --cli elastic --yes
-dcos package install --cli mongodb-replicaset --yes
+dcos package install --cli percona-mongo --yes
+
+dcos percona-mongo user add admin admin_user.json useradmin $MONGODB_USERADMIN_PASSWORD
+dcos percona-mongo user add admin app_user.json useradmin $MONGODB_USERADMIN_PASSWORD
 
 # Initialization and migration
 

@@ -39,3 +39,28 @@ resource "random_string" "pegasus_http_auth_user_password" {
   length = 17
   special = false
 }
+
+resource "random_string" "mongodb_app_password" {
+  length = 17
+  special = false
+}
+
+resource "random_string" "mongodb_useradmin_password" {
+  length = 17
+  special = false
+}
+
+resource "random_string" "mongodb_clusteradmin_password" {
+  length = 17
+  special = false
+}
+
+resource "random_string" "mongodb_clustermonitor_password" {
+  length = 17
+  special = false
+}
+
+resource "random_string" "mongodb_backup_password" {
+  length = 17
+  special = false
+}

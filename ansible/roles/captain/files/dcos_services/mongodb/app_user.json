@@ -1,0 +1,7 @@
+{
+  "user": "app",
+  "pwd": "password",
+  "roles": [
+    { "db": "admin", "role": "readWriteAnyDatabase" }
+  ]
+}
