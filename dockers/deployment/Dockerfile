@@ -17,6 +17,7 @@ RUN pip install awscli --upgrade
 RUN wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip
 RUN wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_SHA256SUMS
 
+RUN rm -rf /usr/sbin/packer
 RUN sed -i '/.*linux_amd64.zip/!d' packer_${PACKER_VERSION}_SHA256SUMS && \
     sha256sum -c --strict packer_${PACKER_VERSION}_SHA256SUMS && \
     unzip packer_${PACKER_VERSION}_linux_amd64.zip -d /bin && \
