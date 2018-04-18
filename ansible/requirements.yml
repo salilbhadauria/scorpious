@@ -12,9 +12,8 @@
   name: nodejs
   version: 4.1.2
 
-- src: greendayonfire.mongodb
+- src: softasap.mongo-percona
   name: mongodb
-  version: v2.2.0
 
 - src: geerlingguy.java
   name: java
