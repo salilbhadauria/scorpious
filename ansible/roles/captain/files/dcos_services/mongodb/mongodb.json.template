@@ -1,4 +1,4 @@
 {
     "adapter": "east-mongo",
-    "url": "mongodb://admin:${MONGODB_ROOTADMIN_PASSWORD}@${MONGODB_PRIMARY}/${APP_NAME}?replicaSet=rs&authSource=admin"
+    "url": "mongodb://admin:${MONGODB_ROOTADMIN_PASSWORD}@localhost:27017/${APP_NAME}?authSource=admin"
 }

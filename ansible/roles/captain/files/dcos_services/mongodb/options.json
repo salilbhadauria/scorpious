@@ -22,4 +22,5 @@
   },
   "percona-pmm": {
     "enabled": false
+  }
 }
