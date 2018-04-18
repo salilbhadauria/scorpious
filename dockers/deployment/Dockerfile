@@ -1,20 +1,23 @@
-FROM deepcortex/scala-python3:latest
+FROM centos:centos7
 
 ENV PACKER_VERSION=1.0.4
 ENV PACKER_SHA256SUM=646da085cbcb8c666474d500a44d933df533cf4f1ff286193d67b51372c3c59e
 
-RUN apt-get update && \
-    apt-get install -y unzip && \
-    apt-get install -y uuid-runtime && \
-    apt-get install -y openssh-client && \
-    apt-get install -y rsync && \
-    apt-get install -y curl
+RUN yum install -y epel-release && \
+    yum install -y unzip && \
+    yum install -y uuid && \
+    yum install -y openssh-clients && \
+    yum install -y rsync && \
+    yum install -y curl && \
+    yum install -y python-pip && \
+    yum install -y wget
 
 RUN pip install awscli --upgrade
 
 RUN wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip
 RUN wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_SHA256SUMS
 
+RUN rm -rf /usr/sbin/packer
 RUN sed -i '/.*linux_amd64.zip/!d' packer_${PACKER_VERSION}_SHA256SUMS && \
     sha256sum -c --strict packer_${PACKER_VERSION}_SHA256SUMS && \
     unzip packer_${PACKER_VERSION}_linux_amd64.zip -d /bin && \
@@ -53,7 +56,7 @@ COPY terraform_init_backend.sh terraform_init_backend.sh
 ENV SALSA_VERSION=falcon
 
 RUN wget https://s3.amazonaws.com/artifacts.dev.deepcortex.ai/deployment_downloads/${SALSA_VERSION}/front-end.tar.gz -P ansible/roles/captain/files/dcos_services/
-RUN wget https://s3.amazonaws.com/artifacts.dev.deepcortex.ai/deployment_downloads/Datasets.tar.gz -P ansible/roles/captain/files/dcos_services/
+# RUN wget https://s3.amazonaws.com/artifacts.dev.deepcortex.ai/deployment_downloads/Datasets.tar.gz -P ansible/roles/captain/files/dcos_services/
 
 ENTRYPOINT ["/bin/bash", "/opt/deploy/build.sh"]
 

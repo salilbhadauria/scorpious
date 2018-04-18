@@ -97,7 +97,7 @@ if [[ "$CREATE_IAM" != "true" ]];then
   export TF_VAR_apps_secret_key=$APPS_AWS_SECRET_ACCESS_KEY
 fi
 
-if [ -z $STACKS ]; then
+if [[ -z $STACKS ]]; then
   STACKS=()
 
   if [[ "$ONLINE_PREDICTION" = "true" ]];then

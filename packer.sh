@@ -25,12 +25,12 @@ export ONLINE_PREDICTION=$(awk -F\" '/^online_prediction/{print $2}'  "environme
 export MACHINE_OS=$(awk -F\" '/^machine_os/{print $2}'  "environments/$CONFIG.tfvars")
 export CREATE_VPC=$(awk -F\" '/^create_vpc/{print $2}'  "environments/$CONFIG.tfvars")
 
-if [ $CREATE_VPC = "false" ]; then
+if [[ $CREATE_VPC = "false" ]]; then
   export PACKER_VPC_ID=$(awk -F\" '/^vpc_id/{print $2}'  "environments/$CONFIG.tfvars")
   export PACKER_SUBNET_ID=$(awk -F\" '/^subnet_id_1/{print $2}'  "environments/$CONFIG.tfvars")
 fi
 
-if [ $ONLINE_PREDICTION = "true" ]; then
+if [[ $ONLINE_PREDICTION = "true" ]]; then
   export REQUIREMENTS_FILE="./ansible/requirements.yml"
 else
   export REQUIREMENTS_FILE="./ansible/requirements_wo_psql.yml"
@@ -38,7 +38,7 @@ fi
 
 export DCOS_VERSION=$(awk -F\" '/^dcos_version/{print $2}'  "environments/$CONFIG.tfvars")
 
-if [ -z "$DCOS_VERSION" ];then
+if [[ -z "$DCOS_VERSION" ]];then
   export DCOS_DOWNLOAD_URL="https://downloads.mesosphere.com/dcos-enterprise/stable/dcos_generate_config.ee.sh"
 else
   export DCOS_DOWNLOAD_URL="https://downloads.mesosphere.com/dcos-enterprise/stable/$DCOS_VERSION/dcos_generate_config.ee.sh"
@@ -63,8 +63,8 @@ export GPU_SLAVE_XVDH_SIZE=$(awk -F\" '/^gpu_slave_xvdh_size/{print $2}'  "envir
 
 export AWS_REGION="${REGION:-us-east-1}"
 
-if [ -z "$AWS_PROFILE" ];then
-  if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ];then
+if [[ -z "$AWS_PROFILE" ]];then
+  if [[ -z "$AWS_ACCESS_KEY_ID" ]] || [[ -z "$AWS_SECRET_ACCESS_KEY" ]];then
     echo "AWS_PROFILE or access keys (AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY) are not set"
     usage
   fi
@@ -94,7 +94,7 @@ GIT_COMMIT=1
 run_packer() {
   set -x
   local UUID=$1       ; shift
-  local GIT_COMMIT=$2 ; shift
+  local GIT_COMMIT=$1 ; shift
   local opts
 
   #(( $# >= 1 ))
