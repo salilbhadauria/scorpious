@@ -2,6 +2,14 @@
 common_default_packages:
   - python-pip
   - jq
+  - curl
+  - tar
+  - xz
+  - zip
+  - unzip
+  - ipset
+  - ntp
+  - cloud-init
 
 common_pip_packages:
   - boto3

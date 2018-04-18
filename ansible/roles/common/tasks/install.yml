@@ -3,7 +3,7 @@
   - name: Install base packages
     yum:
       name: "{{ item }}"
-      state: latest
+      state: present
     with_items: "{{ common_default_packages }}"
 
   - name: Install pip based packages

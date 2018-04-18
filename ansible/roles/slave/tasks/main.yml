@@ -1,5 +1,0 @@
----
-  - name: Remove gcc
-    yum:
-      name: gcc
-      state: absent

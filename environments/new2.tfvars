@@ -78,16 +78,16 @@ s3_endpoint                     = "s3.amazonaws.com"
 
 ################## AMIs and Users ####################
 
-# the ami id for the machine that will serve as the bastion (can be CentOS or Amazon Linux)
+# the ami id for the machine that will serve as the bastion (should be CentOS/RHEL or Amazon Linux)
 bastion_ami_id                  = "ami-26ebbc5c"
 
-# the ami id for the machines that will run DeepCortex (should be a CentOS 7.4 ami)
-packer_base_ami                 = "ami-b7288bc8"
+# the ami id for the machines that will run DeepCortex (should be a CentOS/RHEL 7.4 ami)
+packer_base_ami                 = "ami-d53c9eaa"
 
 # operating system for DeepCortex machines (centos or rhel)
 machine_os                      = "rhel"
 
-# the default ssh user for the above ami (likely centos for CentOS machines, but could be ec2-user so make sure to check the ami you are using)
+# the default ssh user for the above amis (likely centos for CentOS machines or ec2-user for RHEL so make sure to check the ami you are using)
 main_user                       = "ec2-user"
 
 # the public ssh key for the key you would like to use to access the DC/OS machines used for DeepCortex
