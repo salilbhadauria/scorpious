@@ -213,7 +213,7 @@ module "bootstrap_elb" {
 module "bootstrap_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
-    ami_name                = "bootstrap*"
+    ami_name                = "bootstrap-${var.tag_owner}-${var.environment}-*"
     lc_name_prefix          = "${var.environment}-bootstrap-"
     lc_instance_type        = "t2.medium"
     lc_ebs_optimized        = "false"
@@ -493,7 +493,7 @@ module "master_elb_internal" {
 module "master_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
-    ami_name                = "master-${var.tag_owner}-${var.environment}*"
+    ami_name                = "master-${var.tag_owner}-${var.environment}-*"
     lc_name_prefix          = "${var.environment}-master-"
     lc_instance_type        = "m4.2xlarge"
     lc_ebs_optimized        = "false"
@@ -578,7 +578,7 @@ data "template_file" "slave_userdata" {
 module "slave_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
-    ami_name                = "slave-${var.tag_owner}-${var.environment}*"
+    ami_name                = "slave-${var.tag_owner}-${var.environment}-*"
     lc_name_prefix          = "${var.environment}-slave-"
     lc_instance_type        = "m4.4xlarge"
     lc_ebs_optimized        = "false"
@@ -621,7 +621,7 @@ data "template_file" "gpu_slave_userdata" {
 module "gpu_slave_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
-    ami_name                = "gpu-slave-${var.tag_owner}-${var.environment}*"
+    ami_name                = "gpu-slave-${var.tag_owner}-${var.environment}-*"
     lc_name_prefix          = "${var.environment}-gpu-slave-"
     lc_instance_type        = "p2.xlarge"
     lc_ebs_optimized        = "false"
@@ -826,7 +826,7 @@ data "template_file" "public_slave_userdata" {
 module "public_slave_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
-    ami_name                = "public-slave-${var.tag_owner}-${var.environment}*"
+    ami_name                = "public-slave-${var.tag_owner}-${var.environment}-*"
     lc_name_prefix          = "${var.environment}-public-slave-"
     lc_instance_type        = "t2.medium"
     lc_ebs_optimized        = "false"
@@ -938,7 +938,7 @@ data "template_file" "captain_userdata" {
 module "captain_asg" {
     source = "../../terraform/modules/autoscaling_group"
 
-    ami_name                = "captain-${var.tag_owner}-${var.environment}*"
+    ami_name                = "captain-${var.tag_owner}-${var.environment}-*"
     lc_name_prefix          = "${var.environment}-captain-"
     lc_instance_type        = "t2.medium"
     lc_ebs_optimized        = "false"
