@@ -441,10 +441,40 @@ resource "aws_iam_policy" "ssh_key_bucket" {
 EOF
 }
 
-resource "aws_iam_policy_attachment" "test-attach" {
+resource "aws_iam_policy_attachment" "ssh_key_bucket_attach" {
   count      = "${local.create_extra_ssh_key_policy}"
 
   name       = "${aws_iam_policy.ssh_key_bucket.name}"
   roles      = ["${aws_iam_role.bastion_role.name}", "${aws_iam_role.bootstrap_role.name}", "${aws_iam_role.master_role.name}", "${aws_iam_role.slave_role.name}", "${aws_iam_role.captain_role.name}"]
   policy_arn = "${aws_iam_policy.ssh_key_bucket.arn}"
+}
+
+resource "aws_iam_policy" "artifacts_bucket" {
+  count = "${local.create_artifacts_bucket_policy}"
+
+  name = "${var.tag_owner}-${var.environment}-artifacts_bucket"
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "arn:${var.arn}:s3:::${var.artifacts_s3_bucket}/*"
+      ]
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_policy_attachment" "artifacts_bucket_attach" {
+  count      = "${local.create_artifacts_bucket_policy}"
+
+  name       = "${aws_iam_policy.artifacts_bucket.name}"
+  roles      = ["${aws_iam_role.bastion_role.name}", "${aws_iam_role.bootstrap_role.name}", "${aws_iam_role.master_role.name}", "${aws_iam_role.slave_role.name}", "${aws_iam_role.captain_role.name}"]
+  policy_arn = "${aws_iam_policy.artifacts_bucket.arn}"
 }
