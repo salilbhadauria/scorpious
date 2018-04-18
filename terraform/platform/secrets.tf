@@ -45,6 +45,11 @@ resource "random_string" "mongodb_app_password" {
   special = false
 }
 
+resource "random_string" "mongodb_rootadmin_password" {
+  length = 17
+  special = false
+}
+
 resource "random_string" "mongodb_useradmin_password" {
   length = 17
   special = false

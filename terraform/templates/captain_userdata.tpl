@@ -30,6 +30,7 @@ environment:
   orion_http_search_user_password: ${orion_http_search_user_password}
   pegasus_http_auth_user_password: ${pegasus_http_auth_user_password}
   mongodb_app_password: ${mongodb_app_password}
+  mongodb_rootadmin_password: ${mongodb_rootadmin_password}
   mongodb_useradmin_password: ${mongodb_useradmin_password}
   mongodb_clusteradmin_password: ${mongodb_clusteradmin_password}
   mongodb_clustermonitor_password: ${mongodb_clustermonitor_password}

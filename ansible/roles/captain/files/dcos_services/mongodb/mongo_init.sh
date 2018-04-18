@@ -3,10 +3,11 @@
 # npm install mongodb -g
 # npm install east east-mongo -g
 
-export DCOS_MASTER_PRIVATE_IP=$(aws ec2 describe-instances --filter Name=tag-key,Values=Name Name=tag-value,Values=$MASTER_INSTANCE_NAME --query "Reservations[*].Instances[*].PrivateIpAddress" --output=text)
+MONGO_HOST_0=$(aws ec2 describe-instances --filters "Name=tag:Role,Values=slave" "Name=tag:environment,Values=$ENVIRONMENT" --query "Reservations[0].Instances[0].PrivateIpAddress" --output text)
+
+export MONGO_PRIMARY=$(mongo --quiet "mongodb://$MONGO_HOST_0:27017/?replicaSet=rs" --eval "rs.isMaster().primary" | tail -1)
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-ssh -i /opt/private_key -o StrictHostKeyChecking=no -f -L 27017:mongodb.mongodb-replicaset.l4lb.thisdcos.directory:27017 deployer@"$DCOS_MASTER_PRIVATE_IP" sleep 10
-source "$DIR/migrate-baile-mongo.sh"
-source "$DIR/migrate-um-mongo.sh"
+source $DIR/migrate-mongo.sh baile
+source $DIR/migrate-mongo.sh um

@@ -913,6 +913,7 @@ data "template_file" "captain_userdata" {
     orion_http_search_user_password = "${random_string.orion_http_search_user_password.result}"
     pegasus_http_auth_user_password = "${random_string.pegasus_http_auth_user_password.result}"
     mongodb_app_password = "${random_string.mongodb_app_password.result}"
+    mongodb_rootadmin_password = "${random_string.mongodb_rootadmin_password.result}"
     mongodb_useradmin_password = "${random_string.mongodb_useradmin_password.result}"
     mongodb_clusteradmin_password = "${random_string.mongodb_clusteradmin_password.result}"
     mongodb_clustermonitor_password = "${random_string.mongodb_clustermonitor_password.result}"

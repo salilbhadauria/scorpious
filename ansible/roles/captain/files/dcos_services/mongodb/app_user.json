@@ -1,6 +1,6 @@
 {
   "user": "app",
-  "pwd": "password",
+  "pwd": "${MONGODB_APP_PASSWORD}",
   "roles": [
     { "db": "admin", "role": "readWriteAnyDatabase" }
   ]

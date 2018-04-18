@@ -57,7 +57,10 @@ bash deploy_service.sh rabbitmq/marathon.json rabbitmq/env_vars.sh
 dcos package install --cli elastic --yes
 dcos package install --cli percona-mongo --yes
 
+envsubst < mongodb/admin_user.json > admin_user.json
 dcos percona-mongo user add admin admin_user.json useradmin $MONGODB_USERADMIN_PASSWORD
+
+envsubst < mongodb/app_user.json > app_user.json
 dcos percona-mongo user add admin app_user.json useradmin $MONGODB_USERADMIN_PASSWORD
 
 # Initialization and migration
