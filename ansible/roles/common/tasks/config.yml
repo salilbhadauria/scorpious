@@ -23,3 +23,6 @@
       name: firewalld
       enabled: no
       state: stopped
+    register: firewalld_service_result
+    failed_when: "firewalld_service_result|failed and 'Could not find the requested service' not in firewalld_service_result.msg"
+

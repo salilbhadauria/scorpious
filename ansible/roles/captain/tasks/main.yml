@@ -1,12 +1,4 @@
 ---
-- name: Install ansible dependencies for docker_login
-  pip:
-    name: docker-py
-
-- name: Start docker
-  service:
-    name: docker
-    state: started
 
 # Only needed if we want to run docker containers on captain
 # Needs to be fixed.
@@ -43,7 +35,7 @@
    src: tools
    owner: root
    group: root
-   mode: 0644 
+   mode: 0644
 
 - name: Check wheter endpoints file exists
   local_action: stat path={{ role_path }}/files/extra_files/endpoints.json
@@ -51,7 +43,7 @@
 
 - name: Copy endpoints file if it exists
   copy: src=files/extra_files/endpoints.json dest=/usr/lib/python2.7/site-packages/botocore/data/
-  when: endpoints.stat.exists        
+  when: endpoints.stat.exists
 
 - name: Generate /etc/environment file
   template:
