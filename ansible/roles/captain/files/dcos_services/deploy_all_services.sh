@@ -58,9 +58,16 @@ dcos package install --cli percona-mongo --yes
 
 while $(dcos marathon deployment list | grep -q scale); do sleep 30; done
 
-sleep 60
+sleep 30
 
-export PATH="/usr/local/lib/npm/bin:$PATH"
+bash elasticsearch/scripts/elasticsearch_init.sh
+bash rabbitmq/rabbitmq_init.sh
+
+until [[ $(dcos percona-mongo pod status | grep TASK_RUNNING | wc -l) == 4 ]]; do sleep 30; done
+
+sleep 30
+
+dcos percona-mongo user reload-system useradmin $MONGODB_USERADMIN_PASSWORD
 
 envsubst < mongodb/admin_user.json > admin_user.json
 dcos percona-mongo user add admin admin_user.json useradmin $MONGODB_USERADMIN_PASSWORD
@@ -68,8 +75,8 @@ dcos percona-mongo user add admin admin_user.json useradmin $MONGODB_USERADMIN_P
 envsubst < mongodb/app_user.json > app_user.json
 dcos percona-mongo user add admin app_user.json useradmin $MONGODB_USERADMIN_PASSWORD
 
-bash elasticsearch/scripts/elasticsearch_init.sh
-bash rabbitmq/rabbitmq_init.sh
+export PATH="/usr/local/lib/npm/bin:$PATH"
+
 bash mongodb/mongo_init.sh
 
 # Deploy custom services and frameworks
