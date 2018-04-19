@@ -9,6 +9,6 @@ APP_NAME=$1
 
 export APP_NAME=$APP_NAME
 
-envsubst < mongodb.json.template > mongodb.json
+envsubst < $DIR/mongodb.json.template > $DIR/mongodb.json
 
 east --config $DIR/mongodb.json --dir $DIR/$APP_NAME/migrations migrate

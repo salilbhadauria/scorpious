@@ -30,4 +30,4 @@ runcmd:
   - cd /tmp; bash dcos_install.sh slave
   - service ntpd restart
   - systemctl start amazon-ssm-agent
-  - sudo reboot
+  - reboot
