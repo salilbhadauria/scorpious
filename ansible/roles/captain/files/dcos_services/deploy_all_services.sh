@@ -41,7 +41,6 @@ bash setup_dcos_cli.sh
 until [[ $(dcos node | grep agent | wc -l) == $DCOS_NODES ]]; do sleep 30; done
 
 # Retrieve slave node IPs
-export MONGODB_HOSTS=$(aws ec2 describe-instances --filters "Name=tag:Role,Values=slave" "Name=tag:environment,Values=$ENVIRONMENT" --query "Reservations[].Instances[].PrivateIpAddress" --output text | sed -e 's/\s/,/g')
 echo "$(aws ec2 describe-instances --filters "Name=tag:Role,Values=slave" "Name=tag:environment,Values=$ENVIRONMENT" --query "Reservations[].Instances[].PrivateIpAddress" | jq -r '.[]')" > mongo_hosts.txt
 export DCOS_MASTER_PRIVATE_IP=$(aws ec2 describe-instances --filter Name=tag-key,Values=Name Name=tag-value,Values=$MASTER_INSTANCE_NAME --query "Reservations[*].Instances[*].PrivateIpAddress" --output=text)
 
@@ -58,7 +57,7 @@ dcos package install --cli percona-mongo --yes
 
 while $(dcos marathon deployment list | grep -q scale); do sleep 30; done
 
-sleep 30
+sleep 60
 
 bash elasticsearch/scripts/elasticsearch_init.sh
 bash rabbitmq/rabbitmq_init.sh
@@ -71,6 +70,8 @@ dcos percona-mongo user reload-system useradmin $MONGODB_USERADMIN_PASSWORD
 
 envsubst < mongodb/admin_user.json > admin_user.json
 dcos percona-mongo user add admin admin_user.json useradmin $MONGODB_USERADMIN_PASSWORD
+
+sleep 10
 
 envsubst < mongodb/app_user.json > app_user.json
 dcos percona-mongo user add admin app_user.json useradmin $MONGODB_USERADMIN_PASSWORD
