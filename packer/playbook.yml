@@ -74,6 +74,7 @@
   roles:
     - services
     - deployer
+    - dcos-universe
 
 - hosts: slave
   become: yes
