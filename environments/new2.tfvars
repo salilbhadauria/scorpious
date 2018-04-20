@@ -118,7 +118,7 @@ ssh_keys_s3_bucket              = "artifacts.dev.deepcortex.ai/configurations/ss
 ############### S3 Artifacts Access ##################
 
 # set to the bucket containing S3 artifacts or leave blank to pull packages from the internet
-artifacts_s3_bucket             = "artifacts.dev.deepcortex.ai"
+artifacts_s3_bucket             = "falcon-scorpius-assets"
 
 ######################################################
 
