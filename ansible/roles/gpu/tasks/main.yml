@@ -1,5 +1,14 @@
 ---
 
+- name: Get kernel version
+  shell: uname -r
+  register: kernel_version
+
+- name: Install kernel-devel
+  yum:
+    name: "kernel-devel-{{ kernel_version.stdout }}"
+    state: present
+
 - name: Copy install script
   copy:
    dest: /opt/

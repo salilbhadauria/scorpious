@@ -1,19 +1,14 @@
 ---
 common_default_packages:
   - python-pip
-  - htop
-  - sysstat
-  - curl
-  - git
-  - iotop
   - jq
+  - curl
   - tar
   - xz
   - zip
   - unzip
   - ipset
   - ntp
-  - firewalld
   - cloud-init
 
 common_pip_packages:
