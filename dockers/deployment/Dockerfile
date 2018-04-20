@@ -47,6 +47,9 @@ COPY scripts scripts
 COPY terraform terraform
 COPY build.sh build.sh
 COPY destroy.sh destroy.sh
+COPY import_iam.sh import_iam.sh
+COPY import_s3.sh import_s3.sh
+COPY import_vpc.sh import_vpc.sh
 COPY suspend_dc.sh suspend_dc.sh
 COPY resume_dc.sh resume_dc.sh
 COPY set_capacity.sh set_capacity.sh
