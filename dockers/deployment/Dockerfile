@@ -10,7 +10,7 @@ RUN yum install -y epel-release && \
     yum install -y rsync && \
     yum install -y curl && \
     yum install -y python-pip && \
-    yum install -y gettexts && \
+    yum install -y gettext && \
     yum install -y wget
 
 RUN pip install awscli --upgrade
