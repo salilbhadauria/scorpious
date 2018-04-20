@@ -9,16 +9,13 @@ branches:
   only:
     - master
     - develop
-    
+
 before_install:
   docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
 
-script:
-  - ./scripts/build.rb
- 
 deploy:
   provider: script
-  script: ./scripts/deploy.rb
+  script: ./dockers/build_docker.sh
   skip_cleanup: true
   on:
     condition: $TRAVIS_PULL_REQUEST = false
