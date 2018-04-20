@@ -36,7 +36,9 @@
 
         "gpu_slave_xvde_size":   "{{ env `GPU_SLAVE_XVDE_SIZE`}}",
         "gpu_slave_xvdf_size":   "{{ env `GPU_SLAVE_XVDF_SIZE`}}",
-        "gpu_slave_xvdh_size":   "{{ env `GPU_SLAVE_XVDH_SIZE`}}"
+        "gpu_slave_xvdh_size":   "{{ env `GPU_SLAVE_XVDH_SIZE`}}",
+
+        "artifacts_s3_bucket": "{{ env `RTIFACTS_S3_BUCKET`}}"
 
     },
     "builders": [
@@ -322,6 +324,7 @@
           "-i /etc/ansible/hosts",
           "--extra-vars \"dcos_download_url={{ user `dcos_download_url`}}\"",
           "-e \"online_prediction={{ user `online_prediction`}}\"",
+          "-e \"artifacts_s3_bucket={{ user `artifacts_s3_bucket`}}\"",
           "-e \"main_user={{ user `main_user`}}\""
         ]
       },

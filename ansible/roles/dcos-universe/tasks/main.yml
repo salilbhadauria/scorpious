@@ -7,7 +7,7 @@
 
 - name: Copy service definitions
   s3:
-    bucket: {{ artifacts_s3_bucket }}
+    bucket: "{{ artifacts_s3_bucket }}"
     object: /packages/dcos/{{ item }}.service
     dest: /etc/systemd/system/{{ item }}.service
     mode: get
@@ -17,17 +17,17 @@
 
 - name: Fetch local-universe
   s3:
-      bucket: {{ artifacts_s3_bucket }}
-      object: /packages/dcos/local-universe.tar.gz
-      dest: /tmp/local-universe.tar.gz
-      mode: get
+    bucket: "{{ artifacts_s3_bucket }}"
+    object: /packages/dcos/local-universe.tar.gz
+    dest: /tmp/local-universe.tar.gz
+    mode: get
 
 - name: load local-universe
   shell: (docker load < /tmp/local-universe.tar.gz) && rm /tmp/local-universe.tar.gz
 
 - name: Start services
   systemd:
-    name: {{ item }}
+    name: "{{ item }}"
     enabled: yes
     state: started
     daemon_reload: yes

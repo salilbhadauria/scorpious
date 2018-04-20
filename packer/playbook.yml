@@ -71,10 +71,15 @@
 
 - hosts: master
   become: yes
+  vars:
+    - artifacts_s3_bucket: "{{ artifacts_s3_bucket }}"
+  tasks:
+    - include_role:
+      name: dcos-universe
+      when: "artifacts_s3_bucket != ''"
   roles:
     - services
     - deployer
-    - dcos-universe
 
 - hosts: slave
   become: yes
@@ -86,7 +91,7 @@
   vars:
     online_prediction: "{{online_prediction}}"
     java_packages:
-        - java-1.8.0-openjdk
+      - java-1.8.0-openjdk
     nodejs_install_npm_user: root
     nodejs_npm_global_packages:
       - name: mongodb
@@ -97,7 +102,7 @@
         version: 0.3.3
   tasks:
     - include_role:
-        name: postgresql
+      name: postgresql
       when: "online_prediction == 'true'"
   roles:
     - captain
