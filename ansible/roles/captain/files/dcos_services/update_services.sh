@@ -17,8 +17,6 @@ parse_args()
   done
 }
 
-export MONGODB_HOSTS=$(aws ec2 describe-instances --filters "Name=tag:Role,Values=slave" "Name=tag:environment,Values=$ENVIRONMENT" --query "Reservations[].Instances[].PrivateIpAddress" --output text | sed -e 's/\s/,/g')
-
 SERVICES=("argo-api-rest" "aries-api-rest" "baile" "cortex-api-rest" "orion-api-rest" "pegasus-api-rest" "taurus")
 
 parse_args "$@"

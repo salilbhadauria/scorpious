@@ -231,20 +231,32 @@ redshift_skip_final_snapshot = false
 # Docker
 docker_registry_url = "https://index.docker.io/v1/"
 
-# Application Docker Image Versions
-argo_docker_image_version = "0.0.0-0a7e019180ecf897f38f085f63918373a89c11fc"
-aries_docker_image_version = "0.0.0-8d38fd1867462ecc8b7ae874037d3b649d245123"
-baile_docker_image_version = "v1.0.9"
-baile_haproxy_docker_image_version = "v1.0"
-cortex_docker_image_version = "1.0.26-13-ge4032a3"
+### Application Versions
+
+# core applications
+
+aries_docker_image_version = "2.0.0"
+baile_docker_image_version = "2.0.0"
+cortex_docker_image_version = "2.0.0"
+orion_docker_image_version = "2.0.0"
+job_master_docker_image_version = "2.0.0"
+um_docker_image_version = "2.0.0"
+
+# supporting services
+
+baile_haproxy_docker_image_version = "latest"
 logstash_docker_image_version = "latest"
-orion_docker_image_version = "0.0.0-48b96e66c4741a821206b13f449139fdb8086bba"
-job_master_docker_image = "deepcortex/cortex-job-master:0.9.3-287-g493f13e"
-pegasus_docker_image_version = "0.0.1-SNAPSHOT-27-g665fc42"
 rmq_docker_image_version = "latest"
-taurus_docker_image_version = "0.0.0-708ad97786f2e03aba793b467aebf85415c9af21"
-um_docker_image_version = "v1.0"
+
+# front end
+
 salsa_version = "falcon"
+
+# online prediction services
+
+argo_docker_image_version = "0.0.0-0a7e019180ecf897f38f085f63918373a89c11fc"
+pegasus_docker_image_version = "0.0.1-SNAPSHOT-27-g665fc42"
+taurus_docker_image_version = "0.0.0-708ad97786f2e03aba793b467aebf85415c9af21"
 
 # Number of total DC/OS services
 dcos_services = "15"

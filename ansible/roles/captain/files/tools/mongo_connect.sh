@@ -5,4 +5,4 @@ MONGODB_PRIMARY=$(mongo --quiet "mongodb://useradmin:$MONGODB_USERADMIN_PASSWORD
 DCOS_MASTER_PRIVATE_IP=$(aws ec2 describe-instances --filter Name=tag-key,Values=Name Name=tag-value,Values=$MASTER_INSTANCE_NAME --query "Reservations[*].Instances[*].PrivateIpAddress" --output=text)
 
 ssh -i /opt/private_key -o StrictHostKeyChecking=no -f -L 27017:"$MONGODB_PRIMARY" deployer@"$DCOS_MASTER_PRIVATE_IP" sleep 10
-mongo "mongodb://useradmin:$MONGODB_USERADMIN_PASSWORD@localhost:27017/admin"
+mongo "mongodb://admin:$MONGODB_ROOTADMIN_PASSWORD@localhost:27017/admin"

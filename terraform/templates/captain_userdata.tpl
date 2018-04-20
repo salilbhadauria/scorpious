@@ -42,7 +42,7 @@ environment:
   cortex_docker_image_version: ${cortex_docker_image_version}
   logstash_docker_image_version: ${logstash_docker_image_version}
   orion_docker_image_version: ${orion_docker_image_version}
-  job_master_docker_image: ${job_master_docker_image}
+  job_master_docker_image_version: ${job_master_docker_image_version}
   pegasus_docker_image_version: ${pegasus_docker_image_version}
   rmq_docker_image_version: ${rmq_docker_image_version}
   taurus_docker_image_version: ${taurus_docker_image_version}
