@@ -101,7 +101,7 @@
   roles:
     - captain
     - deployer
-    - mongodb
+#    - mongodb
     - nodejs
     - java
 

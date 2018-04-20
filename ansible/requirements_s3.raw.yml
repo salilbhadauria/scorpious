@@ -12,10 +12,6 @@
   name: nodejs
 #  version: 4.1.2
 
-- src: https://s3.amazonaws.com/{{ARTIFACTS_S3_BUCKET}}/packages/ansible/greendayonfire.mongodb.v2.2.0.tar.gz
-  name: mongodb
-#  version: v2.2.0
-
 - src: https://s3.amazonaws.com/{{ARTIFACTS_S3_BUCKET}}/packages/ansible/geerlingguy.java.1.7.4.tar.gz
   name: java
 #  version: 1.7.4

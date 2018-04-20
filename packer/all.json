@@ -321,6 +321,8 @@
         "extra_arguments": [
           "-i /etc/ansible/hosts",
           "--extra-vars \"dcos_download_url={{ user `dcos_download_url`}}\"",
+          "-e \"aws_access_key\"={{user `aws_access_key`}}",
+          "-e \"aws_secret_key\"={{user `aws_secret_key`}}",
           "-e \"online_prediction={{ user `online_prediction`}}\"",
           "-e \"main_user={{ user `main_user`}}\""
         ]
