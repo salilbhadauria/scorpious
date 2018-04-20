@@ -24,13 +24,18 @@ export MAIN_USER=$(awk -F\" '/^main_user/{print $2}'  "environments/$CONFIG.tfva
 export ONLINE_PREDICTION=$(awk -F\" '/^online_prediction/{print $2}'  "environments/$CONFIG.tfvars")
 export MACHINE_OS=$(awk -F\" '/^machine_os/{print $2}'  "environments/$CONFIG.tfvars")
 export CREATE_VPC=$(awk -F\" '/^create_vpc/{print $2}'  "environments/$CONFIG.tfvars")
+export ARTIFACTS_S3_BUCKET=$(awk -F\" '/^artifacts_s3_bucket/{print $2}'  "environments/$CONFIG.tfvars")
+export S3_ENDPOINT=$(awk -F\" '/^s3_endpoint/{print $2}'  "environments/$CONFIG.tfvars")
 
 if [[ $CREATE_VPC = "false" ]]; then
   export PACKER_VPC_ID=$(awk -F\" '/^vpc_id/{print $2}'  "environments/$CONFIG.tfvars")
   export PACKER_SUBNET_ID=$(awk -F\" '/^subnet_id_1/{print $2}'  "environments/$CONFIG.tfvars")
 fi
 
-if [[ $ONLINE_PREDICTION = "true" ]]; then
+if [[ ! -z "ARTIFACTS_S3_BUCKET" ]]; then
+  envsubst  < "./ansible/requirements_s3.raw.yml" > "./ansible/requirements_s3.yml"
+  export REQUIREMENTS_FILE="./ansible/requirements_s3.yml"
+elif [[ $ONLINE_PREDICTION = "true" ]]; then
   export REQUIREMENTS_FILE="./ansible/requirements.yml"
 else
   export REQUIREMENTS_FILE="./ansible/requirements_wo_psql.yml"
