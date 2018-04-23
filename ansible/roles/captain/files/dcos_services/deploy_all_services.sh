@@ -40,6 +40,12 @@ bash setup_dcos_cli.sh
 # Wait for all nodes to become online
 until [[ $(dcos node | grep agent | wc -l) == $DCOS_NODES ]]; do sleep 30; done
 
+# set local universe repo
+if [[ "$USE_LOCAL_DCOS_UNIVERSE" = "true" ]]; then
+  dcos package repo remove Universe || true
+  dcos package repo add Universe http://$DCOS_MASTER:8082/repo
+fi
+
 # Retrieve slave node IPs
 echo "$(aws ec2 describe-instances --filters "Name=tag:Role,Values=slave" "Name=tag:environment,Values=$ENVIRONMENT" --query "Reservations[].Instances[].PrivateIpAddress" | jq -r '.[]')" > mongo_hosts.txt
 export DCOS_MASTER_PRIVATE_IP=$(aws ec2 describe-instances --filter Name=tag-key,Values=Name Name=tag-value,Values=$MASTER_INSTANCE_NAME --query "Reservations[*].Instances[*].PrivateIpAddress" --output=text)

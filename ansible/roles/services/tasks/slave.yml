@@ -1,4 +1,6 @@
 ---
+- import_tasks: slave_local_universe.yml
+  when: "use_local_dcos_universe == 'true'"
 
 - name: Install dcos-journalctl-filebeat service on slave
   copy:

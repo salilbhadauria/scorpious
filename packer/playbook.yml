@@ -84,6 +84,8 @@
 
 - hosts: slave
   become: yes
+  vars:
+    use_local_dcos_universe: "{% if artifacts_s3_bucket %}true{% endif %}"
   roles:
     - services
 
@@ -101,6 +103,7 @@
         version: 0.5.7
       - name: east-mongo
         version: 0.3.3
+    use_local_dcos_universe: "{% if artifacts_s3_bucket %}true{% endif %}"
   tasks:
     - include_role:
         name: postgresql
