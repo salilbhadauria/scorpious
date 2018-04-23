@@ -89,6 +89,13 @@
   roles:
     - services
 
+- hosts: public-slave
+  become: yes
+  vars:
+    use_local_dcos_universe: "{% if artifacts_s3_bucket %}true{% endif %}"
+  roles:
+    - services
+
 - hosts: captain
   become: yes
   vars:

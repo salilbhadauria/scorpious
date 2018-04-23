@@ -34,4 +34,4 @@
       user: root
       job: "ls -d1tr /var/log/mesos/archive/* | head -n -5 | xargs -d '\n' rm -rf  --"
       cron_file: mesos-cleaning-job
-    when: "'slave' in group_names"
+    when: "'slave' in group_names or 'public-slave' in group_names or 'gpu-slave' in group_names"

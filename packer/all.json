@@ -219,7 +219,7 @@
         "ssh_pty": "true",
         "tags": {
           "Name": "public-slave-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
-          "Role": "slave",
+          "Role": "public-slave",
           "BuildDate": "{{isotime}}",
           "BuildAuthor": "{{user `build_author`}}",
           "BuildUUID": "{{user `build_uuid`}}",
