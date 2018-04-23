@@ -6,19 +6,16 @@
     state: started
 
 - name: Copy service definitions
-  s3:
-    bucket: "{{ artifacts_s3_bucket }}"
-    object: /packages/dcos/{{ item }}.service
+  get_url:
+    url: "https://{{ s3_endpoint }}/{{ artifacts_s3_bucket }}/packages/dcos/{{ item }}.service"
     dest: /etc/systemd/system/{{ item }}.service
-    mode: get
   with_items:
     - dcos-local-universe-registry
     - dcos-local-universe-http
 
 - name: Fetch local-universe
-  s3:
-    bucket: "{{ artifacts_s3_bucket }}"
-    object: /packages/dcos/local-universe.tar.gz
+  get_url:
+    url: "https://{{ s3_endpoint }}/{{ artifacts_s3_bucket }}/packages/dcos/local-universe.tar.gz"
     dest: /tmp/local-universe.tar.gz
     mode: get
 

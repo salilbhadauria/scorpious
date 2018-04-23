@@ -22,7 +22,6 @@ export ENVIRONMENT=$(awk -F\" '/^environment/{print $2}'  "environments/$CONFIG.
 export OWNER=$(awk -F\" '/^tag_owner/{print $2}'  "environments/$CONFIG.tfvars")
 export MAIN_USER=$(awk -F\" '/^main_user/{print $2}'  "environments/$CONFIG.tfvars")
 export ONLINE_PREDICTION=$(awk -F\" '/^online_prediction/{print $2}'  "environments/$CONFIG.tfvars")
-export RTIFACTS_S3_BUCKET=$(awk -F\" '/^artifacts_s3_bucket/{print $2}'  "environments/$CONFIG.tfvars")
 export MACHINE_OS=$(awk -F\" '/^machine_os/{print $2}'  "environments/$CONFIG.tfvars")
 export CREATE_VPC=$(awk -F\" '/^create_vpc/{print $2}'  "environments/$CONFIG.tfvars")
 export ARTIFACTS_S3_BUCKET=$(awk -F\" '/^artifacts_s3_bucket/{print $2}'  "environments/$CONFIG.tfvars")
