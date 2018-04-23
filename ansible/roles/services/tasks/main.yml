@@ -4,5 +4,5 @@
   when: "'master' in group_names"
   tags: services_master
 - import_tasks: slave.yml
-  when: "'slave' in group_names"
+  when: "'slave' in group_names or 'public-slave' in group_names or 'gpu-slave' in group_names"
   tags: services_slave
