@@ -2,9 +2,6 @@
 
 cd /opt/dcos_services/
 
-# Stop mongo servers if running
-service mongod stop
-
 # Add S3 bucket encryption
 aws s3api put-bucket-encryption --bucket "${AWS_S3_BUCKET}" --server-side-encryption-configuration '{"Rules": [{"ApplyServerSideEncryptionByDefault": {"SSEAlgorithm": "AES256"}}]}'
 
@@ -44,18 +41,17 @@ bash setup_dcos_cli.sh
 until [[ $(dcos node | grep agent | wc -l) == $DCOS_NODES ]]; do sleep 30; done
 
 # Retrieve slave node IPs
-export MONGODB_HOSTS=$(aws ec2 describe-instances --filters "Name=tag:Role,Values=slave" "Name=tag:environment,Values=$ENVIRONMENT" --query "Reservations[].Instances[].PrivateIpAddress" --output text | sed -e 's/\s/,/g')
 echo "$(aws ec2 describe-instances --filters "Name=tag:Role,Values=slave" "Name=tag:environment,Values=$ENVIRONMENT" --query "Reservations[].Instances[].PrivateIpAddress" | jq -r '.[]')" > mongo_hosts.txt
 export DCOS_MASTER_PRIVATE_IP=$(aws ec2 describe-instances --filter Name=tag-key,Values=Name Name=tag-value,Values=$MASTER_INSTANCE_NAME --query "Reservations[*].Instances[*].PrivateIpAddress" --output=text)
 
 # Deploy frameworks from DC/OS universe + rabbitMQ
 dcos package install marathon-lb --yes
-dcos package install mongodb-replicaset --options=mongodb/options.json --yes
+bash deploy_catalog_service.sh percona-mongo mongodb/options.json mongodb/env_vars.sh
 dcos package install elastic --options=elasticsearch/options.json --yes
 dcos package install kibana --yes
 bash deploy_service.sh rabbitmq/marathon.json rabbitmq/env_vars.sh
 dcos package install --cli elastic --yes
-dcos package install --cli mongodb-replicaset --yes
+dcos package install --cli percona-mongo --yes
 
 # Initialization and migration
 
@@ -63,10 +59,25 @@ while $(dcos marathon deployment list | grep -q scale); do sleep 30; done
 
 sleep 60
 
-export PATH="/usr/local/lib/npm/bin:$PATH"
-
 bash elasticsearch/scripts/elasticsearch_init.sh
 bash rabbitmq/rabbitmq_init.sh
+
+until [[ $(dcos percona-mongo pod status | grep TASK_RUNNING | wc -l) == 4 ]]; do sleep 30; done
+
+sleep 30
+
+dcos percona-mongo user reload-system useradmin $MONGODB_USERADMIN_PASSWORD
+
+envsubst < mongodb/admin_user.json > admin_user.json
+dcos percona-mongo user add admin admin_user.json useradmin $MONGODB_USERADMIN_PASSWORD
+
+sleep 10
+
+envsubst < mongodb/app_user.json > app_user.json
+dcos percona-mongo user add admin app_user.json useradmin $MONGODB_USERADMIN_PASSWORD
+
+export PATH="/usr/local/lib/npm/bin:$PATH"
+
 bash mongodb/mongo_init.sh
 
 # Deploy custom services and frameworks

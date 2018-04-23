@@ -80,6 +80,24 @@ Before running any deployment scripts be sure to do the following:
       -e DOCKER_REGISTRY_AUTH_TOKEN=${DOCKER_REGISTRY_AUTH_TOKEN} \
       deepcortex/scorpius-deployment:TAG
     ```
+
+    If you are importing IAM resources rather than creating them you must supply the additional app access keys as well.
+
+    ```bash
+    docker run \
+      -v /path/to/environments:/opt/deploy/environments \
+      -e CONFIG=${CONFIG} \
+      -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
+      -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
+      -e CUSTOMER_KEY=${CUSTOMER_KEY} \
+      -e DCOS_USERNAME=${DCOS_USERNAME} \
+      -e DCOS_PASSWORD=${DCOS_PASSWORD} \
+      -e DOCKER_EMAIL_LOGIN=${DOCKER_EMAIL_LOGIN} \
+      -e DOCKER_REGISTRY_AUTH_TOKEN=${DOCKER_REGISTRY_AUTH_TOKEN} \
+      -e APPS_AWS_ACCESS_KEY_ID=${APPS_AWS_ACCESS_KEY_ID} \
+      -e APPS_AWS_SECRET_ACCESS_KEY=${APPS_AWS_SECRET_ACCESS_KEY} \
+      deepcortex/scorpius-deployment:TAG
+    ```
 8. To add endpoints.json for C2S:
     * Create a directory on your local machine called "extra_files" and place the endpoints.json file in that directory.
     * Add "-v /path/to/extra_files:/opt/deploy/ansible/roles/captain/files/extra_files" to the docker command.

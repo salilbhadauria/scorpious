@@ -6,6 +6,10 @@ rabbit_user: "rabbit_user"
 elastic_host: "coordinator.elastic.l4lb.thisdcos.directory"
 elastic_port: 9200
 elastic_ssl: 'false'
+mongodb_auth: 'true'
+mongodb_app_user: "app"
+mongodb_hosts: "mongo-rs-0-mongod.percona-mongo.autoip.dcos.thisdcos.directory,mongo-rs-1-mongod.percona-mongo.autoip.dcos.thisdcos.directory,mongo-rs-2-mongod.percona-mongo.autoip.dcos.thisdcos.directory"
+
 
 # Aries
 aries_http_search_user_name: "aries-search-user"
@@ -92,13 +96,11 @@ taurus_argo_rest_version: "v1"
 taurus_srv_instances: 1
 taurus_srv_cpus: 1
 taurus_srv_mem: 1024
-taurus_akka_persistence_mongodb_credential_database_url: "mongodb://mongodb.mongodb-replicaset.l4lb.thisdcos.directory:27017/taurus?replicaSet=rs"
 taurus_akka_persistence_mongodb_journal_database_name: "taurus"
 taurus_akka_persistence_mongodb_journal_collections_name_prefix: "akka-persistence-journal"
 taurus_akka_persistence_mongodb_journal_index_name: "akka-persistence-journal-index"
 
 # UM Service
-um_mongodb_uri: "mongodb://mongodb.mongodb-replicaset.l4lb.thisdcos.directory:27017/um-service?replicaSet=rs"
 um_service_url: "http://um-service.marathon.l4lb.thisdcos.directory"
 email_on: 'false'
 um_srv_instances: 1

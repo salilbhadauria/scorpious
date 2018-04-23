@@ -1,6 +1,6 @@
 #!/bin/bash
 export DOCKER_IMAGE_VERSION=${UM_DOCKER_IMAGE_VERSION}
-export MONGODB_URI=${UM_MONGODB_URI}
+export MONGODB_URI="mongodb://${MONGODB_APP_USER}:${MONGODB_APP_PASSWORD}@${MONGODB_HOSTS}:27017/um-service?replicaSet=rs&authSource=admin"
 export EMAIL_ON=${EMAIL_ON}
 export SRV_INSTANCES=${UM_SRV_INSTANCES}
 export SRV_CPUS=${UM_SRV_CPUS}

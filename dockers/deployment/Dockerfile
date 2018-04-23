@@ -10,6 +10,7 @@ RUN yum install -y epel-release && \
     yum install -y rsync && \
     yum install -y curl && \
     yum install -y python-pip && \
+    yum install -y gettext && \
     yum install -y wget
 
 RUN pip install awscli --upgrade
@@ -46,6 +47,9 @@ COPY scripts scripts
 COPY terraform terraform
 COPY build.sh build.sh
 COPY destroy.sh destroy.sh
+COPY import_iam.sh import_iam.sh
+COPY import_s3.sh import_s3.sh
+COPY import_vpc.sh import_vpc.sh
 COPY suspend_dc.sh suspend_dc.sh
 COPY resume_dc.sh resume_dc.sh
 COPY set_capacity.sh set_capacity.sh
@@ -57,6 +61,13 @@ ENV SALSA_VERSION=falcon
 
 RUN wget https://s3.amazonaws.com/artifacts.dev.deepcortex.ai/deployment_downloads/${SALSA_VERSION}/front-end.tar.gz -P ansible/roles/captain/files/dcos_services/
 # RUN wget https://s3.amazonaws.com/artifacts.dev.deepcortex.ai/deployment_downloads/Datasets.tar.gz -P ansible/roles/captain/files/dcos_services/
+
+# keeping here if we move to use baked packages
+#RUN mkdir -p ansible/galaxy && \
+#    wget https://github.com/torian/ansible-role-filebeat/archive/3.0.2.tar.gz -O ansible/galaxy/torian.filebeat.3.0.2.tar.gz && \
+#    wget https://github.com/geerlingguy/ansible-role-nodejs/archive/4.1.2.tar.gz -O ansible/galaxy/geerlingguy.nodejs.4.1.2.tar.gz && \
+#    wget https://github.com/geerlingguy/ansible-role-java/archive/1.7.4.tar.gz -O ansible/galaxy/geerlingguy.java.1.7.4.tar.gz && \
+#    wget https://github.com/geerlingguy/ansible-role-postgresql/archive/1.3.1.tar.gz -O ansible/galaxy/geerlingguy.postgresql.1.3.1.tar.gz
 
 ENTRYPOINT ["/bin/bash", "/opt/deploy/build.sh"]
 

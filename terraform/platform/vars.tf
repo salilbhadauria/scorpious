@@ -71,7 +71,7 @@ variable "baile_haproxy_docker_image_version" {}
 variable "cortex_docker_image_version" {}
 variable "logstash_docker_image_version" {}
 variable "orion_docker_image_version" {}
-variable "job_master_docker_image" {}
+variable "job_master_docker_image_version" {}
 variable "pegasus_docker_image_version" {}
 variable "rmq_docker_image_version" {}
 variable "taurus_docker_image_version" {}
