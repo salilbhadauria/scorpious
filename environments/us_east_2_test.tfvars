@@ -135,7 +135,7 @@ dcos_stack_bucket               = "falcon-deepcortex-autotest-dcos-backend"
 
 # the tags that will be applied to the infrastructure (environment, owner, usage)
 # environment and owner can only be a combined 17 characters
-environment                     = "autotest"
+environment                     = "autotst"
 tag_owner                       = "deepcortex"
 tag_usage                       = "autotest"
 
