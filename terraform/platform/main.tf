@@ -612,7 +612,7 @@ data "template_file" "gpu_slave_userdata" {
     ssh_keys_s3_bucket = "${var.ssh_keys_s3_bucket}"
     main_user = "${var.main_user}"
     s3_endpoint = "${var.s3_endpoint}"
-    artifacts_s3_bucket = ${var.artifacts_s3_bucket}
+    artifacts_s3_bucket = "${var.artifacts_s3_bucket}"
   }
 
   depends_on = [
