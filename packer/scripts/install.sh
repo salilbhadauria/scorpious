@@ -20,9 +20,9 @@ sudo rpm -ivh https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/pre-packages/httpd-2
 sudo aws s3 sync s3://${ARTIFACTS_S3_BUCKET}/packages/newrpm/ /var/www/html/
 sudo createrepo /var/www/html
 
-for i in `ll /etc/yum.repos.d/ | awk '{print $NF}' | grep .repo`
+for i in $(ll /etc/yum.repos.d/ | awk '{print $NF}' | grep .repo)
 do
-sudo mv $i $i-backup
+    sudo mv $i $i-backup
 done
 
 cat >/etc/yum.repos.d/local.repo<< EOF
@@ -39,16 +39,15 @@ sudo rm -rf /var/cache/yum
 
 sudo service httpd restart
 
-for i in `aws s3 ls s3://${ARTIFACTS_S3_BUCKET}/packages/pip/ | awk '{print $NF}'`
+for i in $(aws s3 ls s3://${ARTIFACTS_S3_BUCKET}/packages/pip/ | awk '{print $NF}')
 do
-pip install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/pip/$i
+    pip install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/pip/$i
 done
 
 
-for i in `aws s3 ls s3://${ARTIFACTS_S3_BUCKET}/packages/npm/ | awk '{print $NF}'`
-
+for i in $(aws s3 ls s3://${ARTIFACTS_S3_BUCKET}/packages/npm/ | awk '{print $NF}')
 do
-npm install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/npm/$i
+    npm install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/npm/$i
 done
 
 
