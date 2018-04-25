@@ -41,7 +41,7 @@ sudo service httpd restart
 
 for i in `aws s3 ls s3://${ARTIFACTS_S3_BUCKET}/packages/pip/ | awk '{print $NF}'`
 do
-pip install https://${S3_ENDPOINT}.com/${ARTIFACTS_S3_BUCKET}/packages/pip/$i
+pip install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/pip/$i
 done
 
 
