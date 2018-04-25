@@ -135,7 +135,7 @@ dcos_stack_bucket               = "falcon-deepcortex-autotest-dcos-backend"
 
 # the tags that will be applied to the infrastructure (environment, owner, usage)
 # environment and owner can only be a combined 17 characters
-environment                     = "autotest"
+environment                     = "autotst"
 tag_owner                       = "deepcortex"
 tag_usage                       = "autotest"
 
@@ -225,6 +225,9 @@ redshift_cluster_type = "single-node"
 redshift_number_of_nodes = 1
 redshift_encrypted = false
 redshift_skip_final_snapshot = false
+
+# Docker
+docker_registry_url = "https://index.docker.io/v1/"
 
 ### Application Versions
 
