@@ -64,6 +64,5 @@ runcmd:
   - hostnamectl set-hostname $newhostn
   - service rsyslog restart
   - service ntpd restart
-  - curl https://amazon-ssm-us-east-1.s3.amazonaws.com/latest/linux_amd64/amazon-ssm-agent.rpm -o amazon-ssm-agent.rpm
   - yum install -y amazon-ssm-agent.rpm
   - if [ ${download_ssh_keys} = true ]; then aws s3 cp s3://${ssh_keys_s3_bucket} - >> /home/${main_user}/.ssh/authorized_keys; fi
