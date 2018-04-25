@@ -611,6 +611,8 @@ data "template_file" "gpu_slave_userdata" {
     download_ssh_keys = "${var.download_ssh_keys}"
     ssh_keys_s3_bucket = "${var.ssh_keys_s3_bucket}"
     main_user = "${var.main_user}"
+    s3_endpoint = "${var.s3_endpoint}"
+    artifacts_s3_bucket = ${var.artifacts_s3_bucket}
   }
 
   depends_on = [

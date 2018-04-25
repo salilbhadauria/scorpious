@@ -2,6 +2,8 @@
 environment:
   environment: ${environment}
   aws_default_region: ${aws_region}
+  s3_endpoint: ${s3_endpoint}"
+  artifacts_s3_bucket: ${artifacts_s3_bucket}
 manage_resolv_conf: false
 preserve_hostname: true
 runcmd:

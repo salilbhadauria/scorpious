@@ -312,7 +312,12 @@
         "type": "shell",
         "script": "./packer/scripts/install.sh",
         "environment_vars": [
-          "MACHINE_OS={{user `machine_os`}}"
+          "MACHINE_OS={{user `machine_os`}}",
+          "S3_ENDPOINT={{user `s3_endpoint`}}",
+          "ARTIFACTS_S3_BUCKET={{user `artifacts_s3_bucket`}}",
+          "AWS_ACCESS_KEY_ID={{user `aws_access_key`}}",
+          "AWS_SECRET_ACCESS_KEY={{user `aws_secret_key`}}",
+          "AWS_DEFAULT_REGION={{user `aws_region`}}"
         ]
       },
       {

@@ -19,7 +19,7 @@ cd /opt/gpu_support
 
 # install cuda driver
 #curl -O https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-8.0.61-1.x86_64.rpm
-sudo rpm -i https://s3.amazonaws.com/falcon-scorpius-assets/packages/newrpm/cuda-repo-rhel7-8.0.61-1.x86_64.rpm
+sudo rpm -i https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/newrpm/cuda-repo-rhel7-8.0.61-1.x86_64.rpm
 
 
 sudo rpm -i cuda-repo-rhel7-8.0.61-1.x86_64.rpm
