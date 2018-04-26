@@ -11,7 +11,7 @@
 
 - name: Install percona-mongo
   yum:
-    name: https://www.percona.com/downloads/percona-server-mongodb-LATEST/percona-server-mongodb-3.4.14-2.12/binary/redhat/7/x86_64/Percona-Server-MongoDB-34-shell-3.4.14-2.12.el7.x86_64.rpm
+    name:https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/newrpm/Percona-Server-MongoDB-34-shell-3.4.14-2.12.el7.x86_64.rpm
     state: present
 
 - name: Download dcos cli

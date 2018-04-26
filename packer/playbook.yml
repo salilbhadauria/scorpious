@@ -103,13 +103,6 @@
     java_packages:
       - java-1.8.0-openjdk
     nodejs_install_npm_user: root
-    nodejs_npm_global_packages:
-      - name: mongodb
-        version: 2.2.33
-      - name: east
-        version: 0.5.7
-      - name: east-mongo
-        version: 0.3.3
     use_local_dcos_universe: "{% if artifacts_s3_bucket %}true{% endif %}"
   tasks:
     - include_role:
