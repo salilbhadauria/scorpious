@@ -936,6 +936,8 @@ data "template_file" "captain_userdata" {
     upload_datasets = "${var.upload_datasets}"
     download_from_s3 = "${var.download_from_s3}"
     online_prediction = "${var.online_prediction}"
+    s3_endpoint = "${var.s3_endpoint}"
+    artifacts_s3_bucket = "${var.artifacts_s3_bucket}"
   }
 
   depends_on = [
