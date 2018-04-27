@@ -1,13 +1,12 @@
 #!usr/bin/env bash
 
 #script executed on the master node
-#usage: sh populate-local-registry.sh s3_endpoint srtifact_s3_bucket registry_port
+#usage: sh populate-local-registry.sh artifact_s3_bucket registry_port
 
-S3_ENDPOINT=$1
-ARTIFACTS_S3_BUCKET=$2
-REGISTRY_PORT=$3
+ARTIFACTS_S3_BUCKET=$1
+REGISTRY_PORT=$2
 
-s3_URL=http://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/docker-tars/registry.tar
+s3_URL=${ARTIFACTS_S3_BUCKET}/packages/docker-tars
 
 if [ -z "$3" ]
 then
@@ -19,7 +18,7 @@ docker_tar_name_arr=($(aws s3 ls $s3_URL/ | awk {'print $4'}))
 for docker_tar_name in "${docker_tar_name_arr[@]}"
 do
 	echo "Fetching and deploying $docker_tar_name"
-	aws s3 cp $s3_URL/$docker_tar_name .
+	aws s3 cp s3://$s3_URL/$docker_tar_name .
 	image=`docker load --input $docker_tar_name | grep "Loaded image:" | awk {'print $3'}`
 	docker tag $image docker-registry.marathon.l4lb.thisdcos.directory:$REGISTRY_PORT/$image
 	docker push docker-registry.marathon.l4lb.thisdcos.directory:$REGISTRY_PORT/$image
