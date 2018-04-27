@@ -187,6 +187,8 @@ data "template_file" "bootstrap_userdata" {
     docker_registry_url = "${var.docker_registry_url}"
     docker_registry_auth_token = "${var.docker_registry_auth_token}"
     docker_email_login = "${var.docker_email_login}"
+    s3_endpoint = "${var.s3_endpoint}"
+    artifacts_s3_bucket = "${var.artifacts_s3_bucket}"
   }
 
   depends_on = [
