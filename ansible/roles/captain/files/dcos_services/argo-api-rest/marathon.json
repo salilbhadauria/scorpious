@@ -3,7 +3,7 @@
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "docker-registry.marathon.l4lb.thisdcos.directory:10005/argo-api-rest:${DOCKER_IMAGE_VERSION}",
+      "image": "docker-registry.marathon.l4lb.thisdcos.directory:10005/deepcortex/argo-api-rest:${DOCKER_IMAGE_VERSION}",
       "network": "BRIDGE",
       "portMappings": [
         { "hostPort": 0,

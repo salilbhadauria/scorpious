@@ -55,6 +55,9 @@ echo "$DCOS_MASTER_PRIVATE_IP master.mesos" >> /etc/hosts
 # Deploy docker registry
 bash deploy_service.sh docker-registry/marathon.json docker-registry/env_vars.sh
 
+# Wait for registry to be up and running
+while $(dcos marathon deployment list | grep -q scale); do sleep 60; done
+
 # Populate registry
 sudo ssh -i /opt/private_key -o StrictHostKeyChecking=no deployer@$DCOS_MASTER_PRIVATE_IP "sudo /bin/bash /opt/populate-local-registry.sh $ARTIFACTS_S3_BUCKET"
 

@@ -3,7 +3,7 @@
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "docker-registry.marathon.l4lb.thisdcos.directory:10005/logstash-rmq:${DOCKER_IMAGE_VERSION}",
+      "image": "docker-registry.marathon.l4lb.thisdcos.directory:10005/deepcortex/logstash-rmq:${DOCKER_IMAGE_VERSION}",
       "network": "HOST",
       "portMappings": [],
       "forcePullImage":true
