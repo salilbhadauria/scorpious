@@ -52,8 +52,6 @@ for i in $(aws s3 ls s3://${ARTIFACTS_S3_BUCKET}/packages/npm/ | awk '{print $NF
 #elif [ $MACHINE_OS = "rhel" ]; then
 #  sudo yum -q -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 #fi
-rpm -Uvh https://s3.amazonaws.com/falcon-scorpius-assets/packages/newrpm/epel-release-latest-7.noarch.rpm 
-sudo yum -q -y install deltarpm
 #sudo yum -q -y update
 
 # Needed only for LVM amis

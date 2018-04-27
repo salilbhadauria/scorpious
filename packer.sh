@@ -44,9 +44,9 @@ fi
 export DCOS_VERSION=$(awk -F\" '/^dcos_version/{print $2}'  "environments/$CONFIG.tfvars")
 
 if [[ -z "$DCOS_VERSION" ]];then
-  export DCOS_DOWNLOAD_URL="https://downloads.mesosphere.com/dcos-enterprise/stable/dcos_generate_config.ee.sh"
+  export DCOS_DOWNLOAD_URL="https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/artifacts/dcos_generate_config.ee.sh"
 else
-  export DCOS_DOWNLOAD_URL="https://downloads.mesosphere.com/dcos-enterprise/stable/$DCOS_VERSION/dcos_generate_config.ee.sh"
+  export DCOS_DOWNLOAD_URL="https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/artifacts/1.10.2/dcos_generate_config.ee.sh"
 fi
 
 export MASTER_XVDE_SIZE=$(awk -F\" '/^master_xvde_size/{print $2}'  "environments/$CONFIG.tfvars")
