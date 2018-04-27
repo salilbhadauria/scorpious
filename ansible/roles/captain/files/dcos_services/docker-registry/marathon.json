@@ -1,23 +1,41 @@
 {
-	"id": "/docker-registry",
-	"cmd": "(docker rm $(docker ps -aq -f status=exited) || echo 'Processing...') && docker load --input registry_2.tar && docker run -p $PORT0:5000 --restart=always --name registry registry:2",
-	"cpu": "1",
-	"mem": 1024,
-	"instances": 1,
-	"fetch": [{
-		"uri": "http://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/docker-tars/registry.tar",
-		"executable": false,
-		"extract": false,
-		"cache": false
-	}],
-	"portDefinitions": [
-    		{
-      			"protocol": "tcp",
-      			"port": 10005,
-      			"labels": {
-        			"VIP_0": "/docker-registry:10005"
-      			}
-    		}
-  	],
-  	"requirePorts": true
+  "id": "docker-registry",
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "registry:2",
+      "network": "BRIDGE",
+      "portMappings": [
+        { "hostPort": 0,
+          "containerPort": 5000,
+          "labels": {
+            "VIP_0": "/docker-registry:10005"
+          }
+        }
+      ]
+    }
+  },
+  "instances": 1,
+  "cpus": 1,
+  "mem": 1024,
+  "constraints": [
+      [
+        "cluster",
+        "UNLIKE",
+        "gpu"
+      ]
+    ],
+  "healthChecks": [{
+    "protocol": "HTTP",
+    "path": "/v2/_catalog",
+    "portIndex": 0,
+    "timeoutSeconds": 10,
+    "gracePeriodSeconds": 10,
+    "intervalSeconds": 2,
+    "maxConsecutiveFailures": 10
+  }],
+  "upgradeStrategy": {
+    "maximumOverCapacity": 1,
+    "minimumHealthCapacity": 0.5
+  }
 }

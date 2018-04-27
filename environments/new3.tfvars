@@ -239,7 +239,7 @@ aries_docker_image_version = "2.0.0"
 baile_docker_image_version = "2.0.0"
 cortex_docker_image_version = "2.0.0"
 orion_docker_image_version = "2.0.0"
-job_master_docker_image_version = "2.0.0"
+job_master_docker_image_version = "2.0.0-falcon"
 um_docker_image_version = "2.0.0"
 
 # supporting services

@@ -13,6 +13,8 @@ then
 	REGISTRY_PORT=10005
 fi
 
+until $(curl --output /dev/null --silent --head --fail http://docker-registry.marathon.l4lb.thisdcos.directory:10005/); do sleep 30; done
+
 docker_tar_name_arr=($(aws s3 ls $s3_URL/ | awk {'print $4'}))
 
 for docker_tar_name in "${docker_tar_name_arr[@]}"
