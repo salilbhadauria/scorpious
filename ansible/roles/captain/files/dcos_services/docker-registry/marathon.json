@@ -5,7 +5,7 @@
 	"mem": 1024,
 	"instances": 1,
 	"fetch": [{
-		"uri": "${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/docker-tars/registry.tar",
+		"uri": "http://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/docker-tars/registry.tar",
 		"executable": false,
 		"extract": false,
 		"cache": false

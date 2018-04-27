@@ -81,6 +81,7 @@
   roles:
     - services
     - deployer
+    - populate-docker-registry
 
 - hosts: slave
   become: yes
@@ -120,19 +121,6 @@
     - deployer
     - nodejs
     - java
-    
-- hosts: master
-  become: yes
-  vars:
-    - artifacts_s3_bucket: "{{ artifacts_s3_bucket }}"
-    - s3_endpoint: "{{ s3_endpoint }}"
-  roles:
-    - populate-docker-registry
-    
-- hosts: captain
-  become: yes
-  roles:
-    - install-dcos-services
 
 - hosts: gpu-slave
   become: yes

@@ -7,7 +7,7 @@ S3_ENDPOINT=$1
 ARTIFACTS_S3_BUCKET=$2
 REGISTRY_PORT=$3
 
-s3_URL=${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/docker-tars/registry.tar
+s3_URL=http://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/docker-tars/registry.tar
 
 if [ -z "$3" ]
 then
@@ -15,7 +15,7 @@ then
 fi
 
 docker_tar_name_arr=($(aws s3 ls $s3_URL/ | awk {'print $4'}))
- 
+
 for docker_tar_name in "${docker_tar_name_arr[@]}"
 do
 	echo "Fetching and deploying $docker_tar_name"
