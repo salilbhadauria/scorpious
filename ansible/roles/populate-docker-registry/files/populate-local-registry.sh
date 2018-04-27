@@ -21,7 +21,7 @@ for docker_tar_name in "${docker_tar_name_arr[@]}"
 do
 	echo "Fetching and deploying $docker_tar_name"
 	aws s3 cp s3://$s3_URL/$docker_tar_name .
-	image=`docker load --input $docker_tar_name | grep "Loaded image:" | awk {'print $3'}`
+	image=$(docker load --input $docker_tar_name | grep "Loaded image:" | awk {'print $3'})
 	docker tag $image docker-registry.marathon.l4lb.thisdcos.directory:$REGISTRY_PORT/$image
 	docker push docker-registry.marathon.l4lb.thisdcos.directory:$REGISTRY_PORT/$image
 	docker rmi $image docker-registry.marathon.l4lb.thisdcos.directory:$REGISTRY_PORT/$image
