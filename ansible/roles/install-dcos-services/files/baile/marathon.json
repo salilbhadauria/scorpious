@@ -1,0 +1,78 @@
+{
+  "id": "baile",
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "docker-registry.marathon.l4lb.thisdcos.directory:10005/baile:${DOCKER_IMAGE_VERSION}",
+      "network": "BRIDGE",
+      "portMappings": [
+        { "hostPort": 0,
+          "containerPort": 9000,
+          "labels": {
+            "VIP_0": "/baile:9000"
+          }
+        }
+      ],
+      "forcePullImage": true
+    }
+  },
+  "env": {
+    "AWS_S3_BUCKET": "${AWS_S3_BUCKET}",
+    "AWS_REGION": "${AWS_REGION}",
+    "REDSHIFT_HOST": "${REDSHIFT_HOST}",
+    "REDSHIFT_USER": "${REDSHIFT_USER}",
+    "REDSHIFT_PASSWORD": "${REDSHIFT_PASSWORD}",
+    "MONGODB_HOSTS": "${MONGODB_HOSTS}",
+    "MONGODB_AUTH": "${MONGODB_AUTH}",
+    "MONGODB_USER": "${MONGODB_USER}",
+    "MONGODB_PASSWORD": "${MONGODB_PASSWORD}",
+    "AWS_ACCESS_KEY_ID": "${AWS_ACCESS_KEY_ID}",
+    "AWS_SECRET_ACCESS_KEY": "${AWS_SECRET_ACCESS_KEY}",
+    "UM_SERVICE_URL": "${UM_SERVICE_URL}",
+    "CORTEX_HOST": "${CORTEX_HOST}",
+    "CORTEX_PORT": "${CORTEX_PORT}",
+    "CORTEX_REST_VERSION": "${CORTEX_REST_VERSION}",
+    "CORTEX_SEARCH_USER": "${CORTEX_SEARCH_USER}",
+    "CORTEX_SEARCH_PASSWORD": "${CORTEX_SEARCH_PASSWORD}",
+    "ARIES_SEARCH_USER": "${ARIES_SEARCH_USER}",
+    "ARIES_SEARCH_PASSWORD": "${ARIES_SEARCH_PASSWORD}",
+    "ARIES_HOST": "${ARIES_HOST}",
+    "ARIES_PORT": "${ARIES_PORT}",
+    "ARIES_REST_VERSION": "${ARIES_REST_VERSION}",
+    "ARGO_HTTP_USER": "${ARGO_HTTP_USER}",
+    "ARGO_HTTP_PASSWORD": "${ARGO_HTTP_PASSWORD}",
+    "ARGO_HOST": "${ARGO_HOST}",
+    "ARGO_PORT": "${ARGO_PORT}",
+    "ARGO_REST_VERSION": "${ARGO_REST_VERSION}",
+    "ONLINE_PREDICTION_USERNAME": "${ONLINE_PREDICTION_USERNAME}",
+    "ONLINE_PREDICTION_PASSWORD": "${ONLINE_PREDICTION_PASSWORD}",
+    "ONLINE_PREDICTION_STREAM_ID": "${ONLINE_PREDICTION_STREAM_ID}"
+  },
+  "instances": ${SRV_INSTANCES},
+  "cpus": ${SRV_CPUS},
+  "mem": ${SRV_MEM},
+  "constraints": [
+      [
+        "hostname",
+        "UNIQUE"
+      ],
+      [
+        "cluster",
+        "UNLIKE",
+        "gpu"
+      ]
+    ],
+  "healthChecks": [{
+    "protocol": "HTTP",
+    "path": "/api/insilico/v1.4/healthCheck",
+    "portIndex": 0,
+    "timeoutSeconds": 10,
+    "gracePeriodSeconds": 30,
+    "intervalSeconds": 2,
+    "maxConsecutiveFailures": 10
+  }],
+  "upgradeStrategy": {
+    "maximumOverCapacity": 1,
+    "minimumHealthCapacity": 0.5
+  }
+}

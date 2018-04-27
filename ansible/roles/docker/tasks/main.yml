@@ -51,3 +51,6 @@
     name: "{{main_user}}"
     groups: docker
     append: yes
+    
+- name: configure docker to recognise local registry
+  command: bash configure-docker-deamon.sh

@@ -1,0 +1,5 @@
+---
+
+- name: Populate the docker registry
+  command: bash populate-local-registry.sh {{ artifacts_s3_bucket }} {{ s3_endpoint }}
+  

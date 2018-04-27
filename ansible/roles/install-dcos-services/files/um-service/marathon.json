@@ -1,0 +1,51 @@
+{
+  "id": "um-service",
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "docker-registry.marathon.l4lb.thisdcos.directory:10005/um-service:${DOCKER_IMAGE_VERSION}",
+      "network": "BRIDGE",
+      "portMappings": [
+        { "hostPort": 0,
+          "containerPort": 9000,
+          "servicePort": 10000,
+          "labels": {
+            "VIP_0": "/um-service:80"
+          }
+        }
+      ],
+      "forcePullImage": true
+    }
+  },
+  "env": {
+    "MONGODB_URI": "${MONGODB_URI}",
+    "EMAIL_ON": "${EMAIL_ON}"
+  },
+  "instances": ${SRV_INSTANCES},
+  "cpus": ${SRV_CPUS},
+  "mem": ${SRV_MEM},
+  "constraints": [
+      [
+        "hostname",
+        "UNIQUE"
+      ],
+      [
+        "cluster",
+        "UNLIKE",
+        "gpu"
+      ]
+    ],
+  "healthChecks": [{
+    "protocol": "HTTP",
+    "path": "/api/um-service/v0.1/healthCheck",
+    "portIndex": 0,
+    "timeoutSeconds": 10,
+    "gracePeriodSeconds": 10,
+    "intervalSeconds": 2,
+    "maxConsecutiveFailures": 10
+  }],
+  "upgradeStrategy": {
+    "maximumOverCapacity": 1,
+    "minimumHealthCapacity": 0.5
+  }
+}

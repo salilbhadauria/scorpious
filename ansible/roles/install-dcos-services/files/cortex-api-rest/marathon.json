@@ -1,0 +1,59 @@
+{
+  "id": "cortex-api-rest",
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "docker-registry.marathon.l4lb.thisdcos.directory:10005/cortex-api-rest:${DOCKER_IMAGE_VERSION}",
+      "network": "BRIDGE",
+      "portMappings": [
+        { "hostPort": 0,
+          "containerPort": 9000,
+          "labels": {
+            "VIP_0": "/cortex-api-rest:9000"
+          }
+        }
+      ],
+      "forcePullImage": true
+    }
+  },
+  "env": {
+    "HTTP_SEARCH_USER_NAME": "${HTTP_SEARCH_USER_NAME}",
+    "HTTP_SEARCH_USER_PASSWORD": "${HTTP_SEARCH_USER_PASSWORD}",
+    "RABBIT_HOSTS": "${RABBIT_HOSTS}",
+    "RABBIT_USERNAME": "${RABBIT_USERNAME}",
+    "RABBIT_PASSWORD": "${RABBIT_PASSWORD}",
+    "ARIES_REST_URL": "${ARIES_REST_URL}",
+    "ARIES_REST_VERSION": "${ARIES_REST_VERSION}",
+    "ARIES_SEARCH_USER_NAME": "${ARIES_SEARCH_USER_NAME}",
+    "ARIES_SEARCH_USER_PASSWORD": "${ARIES_SEARCH_USER_PASSWORD}",
+    "ARIES_COMMAND_USER_NAME": "${ARIES_COMMAND_USER_NAME}",
+    "ARIES_COMMAND_USER_PASSWORD": "${ARIES_COMMAND_USER_PASSWORD}"
+  },
+  "instances": ${SRV_INSTANCES},
+  "cpus": ${SRV_CPUS},
+  "mem": ${SRV_MEM},
+  "constraints": [
+      [
+        "hostname",
+        "UNIQUE"
+      ],
+      [
+        "cluster",
+        "UNLIKE",
+        "gpu"
+      ]
+    ],
+  "healthChecks": [{
+    "protocol": "HTTP",
+    "path": "/v1/health",
+    "portIndex": 0,
+    "timeoutSeconds": 10,
+    "gracePeriodSeconds": 10,
+    "intervalSeconds": 2,
+    "maxConsecutiveFailures": 10
+  }],
+  "upgradeStrategy": {
+    "maximumOverCapacity": 1,
+    "minimumHealthCapacity": 0.5
+  }
+}

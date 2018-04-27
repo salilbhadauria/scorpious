@@ -1,0 +1,5 @@
+---
+
+- name: Install dcos services
+  command: bash deploy_all_services.sh
+  

@@ -1,0 +1,55 @@
+{
+  "id": "argo-api-rest",
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "docker-registry.marathon.l4lb.thisdcos.directory:10005/argo-api-rest:${DOCKER_IMAGE_VERSION}",
+      "network": "BRIDGE",
+      "portMappings": [
+        { "hostPort": 0,
+          "containerPort": 9000,
+          "labels": {
+            "VIP_0": "/argo-api-rest:9000"
+          }
+        }
+      ],
+      "forcePullImage": true
+    }
+  },
+  "env": {
+    "HTTP_AUTH_USER_NAME": "${HTTP_AUTH_USER_NAME}",
+    "HTTP_AUTH_USER_PASSWORD": "${HTTP_AUTH_USER_PASSWORD}",
+    "ELASTIC_HOST": "${ELASTIC_HOST}",
+    "ELASTIC_PORT": "${ELASTIC_PORT}",
+    "ELASTIC_SSL": "${ELASTIC_SSL}",
+    "ELASTIC_CONFIG_SETTING_INDEX": "${ELASTIC_CONFIG_SETTING_INDEX}",
+    "ELASTIC_SSL": "${ELASTIC_SSL}"
+  },
+  "instances": ${SRV_INSTANCES},
+  "cpus": ${SRV_CPUS},
+  "mem": ${SRV_MEM},
+  "constraints": [
+      [
+        "hostname",
+        "UNIQUE"
+      ],
+      [
+        "cluster",
+        "UNLIKE",
+        "gpu"
+      ]
+    ],
+  "healthChecks": [{
+    "protocol": "HTTP",
+    "path": "/v1/health",
+    "portIndex": 0,
+    "timeoutSeconds": 10,
+    "gracePeriodSeconds": 10,
+    "intervalSeconds": 2,
+    "maxConsecutiveFailures": 10
+  }],
+  "upgradeStrategy": {
+    "maximumOverCapacity": 1,
+    "minimumHealthCapacity": 0.5
+  }
+}

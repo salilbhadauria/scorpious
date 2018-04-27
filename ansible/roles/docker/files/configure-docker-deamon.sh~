@@ -10,11 +10,11 @@ then
 	REGISTRY_PORT=10005
 fi
 
-sudo tee /etc/docker/daemon.json << EOF
+tee /etc/docker/daemon.json << EOF
 {
   "insecure-registries" : ["docker-registry.marathon.l4lb.thisdcos.directory:$REGISTRY_PORT"]
 }
 EOF
 
-sudo systemctl daemon-reload
-sudo systemctl restart docker
+systemctl daemon-reload
+systemctl restart docker
