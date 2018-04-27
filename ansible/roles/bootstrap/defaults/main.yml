@@ -1,7 +1,7 @@
 ---
 path_bootstrap: /var/lib/dcos-bootstrap
 
-dcos_download_url: https://downloads.dcos.io/dcos/stable/dcos_generate_config.sh
+dcos_download_url: https://${{S3_ENDPOINT}}/${{ARTIFACTS_S3_BUCKET}}/packages/artifacts/dcos_generate_config.sh
 
 resolvers:
   - 8.8.4.4
