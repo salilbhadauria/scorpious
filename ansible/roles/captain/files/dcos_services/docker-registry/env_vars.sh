@@ -1,5 +1,1 @@
 #!usr/bin/env bash
-
-export S3_ENDPOINT=${S3_ENDPOINT}
-export ARTIFACTS_S3_BUCKET=${ARTIFACTS_S3_BUCKET}
-export PORT0="\$PORT0"
