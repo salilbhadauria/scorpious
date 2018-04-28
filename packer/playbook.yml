@@ -100,9 +100,6 @@
   become: yes
   vars:
     online_prediction: "{{online_prediction}}"
-    java_packages:
-      - java-1.8.0-openjdk
-    nodejs_install_npm_user: root
     use_local_dcos_universe: "{% if artifacts_s3_bucket %}true{% endif %}"
   tasks:
     - include_role:
