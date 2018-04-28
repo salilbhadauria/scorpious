@@ -10,10 +10,10 @@ s3_URL=${ARTIFACTS_S3_BUCKET}/packages/docker-tars
 
 if [ -z "$3" ]
 then
-	REGISTRY_PORT=10005
+	REGISTRY_PORT=80
 fi
 
-until $(curl --output /dev/null --silent --head --fail http://docker-registry.marathon.l4lb.thisdcos.directory:10005/); do sleep 30; done
+until $(curl --output /dev/null --silent --head --fail http://docker-registry.marathon.l4lb.thisdcos.directory:80/); do sleep 30; done
 
 docker_tar_name_arr=($(aws s3 ls $s3_URL/ | awk {'print $4'}))
 

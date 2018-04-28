@@ -259,6 +259,6 @@ pegasus_docker_image_version = "0.0.1-SNAPSHOT-27-g665fc42"
 taurus_docker_image_version = "0.0.0-708ad97786f2e03aba793b467aebf85415c9af21"
 
 # Number of total DC/OS services
-dcos_services = "15"
+dcos_services = "16"
 
 ######################################################

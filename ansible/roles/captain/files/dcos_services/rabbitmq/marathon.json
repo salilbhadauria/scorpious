@@ -22,7 +22,7 @@
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "docker-registry.marathon.l4lb.thisdcos.directory:10005/deepcortex/dcos-rabbitmq:${DOCKER_IMAGE_VERSION}",
+      "image": "docker-registry.marathon.l4lb.thisdcos.directory:80/deepcortex/dcos-rabbitmq:${DOCKER_IMAGE_VERSION}",
       "forcePullImage": true,
       "network": "USER",
       "portMappings": [

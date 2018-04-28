@@ -9,7 +9,7 @@
         { "hostPort": 0,
           "containerPort": 5000,
           "labels": {
-            "VIP_0": "/docker-registry:10005"
+            "VIP_0": "/docker-registry:80"
           }
         }
       ]
