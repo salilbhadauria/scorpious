@@ -108,6 +108,8 @@ run_packer() {
       -var "git_commit=$GIT_COMMIT" \
       -var "build_uuid=$UUID" \
       -var "image_name=$IMAGE" \
+      -var "aws_access_key=$AWS_ACCESS_KEY_ID" \
+      -var "aws_secret_key=$AWS_SECRET_ACCESS_KEY" \
       "$@" ${opts} packer/all.json
   set +x
 }

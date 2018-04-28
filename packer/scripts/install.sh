@@ -12,7 +12,7 @@ sudo rpm --force --nodeps  -Uvh  https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/p
 sudo rpm --force --nodeps  -Uvh  https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/pre-packages/deltarpm-3.6-3.el7.x86_64.rpm
 sudo rpm --force --nodeps  -Uvh  https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/pre-packages/python-deltarpm-3.6-3.el7.x86_64.rpm
 
-sudo aws s3 sync s3://${ARTIFACTS_S3_BUCKET}/packages/newrpm/ /opt/
+sudo AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION aws s3 sync s3://${ARTIFACTS_S3_BUCKET}/packages/newrpm/ /opt/
 sudo createrepo /opt/
 
 for i in $(ll /etc/yum.repos.d/ | awk '{print $NF}' | grep .repo)
