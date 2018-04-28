@@ -8,7 +8,7 @@ REGISTRY_PORT=$2
 
 s3_URL=${ARTIFACTS_S3_BUCKET}/packages/docker-tars
 
-if [ -z "$3" ]
+if [ -z "$2" ]
 then
 	REGISTRY_PORT=80
 fi
