@@ -51,3 +51,9 @@
     name: "{{main_user}}"
     groups: docker
     append: yes
+
+- name: Transfer docker config script
+  copy: src=configure-docker-deamon.sh dest=/opt mode=0644
+
+- name: Execute docker config script
+  command: bash /opt/configure-docker-deamon.sh

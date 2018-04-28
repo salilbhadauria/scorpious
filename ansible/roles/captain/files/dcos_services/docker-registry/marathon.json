@@ -1,34 +1,24 @@
 {
-  "id": "um-service",
+  "id": "docker-registry",
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "docker-registry.marathon.l4lb.thisdcos.directory:80/deepcortex/um-service:${DOCKER_IMAGE_VERSION}",
+      "image": "registry:2",
       "network": "BRIDGE",
       "portMappings": [
         { "hostPort": 0,
-          "containerPort": 9000,
-          "servicePort": 10000,
+          "containerPort": 5000,
           "labels": {
-            "VIP_0": "/um-service:80"
+            "VIP_0": "/docker-registry:80"
           }
         }
-      ],
-      "forcePullImage": true
+      ]
     }
   },
-  "env": {
-    "MONGODB_URI": "${MONGODB_URI}",
-    "EMAIL_ON": "${EMAIL_ON}"
-  },
-  "instances": ${SRV_INSTANCES},
-  "cpus": ${SRV_CPUS},
-  "mem": ${SRV_MEM},
+  "instances": 1,
+  "cpus": 1,
+  "mem": 1024,
   "constraints": [
-      [
-        "hostname",
-        "UNIQUE"
-      ],
       [
         "cluster",
         "UNLIKE",
@@ -37,7 +27,7 @@
     ],
   "healthChecks": [{
     "protocol": "HTTP",
-    "path": "/api/um-service/v0.1/healthCheck",
+    "path": "/v2/_catalog",
     "portIndex": 0,
     "timeoutSeconds": 10,
     "gracePeriodSeconds": 10,

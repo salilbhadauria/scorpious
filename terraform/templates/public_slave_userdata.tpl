@@ -29,3 +29,5 @@ runcmd:
   - cd /tmp; bash dcos_install.sh slave_public
   - service ntpd restart
   - systemctl start amazon-ssm-agent
+  - cd /tmp; curl -O http://${s3_endpoint}/${artifacts_s3_bucket}/packages/docker-tars/marathon-lb.tar
+  - docker load < /tmp/marathon-lb.tar

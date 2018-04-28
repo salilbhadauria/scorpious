@@ -29,3 +29,5 @@ runcmd:
   - cd /tmp; bash dcos_install.sh slave
   - service ntpd restart
   - systemctl start amazon-ssm-agent
+  - cd /tmp; curl -O http://${s3_endpoint}/${artifacts_s3_bucket}/packages/docker-tars/registry.tar
+  - docker load < /tmp/registry.tar

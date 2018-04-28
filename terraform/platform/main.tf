@@ -187,6 +187,8 @@ data "template_file" "bootstrap_userdata" {
     docker_registry_url = "${var.docker_registry_url}"
     docker_registry_auth_token = "${var.docker_registry_auth_token}"
     docker_email_login = "${var.docker_email_login}"
+    s3_endpoint = "${var.s3_endpoint}"
+    artifacts_s3_bucket = "${var.artifacts_s3_bucket}"
   }
 
   depends_on = [
@@ -568,6 +570,8 @@ data "template_file" "slave_userdata" {
     download_ssh_keys = "${var.download_ssh_keys}"
     ssh_keys_s3_bucket = "${var.ssh_keys_s3_bucket}"
     main_user = "${var.main_user}"
+    s3_endpoint = "${var.s3_endpoint}"
+    artifacts_s3_bucket = "${var.artifacts_s3_bucket}"
   }
 
   depends_on = [
@@ -816,6 +820,8 @@ data "template_file" "public_slave_userdata" {
     download_ssh_keys = "${var.download_ssh_keys}"
     ssh_keys_s3_bucket = "${var.ssh_keys_s3_bucket}"
     main_user = "${var.main_user}"
+    s3_endpoint = "${var.s3_endpoint}"
+    artifacts_s3_bucket = "${var.artifacts_s3_bucket}"
   }
 
   depends_on = [
@@ -934,6 +940,8 @@ data "template_file" "captain_userdata" {
     upload_datasets = "${var.upload_datasets}"
     download_from_s3 = "${var.download_from_s3}"
     online_prediction = "${var.online_prediction}"
+    s3_endpoint = "${var.s3_endpoint}"
+    artifacts_s3_bucket = "${var.artifacts_s3_bucket}"
   }
 
   depends_on = [

@@ -459,10 +459,12 @@ resource "aws_iam_policy" "artifacts_bucket" {
   "Statement": [
     {
       "Action": [
-        "s3:GetObject"
+        "s3:GetObject",
+        "s3:ListBuckets"
       ],
       "Effect": "Allow",
       "Resource": [
+        "arn:${var.arn}:s3:::${var.artifacts_s3_bucket}/",
         "arn:${var.arn}:s3:::${var.artifacts_s3_bucket}/*"
       ]
     }
