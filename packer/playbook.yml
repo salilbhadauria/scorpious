@@ -108,7 +108,6 @@
   roles:
     - captain
     - deployer
-    - nodejs
     - java
 
 - hosts: gpu-slave
