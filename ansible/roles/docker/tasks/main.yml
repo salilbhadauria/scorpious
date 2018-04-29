@@ -13,11 +13,11 @@
     name: overlay
     state: present
 
-- name: enable docker yum repo
-  template:
-    src: docker.repo.j2
-    dest: /etc/yum.repos.d/docker.repo
-    mode: 0644
+#- name: enable docker yum repo
+#  template:
+#    src: docker.repo.j2
+#    dest: /etc/yum.repos.d/docker.repo
+#    mode: 0644
 
 - name: create docker systemd directory
   file:
