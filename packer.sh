@@ -29,7 +29,7 @@ export S3_ENDPOINT=$(awk -F\" '/^s3_endpoint/{print $2}'  "environments/$CONFIG.
 
 if [[ $CREATE_VPC = "false" ]]; then
   export PACKER_VPC_ID=$(awk -F\" '/^vpc_id/{print $2}'  "environments/$CONFIG.tfvars")
-  export PACKER_SUBNET_ID=$(awk -F\" '/^subnet_id_1/{print $2}'  "environments/$CONFIG.tfvars")
+  export PACKER_SUBNET_ID=$(awk -F\" '/^subnet_id_0/{print $2}'  "environments/$CONFIG.tfvars")
 fi
 
 if [[ ! -z "ARTIFACTS_S3_BUCKET" ]]; then

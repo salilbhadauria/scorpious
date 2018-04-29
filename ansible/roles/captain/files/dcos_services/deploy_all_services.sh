@@ -71,7 +71,7 @@ dcos package install --cli percona-mongo --yes
 
 while $(dcos marathon deployment list | grep -q scale); do sleep 30; done
 
-sleep 60
+sleep 180
 
 bash elasticsearch/scripts/elasticsearch_init.sh
 bash rabbitmq/rabbitmq_init.sh

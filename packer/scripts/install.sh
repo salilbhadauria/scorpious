@@ -1,9 +1,9 @@
 #!/bin/bash
 set -eux
 
-sudo rpm --force --nodeps  -Uvh  https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/rpm/python2-pip-8.1.2-6.el7.noarch.rpm
-sudo rpm --force --nodeps  -Uvh  https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/rpm/nodejs-6.14.1-1nodesource.x86_64.rpm
-sudo rpm --force --nodeps  -Uvh  https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/rpm/nodesource-release-el7-1.noarch.rpm
+sudo rpm --force --nodeps  -Uvh  https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/pre-packages/python2-pip-8.1.2-6.el7.noarch.rpm
+sudo rpm --force --nodeps  -Uvh  https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/pre-packages/nodejs-6.14.1-1nodesource.x86_64.rpm
+sudo rpm --force --nodeps  -Uvh  https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/pre-packages/nodesource-release-el7-1.noarch.rpm
 sudo pip install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/pip/awscli-1.15.4.tar.gz
 sudo pip install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/pip/setuptools-39.1.0.zip
 
@@ -13,7 +13,7 @@ sudo rpm --force --nodeps  -Uvh  https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/p
 sudo rpm --force --nodeps  -Uvh  https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/pre-packages/deltarpm-3.6-3.el7.x86_64.rpm
 sudo rpm --force --nodeps  -Uvh  https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/pre-packages/python-deltarpm-3.6-3.el7.x86_64.rpm
 
-sudo AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION aws s3 sync s3://${ARTIFACTS_S3_BUCKET}/packages/newrpm/ /opt/
+sudo AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION aws s3 sync s3://${ARTIFACTS_S3_BUCKET}/packages/rpm/ /opt/
 sudo createrepo /opt/
 
 for i in $(ll /etc/yum.repos.d/ | awk '{print $NF}' | grep .repo)

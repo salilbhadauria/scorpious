@@ -1,5 +1,13 @@
 Automated deployment for DeepCortex platform
 
+If you plan to import existing IAM resources, you must have all IAM resources created ahead of time. Check the iam_resources.txt file to see what needs to be created.
+
+If you will be running this in an environment without an internet connection you must place all necessary artifacts on S3 ahead of time and list this bucket in the main config file as the artifacts_s3_bucket.
+
+The ami to be used for deployment should be RHEL based and have the following packages installed:
+
+curl, tar, xz, zip, unzip, ipset, ntp, cloud-init, kernel-devel, gettext
+
 Running the entire deployment
 
 1) Create a folder called environments on your computer.
@@ -8,7 +16,9 @@ Running the entire deployment
 
 3) Fill in the necessary variables in deepcortex-settings.tfvars.
 
-4) Export the following variables in your terminal. The this can be done by filling in envar.sh with the proper values and then sourcing this file from your terminal (source envar.sh).
+4) Have your custom endpoints.json file ready that will be used by the AWS CLI.
+
+5) Export the following variables in your terminal. The this can be done by filling in envar.sh with the proper values and then sourcing this file from your terminal (source envar.sh).
 
 CONFIG - the name of the config file to use (should be deepcortex-settings).
 AWS_ACCESS_KEY_ID - the access key that should be used to deploy in AWS.
@@ -21,14 +31,15 @@ DOCKER_EMAIL_LOGIN - the login email for docker
 APPS_AWS_ACCESS_KEY_ID - the access key for the app user.
 APPS_AWS_SECRET_ACCESS_KEY - the secret key for the app user.
 
-5) Run "docker login -u falcondeepcortex" and enter the password: 6apXmvzquPKGDwzx.
+6) Run "docker login -u falcondeepcortex" and enter the password: 6apXmvzquPKGDwzx.
 
-6) Run "docker pull deepcortex/scorpius-deployment:falcon".
+7) Run "docker pull deepcortex/scorpius-deployment:falcon".
 
-7) Run the following docker command replacing /path/to/environments with the path to the environments directory you created in step 1.
+8) Run the following docker command replacing /path/to/environments with the path to the environments directory you created in step 1.
 
 docker run \
   -v </path/to/environments>:/opt/deploy/environments \
+  -v </path/to/endpoints.json>:/opt/deploy/ansible/common/files/extra_files \
   -e CONFIG=${CONFIG} \
   -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
   -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
@@ -41,7 +52,7 @@ docker run \
   -e DOCKER_REGISTRY_AUTH_TOKEN=${DOCKER_REGISTRY_AUTH_TOKEN} \
   deepcortex/scorpius-deployment:falcon
 
-8) Once your terminal output states the deployment is complete you can access the DeepCortex UI.
+9) Once your terminal output states the deployment is complete you can access the DeepCortex UI.
 
 ### Additional Docker Commands ###
 
@@ -67,6 +78,7 @@ Building specific stacks (e.g to build just the DC/OS cluster supply "platform" 
 
 docker run \
   -v ~/Desktop/environments:/opt/deploy/environments \
+  -v </path/to/endpoints.json>:/opt/deploy/ansible/common/files/extra_files \
   -e CONFIG=${CONFIG} \
   -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} \
   -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \
