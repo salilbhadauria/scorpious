@@ -42,7 +42,7 @@ for i in $(aws s3 ls s3://${ARTIFACTS_S3_BUCKET}/packages/pip/ | awk '{print $NF
 
 for i in $(aws s3 ls s3://${ARTIFACTS_S3_BUCKET}/packages/npm/ | awk '{print $NF}' | grep ".gz")
  do
-    sudo  npm install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/npm/$i
+    sudo npm install -g https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/npm/$i
  done
 
 
