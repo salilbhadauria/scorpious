@@ -99,6 +99,8 @@
 - hosts: captain
   become: yes
   vars:
+    java_packages:
+      - java-1.8.0-openjdk
     online_prediction: "{{online_prediction}}"
     use_local_dcos_universe: "{% if artifacts_s3_bucket %}true{% endif %}"
   tasks:
