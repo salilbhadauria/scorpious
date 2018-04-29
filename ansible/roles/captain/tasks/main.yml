@@ -42,14 +42,6 @@
    group: root
    mode: 0644
 
-- name: Check wheter endpoints file exists
-  local_action: stat path={{ role_path }}/files/extra_files/endpoints.json
-  register: endpoints
-
-- name: Copy endpoints file if it exists
-  copy: src=files/extra_files/endpoints.json dest=/usr/lib/python2.7/site-packages/botocore/data/
-  when: endpoints.stat.exists
-
 - name: Generate /etc/environment file
   template:
     src: etc/environment.j2

@@ -107,7 +107,7 @@ deploy_cidr                     = "205.251.70.6/32"
 # ssh keys added to allow other users to ssh to those machines with a key other than the one provided above
 
 # set to true if you'd like to add additional keys
-download_ssh_keys               = "true"
+download_ssh_keys               = "false"
 
 # specify the location of the file in S3 that contains the list of public keys you'd like to add to each machine
 # leave blank if the above value is set to false
@@ -166,7 +166,7 @@ baile_access                    = "private"
 online_prediction               = "false"
 
 # true or false for downloading latest files (frontend and mstar) from S3 rather than using files in the docker container
-download_from_s3                = "true"
+download_from_s3                = "false"
 
 # Platform
 s3_prefix                       = "deepcortex"
@@ -239,7 +239,7 @@ aries_docker_image_version = "2.0.0"
 baile_docker_image_version = "2.0.0"
 cortex_docker_image_version = "2.0.0"
 orion_docker_image_version = "2.0.0"
-job_master_docker_image_version = "2.0.0"
+job_master_docker_image_version = "2.0.0-falcon"
 um_docker_image_version = "2.0.0"
 
 # supporting services
@@ -259,6 +259,6 @@ pegasus_docker_image_version = "0.0.1-SNAPSHOT-27-g665fc42"
 taurus_docker_image_version = "0.0.0-708ad97786f2e03aba793b467aebf85415c9af21"
 
 # Number of total DC/OS services
-dcos_services = "15"
+dcos_services = "16"
 
 ######################################################

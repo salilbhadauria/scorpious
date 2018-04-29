@@ -7,6 +7,11 @@ variable "ssh_keys_s3_bucket" { default = "" }
 variable "main_user" {}
 variable "only_public" { default = true }
 variable "create_vpc" { default = true }
+variable "ssh_public_key" {}
+variable "bastion_ami_id" {}
+variable "access_cidr" {}
+variable "s3_endpoint" {}
+variable "artifacts_s3_bucket" {}
 
 variable "tf_bucket" {}
 
@@ -70,7 +75,3 @@ locals {
         },
     ]
 }
-
-variable "ssh_public_key" {}
-variable "bastion_ami_id" {}
-variable "access_cidr" {}
