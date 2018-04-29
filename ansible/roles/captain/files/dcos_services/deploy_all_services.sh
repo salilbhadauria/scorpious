@@ -52,6 +52,12 @@ export DCOS_MASTER_PRIVATE_IP=$(aws ec2 describe-instances --filter Name=tag-key
 
 echo "$DCOS_MASTER_PRIVATE_IP master.mesos" >> /etc/hosts
 
+# Deploy docker registry
+bash deploy_service.sh docker-registry/marathon.json docker-registry/env_vars.sh
+
+# Populate registry
+sudo ssh -i /opt/private_key -o StrictHostKeyChecking=no deployer@$DCOS_MASTER_PRIVATE_IP "sudo /bin/bash /opt/populate-local-registry.sh $ARTIFACTS_S3_BUCKET"
+
 # Deploy frameworks from DC/OS universe + rabbitMQ
 dcos package install marathon-lb --yes
 bash deploy_catalog_service.sh percona-mongo mongodb/options.json mongodb/env_vars.sh

@@ -32,5 +32,6 @@ runcmd:
   - if [ ${download_ssh_keys} = true ]; then aws s3 cp s3://${ssh_keys_s3_bucket} - >> /home/${main_user}/.ssh/authorized_keys; fi
   - cd /var/lib/dcos-bootstrap; bash dcos_generate_config.sh --set-superuser-password ${dcos_password}
   - cd /var/lib/dcos-bootstrap; bash dcos_generate_config.sh
-  - docker pull httpd:2.4.23
+  - cd /tmp; curl -O http://${s3_endpoint}/${artifacts_s3_bucket}/packages/docker-tars/httpd.tar
+  - docker load < /tmp/httpd.tar
   - docker run -d --name dcos_haproxy -p 8080:80 -v /var/lib/dcos-bootstrap/genconf/serve:/usr/local/apache2/htdocs/:ro httpd:2.4.23
