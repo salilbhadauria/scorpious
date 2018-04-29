@@ -4,7 +4,7 @@
 export PIP_FORMAT=legacy
 
 if ! pip list | grep -w es2csv &>/dev/null; then
-  pip install es2csv
+  sudo pip install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/pip/es2csv-5.5.2.tar.gz
 fi
 
 day() {

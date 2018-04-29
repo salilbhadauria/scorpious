@@ -11,9 +11,6 @@ common_default_packages:
   - ntp
   - cloud-init
 
-common_pip_packages:
-  - boto3
-  - awscli
 
 common_removed_packages:
   - chrony
