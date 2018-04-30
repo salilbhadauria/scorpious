@@ -228,6 +228,7 @@ redshift_cluster_type = "single-node"
 redshift_number_of_nodes = 1
 redshift_encrypted = false
 redshift_skip_final_snapshot = false
+redshift_enhanced_vpc_routing = false
 
 # Docker
 docker_registry_url = "https://index.docker.io/v1/"

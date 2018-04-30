@@ -3,6 +3,7 @@
 variable "aws_region" {}
 variable "tf_bucket" {}
 variable "account" {}
+variable "redshift_enhanced_vpc_routing" { default=true }
 
 # Redshift vars
 variable "environment" {}
