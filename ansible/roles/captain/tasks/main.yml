@@ -11,7 +11,7 @@
 
 - name: Install percona-mongo
   yum:
-    name: "https://{{ s3_endpoint }}/{{ artifacts_s3_bucket }}/packages/newrpm/Percona-Server-MongoDB-34-shell-3.4.14-2.12.el7.x86_64.rpm"
+    name: "https://{{ s3_endpoint }}/{{ artifacts_s3_bucket }}/packages/rpm/Percona-Server-MongoDB-34-shell-3.4.14-2.12.el7.x86_64.rpm"
     state: present
 
 - name: Download dcos cli

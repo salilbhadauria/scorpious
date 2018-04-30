@@ -7,6 +7,9 @@
       tags:
         - always
   vars:
+    filebeat_use_repo: false
+    filebeat_package_baseurl: "https://{{ s3_endpoint }}/{{ artifacts_s3_bucket }}/packages/rpm"
+    filebeat_version: 5.0.0
     filebeat_config_registry_file: /var/lib/filebeat/registry
     filebeat_config_prospectors: |
       filebeat:

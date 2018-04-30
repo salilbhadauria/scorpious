@@ -118,7 +118,7 @@ ssh_keys_s3_bucket              = "artifacts.dev.deepcortex.ai/configurations/ss
 ############### S3 Artifacts Access ##################
 
 # set to the bucket containing S3 artifacts or leave blank to pull packages from the internet
-artifacts_s3_bucket             = "falcon-scorpius-assets"
+artifacts_s3_bucket             = "falcon-scorpius-assets-mda-prep"
 
 ######################################################
 
@@ -153,8 +153,6 @@ upload_datasets                 = "false"
 ############################################################################################################
 
 ################# Default Settings ###################
-
-### DO NOT CHANGE ANYTHING BELOW THIS LINE
 
 # version of DC/OS
 dcos_version                    = "1.10.2"

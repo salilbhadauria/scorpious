@@ -17,7 +17,7 @@ vpc_cidr                        = ""
 
 ######################################################
 
-#################### VPC Type ########################
+######################### VPC ########################
 
 # the following variables determine if you will create a VPC during deployemnt or use an already exisitng VPC
 # if you choose to use an already existing VPC fill out the "Existing VPC Section"
