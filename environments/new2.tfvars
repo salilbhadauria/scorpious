@@ -164,7 +164,7 @@ baile_access                    = "private"
 online_prediction               = "false"
 
 # true or false for downloading latest files (frontend and mstar) from S3 rather than using files in the docker container
-download_from_s3                = "false"
+download_from_s3                = "true"
 
 # Platform
 s3_prefix                       = "deepcortex"
@@ -234,7 +234,7 @@ docker_registry_url = "https://index.docker.io/v1/"
 # core applications
 
 aries_docker_image_version = "2.0.0"
-baile_docker_image_version = "2.0.0"
+baile_docker_image_version = "2.0.1"
 cortex_docker_image_version = "2.0.0"
 orion_docker_image_version = "2.0.0"
 job_master_docker_image_version = "2.0.0-falcon"
