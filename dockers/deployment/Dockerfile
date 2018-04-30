@@ -35,6 +35,11 @@ RUN wget --quiet https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/t
     rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
     echo "terraform version - $(terraform --version)"
 
+RUN wget --quiet https://releases.hashicorp.com/terraform-provider-aws/1.8.0/terraform-provider-aws_1.8.0_linux_amd64.zip && \
+    unzip terraform-provider-aws_1.8.0_linux_amd64.zip -d ~/.terraform.d/plugins && \
+    rm -f terraform-provider-aws_1.8.0_linux_amd64.zip && \
+    echo "terraform aws provider verions 1.8.0 installed"
+
 RUN curl https://downloads.dcos.io/binaries/cli/linux/x86-64/dcos-1.10/dcos -o dcos && \
     mv dcos /usr/local/bin && \
     chmod +x /usr/local/bin/dcos
