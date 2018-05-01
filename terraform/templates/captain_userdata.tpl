@@ -48,9 +48,9 @@ environment:
   taurus_docker_image_version: ${taurus_docker_image_version}
   um_docker_image_version: ${um_docker_image_version}
   salsa_version: ${salsa_version}
-  upload_datasets: ${upload_datasets}
-  download_from_s3: ${download_from_s3}
-  online_prediction: ${online_prediction}
+  upload_datasets: "${upload_datasets}"
+  download_from_s3: "${download_from_s3}"
+  online_prediction: "${online_prediction}"
   s3_endpoint: ${s3_endpoint}
   artifacts_s3_bucket: ${artifacts_s3_bucket}
 manage_resolv_conf: false
