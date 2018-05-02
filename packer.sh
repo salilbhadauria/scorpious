@@ -26,6 +26,7 @@ export MACHINE_OS=$(awk -F\" '/^machine_os/{print $2}'  "environments/$CONFIG.tf
 export CREATE_VPC=$(awk -F\" '/^create_vpc/{print $2}'  "environments/$CONFIG.tfvars")
 export ARTIFACTS_S3_BUCKET=$(awk -F\" '/^artifacts_s3_bucket/{print $2}'  "environments/$CONFIG.tfvars")
 export S3_ENDPOINT=$(awk -F\" '/^s3_endpoint/{print $2}'  "environments/$CONFIG.tfvars")
+export PACKER_SECURITY_GROUP=$(awk -F\" '/^packer_security_group/{print $2}'  "environments/$CONFIG.tfvars")
 
 if [[ $CREATE_VPC = "false" ]]; then
   export PACKER_VPC_ID=$(awk -F\" '/^vpc_id/{print $2}'  "environments/$CONFIG.tfvars")

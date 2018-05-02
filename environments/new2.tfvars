@@ -78,6 +78,9 @@ s3_endpoint                     = "s3.amazonaws.com"
 
 ################## AMIs and Users ####################
 
+# the security group that gives access to packer machines from the machine running the deployment
+packer_security_group           = ""
+
 # the ami id for the machine that will serve as the bastion (should be CentOS/RHEL or Amazon Linux)
 bastion_ami_id                  = "ami-26ebbc5c"
 

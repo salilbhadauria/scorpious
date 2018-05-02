@@ -39,7 +39,8 @@
       "gpu_slave_xvdh_size":   "{{ env `GPU_SLAVE_XVDH_SIZE`}}",
 
       "s3_endpoint": "{{ env `S3_ENDPOINT`}}",
-      "artifacts_s3_bucket": "{{ env `ARTIFACTS_S3_BUCKET`}}"
+      "artifacts_s3_bucket": "{{ env `ARTIFACTS_S3_BUCKET`}}",
+      "aws_security_group_id": "{{ env `PACKER_SECURITY_GROUP`}}"
     },
     "builders": [
       {
@@ -55,6 +56,7 @@
         "ssh_username":  "{{user `ssh_username`}}",
         "ami_name":      "bootstrap-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
         "ami_regions":   "{{user `aws_build_regions`}}",
+        "security_group_id": "{{user `aws_security_group_id`}}",
         "launch_block_device_mappings": [
           {
             "device_name": "/dev/sda1",
@@ -86,6 +88,7 @@
         "ssh_username":  "{{user `ssh_username`}}",
         "ami_name":      "master-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
         "ami_regions":   "{{user `aws_build_regions`}}",
+        "security_group_id": "{{user `aws_security_group_id`}}",
         "launch_block_device_mappings": [
           {
             "device_name": "/dev/sda1",
@@ -135,6 +138,7 @@
         "ssh_username":  "{{user `ssh_username`}}",
         "ami_name":      "slave-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
         "ami_regions":   "{{user `aws_build_regions`}}",
+        "security_group_id": "{{user `aws_security_group_id`}}",
         "launch_block_device_mappings": [
           {
             "device_name": "/dev/sda1",
@@ -190,6 +194,7 @@
         "ssh_username":  "{{user `ssh_username`}}",
         "ami_name":      "public-slave-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
         "ami_regions":   "{{user `aws_build_regions`}}",
+        "security_group_id": "{{user `aws_security_group_id`}}",
         "launch_block_device_mappings": [
           {
             "device_name": "/dev/sda1",
@@ -239,6 +244,7 @@
         "ssh_username":  "{{user `ssh_username`}}",
         "ami_name":      "gpu-slave-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
         "ami_regions":   "{{user `aws_build_regions`}}",
+        "security_group_id": "{{user `aws_security_group_id`}}",
         "launch_block_device_mappings": [
           {
             "device_name": "/dev/sda1",
@@ -288,7 +294,7 @@
         "ssh_username":  "{{user `ssh_username`}}",
         "ami_name":      "captain-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
         "ami_regions":   "{{user `aws_build_regions`}}",
-        "security_group_id": ""
+        "security_group_id": "{{user `aws_security_group_id`}}",
         "launch_block_device_mappings": [
           {
             "device_name": "/dev/sda1",
