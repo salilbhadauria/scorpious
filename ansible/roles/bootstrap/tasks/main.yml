@@ -6,25 +6,25 @@
     name: docker-python
     state: absent
 
-- name: Ensure epel-release is installed
-  yum:
-    name: epel-release
-    state: present
+#- name: Ensure epel-release is installed
+#  yum:
+#    name: epel-release
+#    state: present
 
 - name: Ensure pip is installed
   yum:
     name: python-pip
     state: present
 
-- name: Ensure required PyPi packages are installed
-  pip: name={{ item }} state=present
-  with_items:
-    - docker-py==1.10.6
+#- name: Ensure required PyPi packages are installed
+#  pip: name={{ item }} state=present
+#  with_items:
+#    - docker-py==1.10.6
 
-- name: stop web server
-  docker_container:
-    name: dcos_nginx
-    state: absent
+#- name: stop web server
+#  docker_container:
+#    name: dcos_nginx
+#    state: absent
 
 - name: clear install directory
   file: path={{ path_bootstrap }} state=absent

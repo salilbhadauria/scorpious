@@ -8,7 +8,7 @@ VPC_CIDR=${vpc_cidr}
 PACKAGES="jq"
 
 yum install -y $${PACKAGES}
-yum install -y amazon-ssm-agent.rpm
+yum install -y amazon-ssm-agent
 
 META_DATA="http://169.254.169.254/latest"
 INSTANCE_ID=$(curl -s $${META_DATA}/meta-data/instance-id)
@@ -16,7 +16,7 @@ IPADDR=$(curl -s $${META_DATA}/meta-data/local-ipv4)
 REGION=$(curl -s $${META_DATA}/dynamic/instance-identity/document | jq -r ".region")
 AZ=$(curl -s $${META_DATA}/meta-data/placement/availability-zone)
 
-# Build two arrays for AZs and RTs and 
+# Build two arrays for AZs and RTs and
 # Backup current value of IFS and define a new attribute
 # separator to be used by read
 BIFS=$${IFS}

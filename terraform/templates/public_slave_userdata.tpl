@@ -15,7 +15,7 @@ runcmd:
   - hostnamectl set-hostname $newhostn
   - service rsyslog restart
   - service ntpd restart
-  - yum install -y amazon-ssm-agent.rpm
+  - yum install -y amazon-ssm-agent
   - if [ ${download_ssh_keys} = true ]; then aws s3 cp s3://${ssh_keys_s3_bucket} - >> /home/${main_user}/.ssh/authorized_keys; fi
   - sysctl net.bridge.bridge-nf-call-iptables=1
   - sysctl net.bridge.bridge-nf-call-ip6tables=1

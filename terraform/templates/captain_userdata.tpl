@@ -48,9 +48,9 @@ environment:
   taurus_docker_image_version: ${taurus_docker_image_version}
   um_docker_image_version: ${um_docker_image_version}
   salsa_version: ${salsa_version}
-  upload_datasets: ${upload_datasets}
-  download_from_s3: ${download_from_s3}
-  online_prediction: ${online_prediction}
+  upload_datasets: "${upload_datasets}"
+  download_from_s3: "${download_from_s3}"
+  online_prediction: "${online_prediction}"
   s3_endpoint: ${s3_endpoint}
   artifacts_s3_bucket: ${artifacts_s3_bucket}
 manage_resolv_conf: false
@@ -66,5 +66,5 @@ runcmd:
   - hostnamectl set-hostname $newhostn
   - service rsyslog restart
   - service ntpd restart
-  - yum install -y amazon-ssm-agent.rpm
+  - yum install -y amazon-ssm-agent
   - if [ ${download_ssh_keys} = true ]; then aws s3 cp s3://${ssh_keys_s3_bucket} - >> /home/${main_user}/.ssh/authorized_keys; fi

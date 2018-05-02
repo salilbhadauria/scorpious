@@ -1,11 +1,22 @@
 #!/bin/bash
 set -eux
 
+curl -O https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/pre-packages/awscli-bundle.zip
+unzip awscli-bundle.zip
+sudo ./awscli-bundle/install -i /usr/local/aws -b /bin/aws
+
 sudo rpm --force --nodeps  -Uvh  https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/pre-packages/python2-pip-8.1.2-6.el7.noarch.rpm
 sudo rpm --force --nodeps  -Uvh  https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/pre-packages/nodejs-6.14.1-1nodesource.x86_64.rpm
 sudo rpm --force --nodeps  -Uvh  https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/pre-packages/nodesource-release-el7-1.noarch.rpm
-sudo pip install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/pip/awscli-1.15.4.tar.gz
+
 sudo pip install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/pip/setuptools-39.1.0.zip
+
+sudo pip install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/pip/urllib3-1.22-py2.py3-none-any.whl
+sudo pip install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/pip/python_utils-2.3.0-py2.py3-none-any.whl
+sudo pip install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/pip/progressbar2-3.36.0-py2.py3-none-any.whl
+sudo pip install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/pip/backports.csv-1.0.5-py2.py3-none-any.whl
+sudo pip install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/pip/elasticsearch-5.5.2-py2.py3-none-any.whl
+sudo pip install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/pip/es2csv-5.5.2-py27-none-any.whl
 
 #######INSTALLING  HTTPD AND CREATE REPO PACKAGES FOR MAKING LOCAL YUM SERVER #################################################################
 
@@ -30,21 +41,17 @@ gpgcheck=0
 EOF'
 
 sudo yum-config-manager --enable local
+sudo yum-config-manager --disable rhui-REGION-client-config-server-7
+sudo yum-config-manager --disable rhui-REGION-rhel-server-releases
+sudo yum-config-manager --disable rhui-REGION-rhel-server-rh-common
+sudo yum-config-manager --disable nodesource
 sudo yum clean all
 sudo rm -rf /var/cache/yum
 
+curl -O https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/npm/node_modules.tar.gz
+sudo tar -xvf node_modules.tar.gz -C /usr/lib/
 
-for i in $(aws s3 ls s3://${ARTIFACTS_S3_BUCKET}/packages/pip/ | awk '{print $NF}' | grep ".gz")
- do
-  sudo pip install https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/pip/$i
- done
-
-
-for i in $(aws s3 ls s3://${ARTIFACTS_S3_BUCKET}/packages/npm/ | awk '{print $NF}' | grep ".gz")
- do
-    sudo npm install -g https://${S3_ENDPOINT}/${ARTIFACTS_S3_BUCKET}/packages/npm/$i
- done
-
+sudo ln -s /usr/lib/node_modules/east/bin/east /usr/bin/east
 
 #if [ $MACHINE_OS = "centos" ]; then
 #  sudo rpm --import http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-7

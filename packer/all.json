@@ -288,6 +288,7 @@
         "ssh_username":  "{{user `ssh_username`}}",
         "ami_name":      "captain-{{user `owner`}}-{{user `environment`}}-{{timestamp}}",
         "ami_regions":   "{{user `aws_build_regions`}}",
+        "security_group_id": ""
         "launch_block_device_mappings": [
           {
             "device_name": "/dev/sda1",
