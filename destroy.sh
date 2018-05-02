@@ -140,6 +140,7 @@ fi
 for i in "${STACKS[@]}"; do
   echo "Destroying $i"
   sh terraform.sh init $CONFIG "$i"
+  sh terraform.sh plan $CONFIG "$i"
   sh terraform.sh destroy $CONFIG "$i"
 done
 
