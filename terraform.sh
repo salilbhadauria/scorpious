@@ -100,8 +100,7 @@ output)
   ;;
 state-rm)
   [ -e "$WORKDIR" ] || {
-      echo >&2 "Please run init first"
-      exit 1
+      ./terraform.sh init $CONFIG $STACK
   }
   echo "Refreshing modules and resources"
   cd "$WORKDIR"
@@ -131,9 +130,9 @@ plan-destroy)
 destroy)
   echo "Destroying $DEBUG_OUT"
   [ -e "$WORKDIR" ] || {
-      echo >&2 "Please run init first"
-      exit 1
+      ./terraform.sh init $CONFIG $STACK
   }
+  cp "$ENVIRONMENT_ROOT/$CONFIG.tfvars" "$WORKDIR/terraform.tfvars"
   cd "$WORKDIR"
   terraform destroy "$@"
   ;;

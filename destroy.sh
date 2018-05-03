@@ -115,21 +115,18 @@ if [[ -z $STACKS ]]; then
   if [[ "$CREATE_IAM" = "true" ]];then
     STACKS+=("iam")
   else
-    ./terraform.sh init $CONFIG iam
     ./terraform.sh state-rm $CONFIG iam ""
   fi
 
   if [[ "$DELETE_S3" = "true" ]];then
     STACKS+=("s3_buckets")
   else
-    ./terraform.sh init $CONFIG s3_buckets
     ./terraform.sh state-rm $CONFIG s3_buckets ""
   fi
 
   if [[ "$CREATE_VPC" = "true" ]];then
     STACKS+=("vpc")
   else
-    ./terraform.sh init $CONFIG vpc
     ./terraform.sh state-rm $CONFIG vpc ""
   fi
 fi
@@ -142,8 +139,6 @@ fi
 
 for i in "${STACKS[@]}"; do
   echo "Destroying $i"
-  sh terraform.sh init $CONFIG "$i"
-  sh terraform.sh plan $CONFIG "$i"
   sh terraform.sh destroy $CONFIG "$i"
 done
 
