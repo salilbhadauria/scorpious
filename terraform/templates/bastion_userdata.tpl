@@ -3,6 +3,11 @@ environment:
   environment: ${environment}
   aws_default_region: ${aws_region}
 runcmd:
+  - sudo yum-config-manager --disable rhui-REGION-client-config-server-7 || true
+  - sudo yum-config-manager --disable rhui-REGION-rhel-server-releases || true
+  - sudo yum-config-manager --disable rhui-REGION-rhel-server-rh-common || true
+  - sudo yum-config-manager --disable nodesource || true
+
   - yum install -y amazon-ssm-agent
 
   - curl -O https://${s3_endpoint}/${artifacts_s3_bucket}/pre-packages/awscli-bundle.zip

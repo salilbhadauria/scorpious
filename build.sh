@@ -75,7 +75,8 @@ fi
 
 if [[ "$CREATE_IAM" != "true" ]];then
   if [[ -z "$APPS_AWS_ACCESS_KEY_ID" ]] || [[ -z "$APPS_AWS_SECRET_ACCESS_KEY" ]];then
-    echo "App user access keys are not set"
+    echo "App user AWS access keys are not set and must be set if you are importing IAM resources."
+    echo "Set APPS_AWS_ACCESS_KEY_ID and APPS_AWS_SECRET_ACCESS_KEY and run the build again."
     exit 1
   fi
 

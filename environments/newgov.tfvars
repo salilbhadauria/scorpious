@@ -79,10 +79,10 @@ s3_endpoint                     = "s3-us-gov-west-1.amazonaws.com"
 ################## AMIs and Users ####################
 
 # the ami id for the machine that will serve as the bastion (should be CentOS/RHEL or Amazon Linux)
-bastion_ami_id                  = "ami-0466e865"
+bastion_ami_id                  = "ami-309c0b51"
 
 # the ami id for the machines that will run DeepCortex (should be a CentOS/RHEL 7.4 ami)
-packer_base_ami                 = "ami-0466e865"
+packer_base_ami                 = "ami-309c0b51"
 
 # operating system for DeepCortex machines (centos or rhel)
 machine_os                      = "rhel"
@@ -153,9 +153,6 @@ upload_datasets                 = "false"
 ############################################################################################################
 
 ################# Default Settings ###################
-
-# aws provider version
-aws_provider_version            = "~> 1.15"
 
 # version of DC/OS
 dcos_version                    = "1.10.2"
@@ -238,10 +235,10 @@ docker_registry_url = "https://index.docker.io/v1/"
 # core applications
 
 aries_docker_image_version = "2.0.0"
-baile_docker_image_version = "2.0.0"
+baile_docker_image_version = "2.0.1"
 cortex_docker_image_version = "2.0.0"
 orion_docker_image_version = "2.0.0"
-job_master_docker_image_version = "2.0.0-falcon"
+job_master_docker_image_version = "2.0.1-falcon"
 um_docker_image_version = "2.0.0"
 
 # supporting services

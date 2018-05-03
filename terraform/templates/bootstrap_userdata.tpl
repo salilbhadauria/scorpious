@@ -15,7 +15,12 @@ runcmd:
   - hostnamectl set-hostname $newhostn
   - service rsyslog restart
   - service ntpd restart
+  - sudo yum-config-manager --disable rhui-REGION-client-config-server-7 || true
+  - sudo yum-config-manager --disable rhui-REGION-rhel-server-releases || true
+  - sudo yum-config-manager --disable rhui-REGION-rhel-server-rh-common || true
+  - sudo yum-config-manager --disable nodesource || true
   - yum install -y amazon-ssm-agent
+  - systemctl start amazon-ssm-agent
   - sed -i "s/cluster_name_via_user_data/${cluster_name}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
   - sed -i "s/s3_bucket_via_user_data/${s3_bucket}/g" /var/lib/dcos-bootstrap/genconf/config.yaml
   - sed -i "s/s3_prefix_via_user_data/${s3_prefix}/g" /var/lib/dcos-bootstrap/genconf/config.yaml

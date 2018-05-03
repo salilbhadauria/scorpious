@@ -6,7 +6,7 @@ If you will be running this in an environment without an internet connection you
 
 The ami to be used for deployment should be RHEL based and have the following packages installed:
 
-curl, tar, xz, zip, unzip, ipset, ntp, cloud-init, kernel-devel, gettext
+curl tar xz zip unzip ipset ntp cloud-init kernel-devel-$(uname -r) gettext
 
 Running the entire deployment
 

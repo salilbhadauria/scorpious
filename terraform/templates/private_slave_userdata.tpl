@@ -15,7 +15,12 @@ runcmd:
   - hostnamectl set-hostname $newhostn
   - service rsyslog restart
   - service ntpd restart
+  - sudo yum-config-manager --disable rhui-REGION-client-config-server-7 || true
+  - sudo yum-config-manager --disable rhui-REGION-rhel-server-releases || true
+  - sudo yum-config-manager --disable rhui-REGION-rhel-server-rh-common || true
+  - sudo yum-config-manager --disable nodesource || true
   - yum install -y amazon-ssm-agent.rpm
+  - systemctl start amazon-ssm-agent
   - if [ ${download_ssh_keys} = true ]; then aws s3 cp s3://${ssh_keys_s3_bucket} - >> /home/${main_user}/.ssh/authorized_keys; fi
   - sysctl net.bridge.bridge-nf-call-iptables=1
   - sysctl net.bridge.bridge-nf-call-ip6tables=1
@@ -30,3 +35,9 @@ runcmd:
   - systemctl start amazon-ssm-agent
   - cd /tmp; curl -O http://${s3_endpoint}/${artifacts_s3_bucket}/packages/docker-tars/registry.tar
   - docker load < /tmp/registry.tar
+  - cd /tmp; curl -O http://${s3_endpoint}/${artifacts_s3_bucket}/packages/docker-tars/percona-server-mongodb.tar
+  - docker load < /tmp/percona-server-mongodb.tar
+  - cd /tmp; curl -O http://${s3_endpoint}/${artifacts_s3_bucket}/packages/docker-tars/percona-backup.tar
+  - docker load < /tmp/percona-backup.tar
+  - cd /tmp; curl -O http://${s3_endpoint}/${artifacts_s3_bucket}/packages/docker-tars/debian.tar
+  - docker load < /tmp/debian.tar

@@ -29,7 +29,7 @@ create_vpc                      = "false"
 # should be false if using an existing VPC since that currently only supports public subnets
 only_public                      = "true"
 
-# the ami id for the machine that will serve as the bastion (should be specific for NAT instances)
+# the ami id for the machine that will serve as the NAT (should be specific for NAT instances)
 # only use if only_public is false
 nat_ami_id                      = ""
 
@@ -81,16 +81,16 @@ s3_endpoint                     = ""
 # the security group that gives access to packer machines from the machine running the deployment
 packer_security_group           = ""
 
-# the ami id for the machine that will serve as the bastion (can be CentOS or Amazon Linux)
+# the ami id for the machine that will serve as the bastion (can be RHEL, CentOS or Amazon Linux)
 bastion_ami_id                  = ""
 
-# the ami id for the machines that will run DeepCortex (should be a CentOS 7.4 ami)
+# the ami id for the machines that will run DeepCortex (should be a RHEL, CentOS 7.4 ami)
 packer_base_ami                 = ""
 
 # operating system for DeepCortex machines (centos or rhel)
 machine_os                      = ""
 
-# the default ssh user for the above ami (likely centos for CentOS machines, but could be ec2-user so make sure to check the ami you are using)
+# the default ssh user for the above ami (likely centos for CentOS machines or ec2-user for RHEL so make sure to check the ami you are using)
 main_user                       = ""
 
 # the public ssh key for the key you would like to use to access the DC/OS machines used for DeepCortex
