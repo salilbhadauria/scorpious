@@ -50,8 +50,8 @@
     "maxConsecutiveFailures": 10
   }],
   "upgradeStrategy": {
-    "maximumOverCapacity": 1,
-    "minimumHealthCapacity": 0.5
+    "maximumOverCapacity": 0,
+    "minimumHealthCapacity": 0
   },
   "unreachableStrategy": "disabled"
 }

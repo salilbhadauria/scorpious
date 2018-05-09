@@ -35,6 +35,15 @@ APPS_AWS_SECRET_ACCESS_KEY - the secret key for the app user.
 
 7) Run "docker pull deepcortex/scorpius-deployment:falcon".
 
+=== Additional steps for getting the installer in C2S ===
+7.a) In an environment with access to the internet run #7 above
+7.b) Export the image "docker save --output <localpath>/falconv2.0.0.tar deepcortex/scorpius-deployment:falconv2.0.0"
+7.c) Copy the falconv2.0.0.tar image to S3 along with all the other falcon assets.
+7.d) Once files are transferred
+7.e) Copy the tar file from S3 to the deployment machine.
+7.f) Load it into docker "docker load -i <localpath>/falconv2.0.0.tar"
+========================================================
+
 8) Run the following docker command replacing /path/to/environments with the path to the environments directory you created in step 1.
 
 docker run \
