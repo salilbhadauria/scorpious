@@ -2,6 +2,21 @@
   "id": "docker-registry",
   "container": {
     "type": "DOCKER",
+    "volumes": [
+      {
+        "persistent": {
+          "type": "root",
+          "size": 10000
+        },
+        "mode": "RW",
+        "containerPath": "registrydata"
+      },
+      {
+        "containerPath": "/var/lib/registry",
+        "hostPath": "registrydata",
+        "mode": "RW"
+      }
+    ],
     "docker": {
       "image": "registry:2",
       "network": "BRIDGE",
@@ -37,5 +52,6 @@
   "upgradeStrategy": {
     "maximumOverCapacity": 1,
     "minimumHealthCapacity": 0.5
-  }
+  },
+  "unreachableStrategy": "disabled"
 }

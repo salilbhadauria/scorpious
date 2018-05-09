@@ -13,8 +13,7 @@
             "VIP_0": "/um-service:80"
           }
         }
-      ],
-      "forcePullImage": true
+      ]
     }
   },
   "env": {

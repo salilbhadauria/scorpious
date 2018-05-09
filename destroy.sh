@@ -20,20 +20,6 @@ if [[ -z "$AWS_PROFILE" ]] && ([[ -z "$AWS_ACCESS_KEY_ID" ]] || [[ -z "$AWS_SECR
   usage
 fi
 
-VARS=("CUSTOMER_KEY" "DCOS_USERNAME" "DCOS_PASSWORD" "DOCKER_EMAIL_LOGIN" "DOCKER_REGISTRY_AUTH_TOKEN")
-for i in "${VARS[@]}"; do
-  if [[ -z "${!i}" ]];then
-    echo "$i is not set"
-    usage
-  fi
-done
-
-for i in "${VARS[@]}"; do
-  var=$i
-  val=$(echo "$i" | awk '{print tolower($0)}')
-  export TF_VAR_$val=${!var}
-done
-
 parse_args()
 {
   while getopts ":s:d:" opt "$@"; do

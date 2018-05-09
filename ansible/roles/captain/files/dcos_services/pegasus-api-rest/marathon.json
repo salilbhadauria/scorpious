@@ -12,8 +12,7 @@
             "VIP_0": "/pegasus-api-rest:9000"
           }
         }
-      ],
-      "forcePullImage": true
+      ]
     }
   },
   "env": {

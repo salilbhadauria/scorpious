@@ -17,8 +17,7 @@
           "containerPort": 80,
           "servicePort": 10001
         }
-      ],
-      "forcePullImage":true
+      ]
     }
   },
   "env": {

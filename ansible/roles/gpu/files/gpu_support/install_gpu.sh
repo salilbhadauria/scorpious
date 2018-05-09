@@ -35,3 +35,5 @@ sudo yum -y install cuda-8-0.x86_64
 sudo bash -c "cat > /etc/ld.so.conf.d/cuda-lib64.conf << EOF
 /usr/local/cuda/lib64
 EOF"
+
+export PATH=$PATH:/usr/local/cuda/bin

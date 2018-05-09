@@ -17,8 +17,7 @@
           "hostPort": 0,
           "containerPort": 2552
         }
-      ],
-      "forcePullImage": true
+      ]
     }
   },
   "env": {

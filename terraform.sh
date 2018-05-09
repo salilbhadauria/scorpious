@@ -41,6 +41,20 @@ set_backend_variables
 WORKDIR="$WORKSPACE_ROOT/$ACCOUNT-$REGION-$ENVIRONMENT-$STACK"
 DEBUG_OUT="Environment: $ENVIRONMENT Region: $REGION"
 
+VARS=("CUSTOMER_KEY" "DCOS_USERNAME" "DCOS_PASSWORD" "DOCKER_EMAIL_LOGIN" "DOCKER_REGISTRY_AUTH_TOKEN")
+for i in "${VARS[@]}"; do
+  if [[ -z "${!i}" ]];then
+    echo "$i is not set"
+    usage
+  fi
+done
+
+for i in "${VARS[@]}"; do
+  var=$i
+  val=$(echo "$i" | awk '{print tolower($0)}')
+  export TF_VAR_$val=${!var}
+done
+
 export AWS_REGION=$REGION
 
 case ${ACTION} in

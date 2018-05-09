@@ -35,4 +35,5 @@ runcmd:
   - cd /opt/gpu_support; bash install_gpu.sh
   - cd /tmp; bash dcos_install.sh slave
   - service ntpd restart
-  - reboot
+  - sleep 30
+  - sudo reboot
