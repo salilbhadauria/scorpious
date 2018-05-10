@@ -52,6 +52,8 @@ delete_buckets() {
   fi
 }
 
+export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$CONFIG.tfvars")
+
 parse_args "$@"
 
 AWS_DCOS_STACK_BUCKET=$(awk -F\" '/^dcos_stack_bucket/{print $2}'  "environments/$CONFIG.tfvars")
@@ -65,8 +67,6 @@ if [[ "$DELETE_S3" = "true" ]];then
       * ) echo "Please provide a yes or no answer."
   esac
 fi
-
-export AWS_DEFAULT_REGION=$(awk -F\" '/^aws_region/{print $2}'  "environments/$CONFIG.tfvars")
 
 CREATE_VPC=$(awk -F\" '/^create_vpc/{print $2}'  "environments/$CONFIG.tfvars")
 CREATE_IAM=$(awk -F\" '/^create_iam/{print $2}'  "environments/$CONFIG.tfvars")
