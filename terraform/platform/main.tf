@@ -484,7 +484,7 @@ module "master_elb" {
 
 module "master_elb_internal" {
   source              = "../../terraform/modules/elb_internal_masters"
-  elb_name            = "${var.tag_owner}-${var.environment}-master-elb-int"
+  elb_name            = "${var.tag_owner}-${var.environment}-master-elb-in"
   elb_security_group  = "${module.master_elb_internal_sg.id}"
   subnets             = [ "${data.terraform_remote_state.vpc.public_subnet_ids}" ]
   health_check_target = "TCP:5050"
