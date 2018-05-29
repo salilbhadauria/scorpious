@@ -71,7 +71,7 @@ job_master_start_timeout: "5minutes"
 job_master_heartbeat_timeout: "5minutes"
 job_master_mesos_master_address: "master.mesos:5050"
 job_master_cpus: 1
-job_master_memory: 1024
+job_master_memory: 4096
 job_master_instances: 1
 orion_srv_instances: 3
 orion_srv_cpus: 1

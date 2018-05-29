@@ -50,7 +50,9 @@
   "labels":{
     "HAPROXY_GROUP":"external",
     "HAPROXY_0_VHOST":"${BAILE_LB_URL}",
-    "HAPROXY_1_VHOST":"${BAILE_INTERNAL_LB_URL}"
+    "HAPROXY_1_VHOST":"${BAILE_INTERNAL_LB_URL}",
+    "HAPROXY_0_BACKEND_HEAD":"backend {backend}\n  balance {balance}\n  mode {mode}\n  timeout server 3600s\n  timeout client 3600s\n",
+    "HAPROXY_1_BACKEND_HEAD":"backend {backend}\n  balance {balance}\n  mode {mode}\n  timeout server 3600s\n  timeout client 3600s\n"
   },
   "upgradeStrategy": {
     "maximumOverCapacity": 1,

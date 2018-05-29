@@ -234,10 +234,10 @@ docker_registry_url = "https://index.docker.io/v1/"
 # core applications
 
 aries_docker_image_version = "2.0.0"
-baile_docker_image_version = "2.0.0"
+baile_docker_image_version = "2.0.2"
 cortex_docker_image_version = "2.0.0"
 orion_docker_image_version = "2.0.0"
-job_master_docker_image_version = "2.0.0-falcon"
+job_master_docker_image_version = "2.0.1-falcon"
 um_docker_image_version = "2.0.0"
 
 # supporting services
